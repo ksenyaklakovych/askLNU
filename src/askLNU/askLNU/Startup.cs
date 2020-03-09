@@ -95,8 +95,9 @@ namespace askLNU
             {
                 var admin = new ApplicationUser
                 {
+                    UserName = adminConfig.Value.Email,
                     Email = adminConfig.Value.Email,
-                    UserName = "Admin"
+                    EmailConfirmed = true
                 };
 
                 await userManager.CreateAsync(admin, adminConfig.Value.Password);
