@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using askLNU.Models;
+using askLNU.Configs;
+using Microsoft.Extensions.Options;
 
 namespace askLNU
 {
@@ -31,14 +33,17 @@ namespace askLNU
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+
+            services.Configure<AdminConfig>(Configuration.GetSection("AdminConfig"));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -66,6 +71,36 @@ namespace askLNU
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            CreateUserRoles(serviceProvider).Wait();
+        }
+
+        private async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            foreach (var role in new string[] {"User", "Moderator", "Admin"})
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var adminConfig = serviceProvider.GetRequiredService<IOptions<AdminConfig>>();
+
+            if (await userManager.FindByEmailAsync(adminConfig.Value.Email) == null)
+            {
+                var admin = new ApplicationUser
+                {
+                    Email = adminConfig.Value.Email,
+                    UserName = "Admin"
+                };
+
+                await userManager.CreateAsync(admin, adminConfig.Value.Password);
+                await userManager.AddToRolesAsync(admin, new string[] { "User", "Moderator", "Admin" });
+            }
         }
     }
 }
