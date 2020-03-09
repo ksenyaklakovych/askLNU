@@ -5,6 +5,11 @@
     <UserSecretsId>aspnet-askLNU-6C6E514C-8476-441A-A2AB-C978F0CBD99C</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20200309004353_Add custom user.cs" />
+    <Compile Remove="Data\Migrations\20200309004353_Add custom user.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />
