@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace askLNU.Models
+namespace askLNU.DAL.Entities
 {
     public class QuestionTag
     {
