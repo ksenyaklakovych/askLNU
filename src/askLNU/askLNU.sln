@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "askLNU", "askLNU\askLNU.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "askLNU.DAL", "askLNU.DAL\askLNU.DAL.csproj", "{73A08AD3-7232-4F7A-8552-2F3E3E5BC38E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "askLNU.BLL", "askLNU.BLL\askLNU.BLL.csproj", "{31452A4F-0AE7-4355-BC87-6712D4C15006}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "askLNU.BLL", "askLNU.BLL\askLNU.BLL.csproj", "{31452A4F-0AE7-4355-BC87-6712D4C15006}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

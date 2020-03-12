@@ -4,6 +4,8 @@ using System.Text;
 using askLNU.DAL.Entities;
 using askLNU.DAL.EF;
 using askLNU.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace askLNU.DAL.Repositories
 {
