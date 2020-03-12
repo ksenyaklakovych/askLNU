@@ -16,7 +16,7 @@ namespace askLNU.DAL.Repositories
             this.db = context;
         }
 
-        public IEnumerable<LabelRepository> GetAll()
+        public IEnumerable<Label> GetAll()
         {
             return db.Labels;
         }

@@ -17,7 +17,7 @@ namespace askLNU.DAL.Repositories
             this.db = context;
         }
 
-        public IEnumerable<NotificationRepository> GetAll()
+        public IEnumerable<Notification> GetAll()
         {
             return db.Notifications;
         }

@@ -18,7 +18,7 @@ namespace askLNU.DAL.Repositories
             this.db = context;
         }
 
-        public IEnumerable<TagRepository> GetAll()
+        public IEnumerable<Tag> GetAll()
         {
             return db.Tags;
         }

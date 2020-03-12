@@ -19,11 +19,9 @@ namespace askLNU.DAL.Repositories
         private TagRepository tagRepository;
 
 
-
-
-        public EFUnitOfWork(string connectionString)
+        public EFUnitOfWork(ApplicationDbContext context)
         {
-            db = new ApplicationDbContext(connectionString);
+            db = context;
         }
         public IRepository<Answer> Answers
         {
@@ -81,14 +79,6 @@ namespace askLNU.DAL.Repositories
                 return tagRepository;
             }
         }
-
-
-
-
-
-
-
-
 
         public void Save()
         {
