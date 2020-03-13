@@ -16,6 +16,8 @@ using askLNU.Models;
 using askLNU.Configs;
 using askLNU.BLL.DTO;
 using Microsoft.Extensions.Options;
+using askLNU.DAL.EF;
+using askLNU.DAL.Entities;
 
 namespace askLNU
 {
@@ -37,7 +39,7 @@ namespace askLNU
 
             services.Configure<AdminConfig>(Configuration.GetSection("AdminConfig"));
 
-            services.AddDefaultIdentity<UserDTO>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
@@ -89,12 +91,12 @@ namespace askLNU
                 }
             }
 
-            var userManager = serviceProvider.GetRequiredService<UserManager<UserDTO>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var adminConfig = serviceProvider.GetRequiredService<IOptions<AdminConfig>>();
 
             if (await userManager.FindByEmailAsync(adminConfig.Value.Email) == null)
             {
-                var admin = new UserDTO
+                var admin = new ApplicationUser
                 {
                     UserName = adminConfig.Value.Email,
                     Email = adminConfig.Value.Email,

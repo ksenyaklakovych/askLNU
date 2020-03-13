@@ -1,6 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Identity;
-
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace askLNU.BLL.DTO
 {
-    public class UserDTO : IdentityUser
+    public class UserDTO
     {
         public string Name { get; set; }
         public string Surname { get; set; }

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\askLNU.BLL\askLNU.BLL.csproj" />
+    <ProjectReference Include="..\askLNU.DAL\askLNU.DAL.csproj" />
   </ItemGroup>
 
 </Project>
