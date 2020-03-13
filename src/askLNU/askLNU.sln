@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "askLNU", "askLNU\askLNU.csproj", "{C9740A39-E196-4972-B022-6A7F0F83CB9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "askLNU.DAL", "askLNU.DAL\askLNU.DAL.csproj", "{73A08AD3-7232-4F7A-8552-2F3E3E5BC38E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "askLNU.DAL", "askLNU.DAL\askLNU.DAL.csproj", "{73A08AD3-7232-4F7A-8552-2F3E3E5BC38E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "askLNU.BLL", "askLNU.BLL\askLNU.BLL.csproj", "{31452A4F-0AE7-4355-BC87-6712D4C15006}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{73A08AD3-7232-4F7A-8552-2F3E3E5BC38E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73A08AD3-7232-4F7A-8552-2F3E3E5BC38E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73A08AD3-7232-4F7A-8552-2F3E3E5BC38E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31452A4F-0AE7-4355-BC87-6712D4C15006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31452A4F-0AE7-4355-BC87-6712D4C15006}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31452A4F-0AE7-4355-BC87-6712D4C15006}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31452A4F-0AE7-4355-BC87-6712D4C15006}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

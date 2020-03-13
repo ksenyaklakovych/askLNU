@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace askLNU.Data.Migrations
+namespace askLNU.DAL.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {

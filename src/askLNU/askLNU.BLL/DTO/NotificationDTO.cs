@@ -4,16 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace askLNU.Models
+namespace askLNU.BLL.DTO
 {
-    public class Tag
+    public class NotificationDTO
     {
-        [Key]
         public int Id { get; set; }
-
-        [Required]
+        public string ApplicationUserId { get; set; }
         public string Text { get; set; }
-
-        public virtual ICollection<QuestionTag> QuestionTags { get; set; }
+        public DateTime Date { get; set; }
+        public bool IsActive { get; set; }
     }
 }

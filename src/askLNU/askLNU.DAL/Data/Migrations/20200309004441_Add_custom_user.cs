@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace askLNU.Data.Migrations
+namespace askLNU.DAL.Data.Migrations
 {
     public partial class Add_custom_user : Migration
     {

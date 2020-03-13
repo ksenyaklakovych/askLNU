@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace askLNU.Models
+namespace askLNU.BLL.DTO
 {
-    public class Notification
+    public class AnswerDTO
     {
-        [Key]
         public int Id { get; set; }
-
-        [Required]
         public string ApplicationUserId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
-
-        [Required]
+        public int QuestionId { get; set; }
         public string Text { get; set; }
-
-        [Required]
+        public int Rating { get; set; }
+        public bool IsSolution { get; set; }
         public DateTime Date { get; set; }
-
-        [Required]
-        public bool IsActive { get; set; }
     }
 }

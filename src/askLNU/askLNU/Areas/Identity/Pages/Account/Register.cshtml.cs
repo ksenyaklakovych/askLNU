@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using askLNU.BLL.DTO;
+using askLNU.DAL.Entities;
 
 namespace askLNU.Areas.Identity.Pages.Account
 {
