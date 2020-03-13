@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
-using askLNU.Data;
+using askLNU.DAL.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using askLNU.Models;
 using askLNU.Configs;
+using askLNU.BLL.DTO;
 using Microsoft.Extensions.Options;
 
 namespace askLNU
@@ -36,7 +37,7 @@ namespace askLNU
 
             services.Configure<AdminConfig>(Configuration.GetSection("AdminConfig"));
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<UserDTO>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
@@ -88,12 +89,12 @@ namespace askLNU
                 }
             }
 
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<UserDTO>>();
             var adminConfig = serviceProvider.GetRequiredService<IOptions<AdminConfig>>();
 
             if (await userManager.FindByEmailAsync(adminConfig.Value.Email) == null)
             {
-                var admin = new ApplicationUser
+                var admin = new UserDTO
                 {
                     UserName = adminConfig.Value.Email,
                     Email = adminConfig.Value.Email,

@@ -1,5 +1,5 @@
 ﻿using System;
-using askLNU.Data;
+using askLNU.DAL.Data;
 using askLNU.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
