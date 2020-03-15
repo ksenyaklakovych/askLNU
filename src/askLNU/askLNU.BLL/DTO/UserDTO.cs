@@ -9,11 +9,14 @@ namespace askLNU.BLL.DTO
 {
     public class UserDTO
     {
+        public string Id { get; set; }
+        public string UserName { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public int Course { get; set; }
         public int? FacultyId { get; set; }
         public bool IsBlocked { get; set; }
         public string ImageSrc { get; set; }
+        public string Email { get; set; }
     }
 }
