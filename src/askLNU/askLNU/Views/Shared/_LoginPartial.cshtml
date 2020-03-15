@@ -1,10 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using askLNU.DAL.Entities
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+@using askLNU.BLL.Interfaces
+@inject ISignInService SignInService
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
+@if (SignInService.IsSignedIn(User))
 {
     <li class="nav-item">
         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
