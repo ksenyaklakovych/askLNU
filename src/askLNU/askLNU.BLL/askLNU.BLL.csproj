@@ -5,11 +5,14 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ApplicationIcon />
     <StartupObject />
+    <UserSecretsId>f17caa82-d6b5-4110-872b-16be1dc57494</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.0.0" />
+    <PackageReference Include="SendGrid" Version="9.13.0" />
   </ItemGroup>
 
   <ItemGroup>
