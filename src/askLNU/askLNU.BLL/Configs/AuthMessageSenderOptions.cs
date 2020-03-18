@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace askLNU.BLL.Services
+namespace askLNU.BLL.Configs
 {
     public class AuthMessageSenderOptions
     {
