@@ -16,6 +16,7 @@ using askLNU.BLL.Infrastructure;
 using askLNU.BLL.Services;
 using askLNU.BLL.Interfaces;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using AutoMapper;
 
 namespace askLNU
 {
@@ -38,6 +39,8 @@ namespace askLNU
             services.AddTransient<ISignInService, SignInService>();
             //services.AddTransient<IEmailSender, EmailSender>();
             //services.Configure<AuthMessageSenderOptions>(Configuration);
+
+            services.AddAutoMapper();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using AutoMapper;
+using askLNU.BLL.Infrastructure.MapperProfiles;
 
 namespace askLNU.BLL.Infrastructure
 {
@@ -19,6 +21,18 @@ namespace askLNU.BLL.Infrastructure
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+        }
+
+        public static void AddAutoMapper(this IServiceCollection services)
+        {
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AnswerProfile());
+                mc.AddProfile(new FacultyProfile());
+            });
+
+            var mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
         }
     }
 }
