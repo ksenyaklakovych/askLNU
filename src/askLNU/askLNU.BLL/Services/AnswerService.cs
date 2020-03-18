@@ -7,65 +7,57 @@ using askLNU.DAL.Interfaces;
 using askLNU.BLL.Infrastructure;
 using askLNU.BLL.Interfaces;
 using AutoMapper;
+using askLNU.BLL.Infrastructure.Exceptions;
 
 namespace askLNU.BLL.Services
 {
     public class AnswerService : IAnswerService
     {
-        IUnitOfWork Database { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public AnswerService(IUnitOfWork uow)
+        public AnswerService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            Database = uow;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         public void CreateAnswer(AnswerDTO answerDto)
         {
-            Answer answer = Database.Answers.Get(answerDto.Id);
-
-            if (answer == null)
-                throw new ValidationException("Answer not found", "");
-            Answer a = new Answer
+            if (answerDto != null)
             {
-                Id=answerDto.Id,
-                ApplicationUserId = answerDto.ApplicationUserId,
-                QuestionId = answerDto.QuestionId,
-                Text = answerDto.Text,
-                Rating = answerDto.Rating,
-                IsSolution = answerDto.IsSolution,
-                Date = answerDto.Date,
-            };
-            Database.Answers.Create(a);
-            Database.Save();
-        }
-
-        public IEnumerable<AnswerDTO> GetAll()
-        {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Answer, AnswerDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<Answer>, List<AnswerDTO>>(Database.Answers.GetAll());
+                Answer answer = _mapper.Map<Answer>(answerDto);
+                _unitOfWork.Answers.Create(answer);
+                _unitOfWork.Save();
+            }
+            else
+            {
+                throw new ArgumentNullException("answerDto");
+            }
         }
 
         public AnswerDTO GetAnswer(int? id)
         {
-            if (id == null)
-                throw new ValidationException("Id not set", "");
-            var answer = Database.Answers.Get(id.Value);
-            if (answer == null)
-                throw new ValidationException("Answer not found", "");
-
-            return new AnswerDTO {
-                Id = answer.Id,
-                ApplicationUserId = answer.ApplicationUserId,
-                QuestionId = answer.QuestionId,
-                Text = answer.Text,
-                Rating = answer.Rating,
-                IsSolution = answer.IsSolution,
-                Date = answer.Date,
-            };
+            if (id != null)
+            {
+                var answer = _unitOfWork.Answers.Get(id.Value);
+                if (answer != null)
+                {
+                    return _mapper.Map<AnswerDTO>(answer);
+                }
+                else
+                {
+                    throw new ItemNotFoundException($"Answer not found.");
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException("id");
+            }
         }
 
         public void Dispose()
         {
-            Database.Dispose();
+            _unitOfWork.Dispose();
         }
     }
 }

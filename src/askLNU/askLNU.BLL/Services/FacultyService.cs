@@ -7,56 +7,64 @@ using askLNU.DAL.Interfaces;
 using askLNU.BLL.Infrastructure;
 using askLNU.BLL.Interfaces;
 using AutoMapper;
+using askLNU.BLL.Infrastructure.Exceptions;
 
 namespace askLNU.BLL.Services
 {
     public class FacultyService : IFacultyService
     {
-        IUnitOfWork Database { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public FacultyService(IUnitOfWork uow)
+        public FacultyService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            Database = uow;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
-        public void CreateFaculty(FacultyDTO Dto)
-        {
-            Faculty answer = Database.Faculties.Get(Dto.Id);
 
-            if (answer == null)
-                throw new ValidationException("Answer not found", "");
-            Faculty a = new Faculty
+        public void CreateFaculty(FacultyDTO facultyDTO)
+        {
+            if (facultyDTO != null)
             {
-                Id= Dto.Id,
-                Title = Dto.Title,
-            };
-            Database.Faculties.Create(a);
-            Database.Save();
+                Faculty faculty = _mapper.Map<Faculty>(facultyDTO);
+                _unitOfWork.Faculties.Create(faculty);
+                _unitOfWork.Save();
+            }
+            else
+            {
+                throw new ArgumentNullException("facultyDTO");
+            }
         }
 
         public IEnumerable<FacultyDTO> GetAll()
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Faculty, FacultyDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<Faculty>, List<FacultyDTO>>(Database.Faculties.GetAll());
+            var faculties = _unitOfWork.Faculties.GetAll();
+            return _mapper.Map<IEnumerable<FacultyDTO>>(faculties);
         }
 
         public FacultyDTO GetFaculty(int? id)
         {
-            if (id == null)
-                throw new ValidationException("Id not set", "");
-            var faculty = Database.Faculties.Get(id.Value);
-            if (faculty == null)
-                throw new ValidationException("Faculty not found", "");
-
-            return new FacultyDTO
+            if (id != null)
             {
-                Id = faculty.Id,
-                Title = faculty.Title,
-            };
+                var faculty = _unitOfWork.Faculties.Get(id.Value);
+                if (faculty != null)
+                {
+                    return _mapper.Map<FacultyDTO>(faculty);
+                }
+                else
+                {
+                    throw new ItemNotFoundException($"Faculty not found.");
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException("id");
+            }
         }
 
         public void Dispose()
         {
-            Database.Dispose();
+            _unitOfWork.Dispose();
         }
     }
 }

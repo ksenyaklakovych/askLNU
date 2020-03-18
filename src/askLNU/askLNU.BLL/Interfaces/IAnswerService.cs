@@ -9,7 +9,6 @@ namespace askLNU.BLL.Interfaces
     {
         public void CreateAnswer(AnswerDTO answerDto);
         public AnswerDTO GetAnswer(int? id);
-        public IEnumerable<AnswerDTO> GetAll();
         public void Dispose();
     }
 }
