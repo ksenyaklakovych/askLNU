@@ -24,6 +24,11 @@ namespace askLNU.BLL.Services
             _logger = logger;
         }
 
+        public UserService(UserManager<ApplicationUser> userManager)
+        {
+            _userManager = userManager;
+        }
+
         public async Task<IdentityResult> CreateUserAsync(UserDTO user, string password)
         {
             var applicationUser = new ApplicationUser

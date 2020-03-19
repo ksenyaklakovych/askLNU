@@ -8,6 +8,20 @@ namespace askLNU.DAL.Entities
 {
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+
+        }
+
+        public ApplicationUser(string name, string surname, int course,  bool isBlocked, string imageSrc)
+        {
+            Name = name;
+            Surname = surname;
+            Course = course;
+            IsBlocked = isBlocked;
+            ImageSrc = imageSrc;
+        }
+
         [PersonalData]
         public string Name { get; set; }
 
