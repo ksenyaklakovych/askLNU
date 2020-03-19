@@ -1,6 +1,12 @@
 using System;
 using Xunit;
 using askLNU.BLL.Services;
+using Moq;
+using Microsoft.AspNetCore.Identity;
+using askLNU.DAL.Entities;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace askLNU.Tests
 {
@@ -12,9 +18,21 @@ namespace askLNU.Tests
         //    //
         //}
         [Fact]
-        public void GetByEmailAsync_ShouldReturnTrue()
+        public void GetByEmailAsync_ShouldReturnTrue(string email)
         {
-            //
+            var fakeUser = new ApplicationUser();
+            var fakeManager = new Mock<UserManager<ApplicationUser>>(
+                    new Mock<IUserStore<ApplicationUser>>().Object,
+                    new Mock<IOptions<IdentityOptions>>().Object,
+                    new Mock<IPasswordHasher<ApplicationUser>>().Object,
+                    new IUserValidator<ApplicationUser>[0],
+                    new IPasswordValidator<ApplicationUser>[0],
+                    new Mock<ILookupNormalizer>().Object,
+                    new Mock<IdentityErrorDescriber>().Object,
+                    new Mock<IServiceProvider>().Object,
+                    new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
+            fakeManager.Setup(m => m.FindByEmailAsync(email)).Returns(fakeUser);
+
         }
     }
 }
