@@ -55,7 +55,15 @@ namespace askLNU.Areas.Identity.Pages.Account
             ExternalLogins = await _signInService.GetExternalAuthenticationSchemesAsync();
             if (ModelState.IsValid)
             {
-                var user = new UserDTO { UserName = Input.Email, Email = Input.Email };
+                var user = new UserDTO
+                {
+                    UserName = Input.UserName,
+                    Email = Input.Email,
+                    Name = Input.Name,
+                    Surname = Input.Surname,
+                    Course = Input.Course,
+                    ImageSrc = Input.ImageSrc
+                };
                 var result = await _userService.CreateUserAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

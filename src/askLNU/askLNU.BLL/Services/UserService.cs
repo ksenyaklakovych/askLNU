@@ -31,7 +31,7 @@ namespace askLNU.BLL.Services
                 Name = user.Name,
                 Surname = user.Surname,
                 Course = user.Course,
-                FacultyId = user.FacultyId,
+                //FacultyId = user.FacultyId,
                 ImageSrc = user.ImageSrc,
                 UserName = user.UserName,
                 Email = user.Email
