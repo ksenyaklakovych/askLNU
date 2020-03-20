@@ -23,5 +23,31 @@ namespace askLNU.InputModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [StringLength(100, MinimumLength = 4)]
+        [Display(Name = "UserName")]
+
+        public string UserName { get; set; }
+
+        [Required]
+        [StringLength(100, MinimumLength = 4)]
+        [Display(Name = "Name")]
+
+        public string Name { get; set; }
+
+        [Required]
+        [StringLength(100, MinimumLength = 4)]
+        [Display(Name = "Surname")]
+
+        public string Surname { get; set; }
+
+        [Required]
+        [Display(Name = "Course")]
+        public int Course { get; set; }
+
+        [Required]
+        [Display(Name = "Image")]
+        public string ImageSrc { get; set; }
     }
 }

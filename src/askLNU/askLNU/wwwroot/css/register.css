@@ -1,0 +1,61 @@
+﻿body {
+    background-color: lightslategray;
+}
+
+#register {
+    background-color: white;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+h1 {
+    margin-top: 18px;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.divider-text {
+    position: relative;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 200px;
+    margin: 0 auto;
+}
+
+.divider-text span {
+    padding: 7px;
+    font-size: 12px;
+    position: relative;
+    z-index: 2;
+}
+
+.divider-text:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    top: 55%;
+    left: 0;
+    z-index: 1;
+}
+
+.form-control {
+    width: 55%;
+    margin: auto;
+}
+
+.btn-primary {
+    margin-left: 244px;
+    margin-bottom: 20px;
+}
+
+label {
+    margin-left: 220px;
+}
+
+#forgot-password {
+    margin-left: 120px;
+}
