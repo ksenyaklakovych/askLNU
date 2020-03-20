@@ -5,7 +5,10 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="@Url.Content("~/css/register.css")" rel="stylesheet" type="text/css" />
+</head>
 <div class="row">
     <div class="col-md-4">
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
