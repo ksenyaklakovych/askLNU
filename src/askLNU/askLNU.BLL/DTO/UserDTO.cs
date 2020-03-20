@@ -9,6 +9,22 @@ namespace askLNU.BLL.DTO
 {
     public class UserDTO
     {
+        public UserDTO()
+        {
+
+        }
+
+        public UserDTO(string userName, string name, string surname, int course, bool isBlocked, string imageSrc, string email)
+        {
+            UserName = userName;
+            Name = name;
+            Surname = surname;
+            Course = course;
+            IsBlocked = isBlocked;
+            ImageSrc = imageSrc;
+            Email = email;
+        }
+
         public string Id { get; set; }
         public string UserName { get; set; }
         public string Name { get; set; }
