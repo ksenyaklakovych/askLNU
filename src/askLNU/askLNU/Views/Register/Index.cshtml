@@ -1,10 +1,8 @@
-﻿@page
-@model RegisterModel
+﻿@model RegisterViewModel
 @{
     ViewData["Title"] = "Register";
 }
 
-@**@
 <head>
     <meta name="viewport" content="width=device-width" />
     <link href="@Url.Content("~/css/register.css")" rel="stylesheet" type="text/css" />
@@ -19,40 +17,40 @@
         <p class="divider-text">
             <span class="bg-light">OR</span>
         </p>
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <form asp-action="Register" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <input asp-for="Input.Email" class="form-control" placeholder="Email" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                <input asp-for="Email" class="form-control" placeholder="Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <input asp-for="Input.Password" class="form-control" placeholder="Password" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <input asp-for="Password" class="form-control" placeholder="Password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Confirm Password" />
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="Input.Name" class="form-control" placeholder="Name" />
-                <span asp-validation-for="Input.Name" class="text-danger"></span>
+                <input asp-for="Name" class="form-control" placeholder="Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="Input.Surname" class="form-control" placeholder="Surname" />
-                <span asp-validation-for="Input.Surname" class="text-danger"></span>
+                <input asp-for="Surname" class="form-control" placeholder="Surname" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="Input.Course" class="form-control" placeholder="Course" />
-                <span asp-validation-for="Input.Course" class="text-danger"></span>
+                <input asp-for="Course" class="form-control" placeholder="Course" />
+                <span asp-validation-for="Course" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="Input.UserName" class="form-control" placeholder="User Name" />
-                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                <input asp-for="UserName" class="form-control" placeholder="User Name" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="Input.ImageSrc" class="form-control" placeholder="Image Src" />
-                <span asp-validation-for="Input.ImageSrc" class="text-danger"></span>
+                <input asp-for="ImageSrc" class="form-control" placeholder="Image Src" />
+                <span asp-validation-for="ImageSrc" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>

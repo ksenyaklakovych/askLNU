@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authentication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace askLNU.InputModels
+namespace askLNU.ViewModels
 {
-    public class UserInputModel
+    public class RegisterViewModel
     {
         [Required]
         [EmailAddress]
@@ -30,24 +31,22 @@ namespace askLNU.InputModels
 
         public string UserName { get; set; }
 
-        [Required]
         [StringLength(100, MinimumLength = 4)]
         [Display(Name = "Name")]
 
         public string Name { get; set; }
 
-        [Required]
         [StringLength(100, MinimumLength = 4)]
         [Display(Name = "Surname")]
 
         public string Surname { get; set; }
 
-        [Required]
         [Display(Name = "Course")]
         public int Course { get; set; }
 
-        [Required]
-        [Display(Name = "Image")]
+        [Display(Name = "Profile Image")]
         public string ImageSrc { get; set; }
+
+        public IList<AuthenticationScheme> ExternalLogins { get; set; }
     }
 }
