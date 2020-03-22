@@ -11,7 +11,9 @@ namespace askLNU.BLL.Interfaces
     {
         Task<IdentityResult> CreateUserAsync(UserDTO user, string password);
         Task<UserDTO> GetByEmailAsync(string email);
-        Task<string> GenerateEmailConfirmationTokenAsync(UserDTO user);
+        Task<UserDTO> GetByIdAsync(string id);
+        Task<IdentityResult> ConfirmEmailAsync(string userId, string token);
+        Task<string> GenerateEmailConfirmationTokenAsync(string userId);
         bool RequireConfirmedAccount();
     }
 }

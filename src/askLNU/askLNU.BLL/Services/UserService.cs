@@ -1,6 +1,7 @@
 ﻿using askLNU.BLL.DTO;
 using askLNU.BLL.Interfaces;
 using askLNU.DAL.Entities;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
@@ -15,13 +16,16 @@ namespace askLNU.BLL.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UserService> _logger;
+        private readonly IMapper _mapper;
 
         public UserService(
             UserManager<ApplicationUser> userManager,
-            ILogger<UserService> logger)
+            ILogger<UserService> logger,
+            IMapper mapper)
         {
             _userManager = userManager;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public UserService(UserManager<ApplicationUser> userManager)
@@ -31,16 +35,13 @@ namespace askLNU.BLL.Services
 
         public async Task<IdentityResult> CreateUserAsync(UserDTO user, string password)
         {
-            var applicationUser = new ApplicationUser
+            var applicationUser = _mapper.Map<ApplicationUser>(user);
+
+            var existingUser = await _userManager.FindByEmailAsync(user.Email);
+            if (existingUser != null && !(await _userManager.IsEmailConfirmedAsync(existingUser)))
             {
-                Name = user.Name,
-                Surname = user.Surname,
-                Course = user.Course,
-                //FacultyId = user.FacultyId,
-                ImageSrc = user.ImageSrc,
-                UserName = user.UserName,
-                Email = user.Email
-            };
+                await _userManager.DeleteAsync(existingUser);
+            }
 
             var result = await _userManager.CreateAsync(applicationUser, password);
 
@@ -53,21 +54,10 @@ namespace askLNU.BLL.Services
             return result;
         }
 
-        public async Task<string> GenerateEmailConfirmationTokenAsync(UserDTO user)
+        public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
         {
-            var applicationUser = new ApplicationUser
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Surname = user.Surname,
-                Course = user.Course,
-                FacultyId = user.FacultyId,
-                ImageSrc = user.ImageSrc,
-                UserName = user.UserName,
-                Email = user.Email
-            };
-
-            return await _userManager.GenerateEmailConfirmationTokenAsync(applicationUser);
+            var user = await _userManager.FindByIdAsync(userId);
+            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
         }
 
         public async Task<UserDTO> GetByEmailAsync(string email)
@@ -76,18 +66,7 @@ namespace askLNU.BLL.Services
 
             if (appLicationUser != null)
             {
-                return new UserDTO
-                {
-                    Id = appLicationUser.Id,
-                    UserName = appLicationUser.UserName,
-                    Name = appLicationUser.Name,
-                    Surname = appLicationUser.Surname,
-                    Course = appLicationUser.Course,
-                    FacultyId = appLicationUser.FacultyId,
-                    ImageSrc = appLicationUser.ImageSrc,
-                    IsBlocked = appLicationUser.IsBlocked,
-                    Email = appLicationUser.Email
-                };
+                return _mapper.Map<UserDTO>(appLicationUser);
             }
             else
             {
@@ -103,6 +82,18 @@ namespace askLNU.BLL.Services
         private async Task AddUserToRoleAsync(ApplicationUser user, string role)
         {
             await _userManager.AddToRoleAsync(user, role);
+        }
+
+        public async Task<UserDTO> GetByIdAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            return _mapper.Map<UserDTO>(user);
+        }
+
+        public async Task<IdentityResult> ConfirmEmailAsync(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            return await _userManager.ConfirmEmailAsync(user, token);
         }
     }
 }

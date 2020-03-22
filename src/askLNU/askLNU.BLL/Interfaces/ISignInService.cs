@@ -1,5 +1,6 @@
 ﻿using askLNU.BLL.DTO;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -13,5 +14,7 @@ namespace askLNU.BLL.Interfaces
         Task SignInAsync(UserDTO user, bool isPersistent);
         Task<List<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync();
         bool IsSignedIn(ClaimsPrincipal claimsPrincipal);
+        Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isPersistent, bool lockoutOnFailure);
+        Task SignOutAsync();
     }
 }

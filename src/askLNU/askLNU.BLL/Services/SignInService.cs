@@ -1,6 +1,7 @@
 ﻿using askLNU.BLL.DTO;
 using askLNU.BLL.Interfaces;
 using askLNU.DAL.Entities;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -15,10 +16,14 @@ namespace askLNU.BLL.Services
     public class SignInService : ISignInService
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IMapper _mapper;
 
-        public SignInService(SignInManager<ApplicationUser> signInManager)
+        public SignInService(
+            SignInManager<ApplicationUser> signInManager,
+            IMapper mapper)
         {
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         public async Task<List<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync()
@@ -31,22 +36,20 @@ namespace askLNU.BLL.Services
             return _signInManager.IsSignedIn(claimsPrincipal);
         }
 
-        public async Task SignInAsync(UserDTO user, bool isPersistent)
+        public Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isPersistent, bool lockoutOnFailure)
         {
-            var applicationUser = new ApplicationUser
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                Name = user.Name,
-                Surname = user.Surname,
-                Course = user.Course,
-                FacultyId = user.FacultyId,
-                ImageSrc = user.ImageSrc,
-                IsBlocked = user.IsBlocked,
-                Email = user.Email
-            };
+            return _signInManager.PasswordSignInAsync(userName, password, isPersistent, lockoutOnFailure);
+        }
 
-            await _signInManager.SignInAsync(applicationUser, isPersistent: false);
+        public Task SignInAsync(UserDTO user, bool isPersistent)
+        {
+            var applicationUser = _mapper.Map<ApplicationUser>(user);
+            return _signInManager.SignInAsync(applicationUser, isPersistent: false);
+        }
+
+        public Task SignOutAsync()
+        {
+            return _signInManager.SignOutAsync();
         }
     }
 }
