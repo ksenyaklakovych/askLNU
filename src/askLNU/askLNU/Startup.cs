@@ -40,6 +40,11 @@ namespace askLNU
             //services.AddTransient<IEmailSender, EmailSender>();
             //services.Configure<AuthMessageSenderOptions>(Configuration);
 
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            });
+
             services.AddAutoMapper();
             services.AddControllersWithViews();
             services.AddRazorPages();
