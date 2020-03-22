@@ -29,6 +29,7 @@ namespace askLNU.BLL.Infrastructure
             {
                 mc.AddProfile(new AnswerProfile());
                 mc.AddProfile(new FacultyProfile());
+                mc.AddProfile(new UserProfile());
             });
 
             var mapper = mappingConfig.CreateMapper();
