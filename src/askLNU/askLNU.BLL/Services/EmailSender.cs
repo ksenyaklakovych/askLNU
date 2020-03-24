@@ -26,7 +26,7 @@ namespace askLNU.BLL.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("askLNU@edu.ua", Options.SendGridUser),
+                From = new EmailAddress("askLNU@edu.ua", "askLNU"),
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message

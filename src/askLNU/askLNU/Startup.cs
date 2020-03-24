@@ -37,8 +37,9 @@ namespace askLNU
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISignInService, SignInService>();
-            //services.AddTransient<IEmailSender, EmailSender>();
-            //services.Configure<AuthMessageSenderOptions>(Configuration);
+           
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.Configure<IdentityOptions>(options =>
             {

@@ -1,8 +1,18 @@
 ﻿@using askLNU.ViewModels
 @model ConfirmEmailViewModel
 @{
-    ViewData["Title"] = "Confirm email";
+    ViewData["Title"] = "Account confirmation";
 }
 
 <h1>@ViewData["Title"]</h1>
-<p>@Model.StatusMessage</p>
+
+@{
+    if (@Model.Succeeded)
+    {
+        <p class="alert alert-success">@Model.StatusMessage</p>
+    }
+    else
+    {
+        <p class="alert alert-danger">@Model.StatusMessage</p>
+    }
+}

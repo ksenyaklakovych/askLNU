@@ -61,16 +61,15 @@ namespace askLNU.Controllers
                 {
                     user = await _userService.GetByEmailAsync(user.Email);
 
-                    //var code = await _userService.GenerateEmailConfirmationTokenAsync(user);
-                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    //var callbackUrl = Url.Page(
-                    //    "/Account/ConfirmEmail",
-                    //    pageHandler: null,
-                    //    values: new { area = "Identity", userId = user.Id, code = code },
-                    //    protocol: Request.Scheme);
+                    var code = await _userService.GenerateEmailConfirmationTokenAsync(user.Id);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var callbackUrl = Url.Action(
+                         "ConfirmEmail", "Register",
+                         new { userId = user.Id, code = code },
+                         protocol: Request.Scheme);
 
-                    //await _emailSender.SendEmailAsync(registerInputModel.Email, "Confirm your email",
-                    //    $"Please confirm your account in askLNU website by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(registerInputModel.Email, "Confirm your email",
+                        $"Please confirm your registration at askLNU website by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userService.RequireConfirmedAccount())
                     {
@@ -104,22 +103,9 @@ namespace askLNU.Controllers
                 return NotFound($"Unable to load user with email '{email}'.");
             }
 
-            // Once you add a real email sender, you should remove this code that lets you confirm the account
-
             var viewModel = new RegisterConfirmationViewModel();
 
-            viewModel.DisplayConfirmAccountLink = true;
-            if (viewModel.DisplayConfirmAccountLink)
-            {
-                var code = await _userService.GenerateEmailConfirmationTokenAsync(user.Id);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-                viewModel.EmailConfirmationUrl = Url.Action(
-                    "ConfirmEmail",
-                    "Register",
-                    new { area = "Identity", userId = user.Id, code = code },
-                    Request.Scheme);
-            }
+            viewModel.DisplayConfirmAccountLink = false;
 
             return View(viewModel);
         }
@@ -142,7 +128,8 @@ namespace askLNU.Controllers
 
             var viewModel = new ConfirmEmailViewModel
             {
-                StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email."
+                StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.",
+                Succeeded = result.Succeeded ? true : false
             };
 
             return View(viewModel);
