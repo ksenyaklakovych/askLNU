@@ -6,21 +6,32 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using askLNU.ViewModels;
+using askLNU.BLL.Interfaces;
+using askLNU.BLL.DTO;
+using AutoMapper;
 
 namespace askLNU.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+       // private readonly ILogger<HomeController> _logger;
+        private readonly IQuestionService _questionService;
+        private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger)
+
+
+        public HomeController(IQuestionService service, IMapper mapper)
         {
-            _logger = logger;
+            _questionService = service;
+            //_questionService = questionService;
+            _mapper = mapper;
         }
-
-        public IActionResult Index()
+        
+        public ActionResult Index()
         {
-            return View();
+            var allQuestions = _questionService.GetAll();
+            var quests = _mapper.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(allQuestions);
+            return View(quests);
         }
 
         public IActionResult Privacy()
