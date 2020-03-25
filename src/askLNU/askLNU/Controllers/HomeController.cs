@@ -16,22 +16,35 @@ namespace askLNU.Controllers
     {
        // private readonly ILogger<HomeController> _logger;
         private readonly IQuestionService _questionService;
-        private readonly IMapper _mapper;
 
 
 
-        public HomeController(IQuestionService service, IMapper mapper)
+        public HomeController(IQuestionService service)
         {
             _questionService = service;
             //_questionService = questionService;
-            _mapper = mapper;
         }
         
         public ActionResult Index()
         {
             var allQuestions = _questionService.GetAll();
-            var quests = _mapper.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(allQuestions);
-            return View(quests);
+            var list = new List<QuestionViewModel>();
+            foreach (var item in allQuestions)
+            {
+                var q = new QuestionViewModel
+                {
+                    ApplicationUserId = item.ApplicationUserId,
+                    Id = item.Id,
+                    Title = item.Title,
+                    Rating = item.Rating,
+                    IsSolved = item.IsSolved,
+                    Date = item.Date,
+                    FacultyId = item.FacultyId
+                };
+                list.Add(q);
+            }
+            IEnumerable<QuestionViewModel> en = list;
+            return View(en);
         }
 
         public IActionResult Privacy()
