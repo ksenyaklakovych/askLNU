@@ -10,6 +10,7 @@ using askLNU.ViewModels;
 using askLNU.BLL.Interfaces;
 using askLNU.BLL.DTO;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace askLNU.Controllers
 {
@@ -25,11 +26,18 @@ namespace askLNU.Controllers
             _mapper = new Mapper(config);
         }
         
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string Faculties)
         {
-            int pageSize = 3;
-            int pageNumber = (page ?? 1);
             var questions = _mapper.Map<IEnumerable<QuestionViewModel>>(_questionService.GetAll());
+            var facultyID =_questionService.GetIdByFacutyName(Faculties);
+            var nameFaculties = new SelectList(_questionService.GetAllFaculties().Select(f=>f.Title).ToList());
+            ViewBag.Faculties = nameFaculties;
+            if (!String.IsNullOrEmpty(Faculties))
+            {
+                questions = questions.Where(s=>s.FacultyId==facultyID);
+            }
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
             return View(questions.ToPagedList(pageNumber, pageSize));
         }
 

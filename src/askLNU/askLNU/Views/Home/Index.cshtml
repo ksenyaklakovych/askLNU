@@ -13,6 +13,21 @@
 </head>
 <body>
     <h1>Questions</h1>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-horizontal" }))
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+                    @Html.DropDownList("Faculties", "Faculty")
+                </div>
+                <div class="col-md-2" id="btext">
+                    <input type="submit" value="Фільтрувати" class="btn" id="hello-btn" />
+                </div>
+            </div>
+        </div>
+    }
+
+
     <div class="container">
         @foreach (var item in Model)
         {
@@ -46,6 +61,6 @@
     <div class="pagination">
         Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        @*     @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
     </div>
 </body>                                                                        

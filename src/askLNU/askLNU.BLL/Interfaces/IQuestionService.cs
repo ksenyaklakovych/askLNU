@@ -11,5 +11,8 @@ namespace askLNU.BLL.Interfaces
         public QuestionDTO GetQuestion(int? id);
         public IEnumerable<QuestionDTO> GetAll();
         public void Dispose();
+
+        public int GetIdByFacutyName(string name);
+        public IEnumerable<FacultyDTO> GetAllFaculties();
     }
 }
