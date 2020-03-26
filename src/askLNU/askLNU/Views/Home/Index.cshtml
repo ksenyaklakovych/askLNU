@@ -1,5 +1,9 @@
-﻿@model IEnumerable<askLNU.ViewModels.QuestionViewModel>
-
+﻿@*@model IEnumerable<askLNU.ViewModels.QuestionViewModel>*@
+@model PagedList.IPagedList<askLNU.ViewModels.QuestionViewModel>
+@using PagedList.Mvc;
+@using PagedList;
+@*@model PagedList.IPagedList<MVC_Views.Models.ViewModel>*@
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
     ViewData["Title"] = "Index";
 }
@@ -39,4 +43,9 @@
             </div>
         }
     </div>
-</body>
+    <div class="pagination">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    </div>
+</body>                                                                        

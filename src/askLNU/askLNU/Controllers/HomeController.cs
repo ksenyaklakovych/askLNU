@@ -1,4 +1,5 @@
 ﻿using System;
+using PagedList;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -24,10 +25,12 @@ namespace askLNU.Controllers
             _mapper = new Mapper(config);
         }
         
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
             var questions = _mapper.Map<IEnumerable<QuestionViewModel>>(_questionService.GetAll());
-            return View(questions);
+            return View(questions.ToPagedList(pageNumber, pageSize));
         }
 
         public IActionResult Privacy()
