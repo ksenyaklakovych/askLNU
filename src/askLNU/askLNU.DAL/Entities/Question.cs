@@ -8,6 +8,19 @@ namespace askLNU.DAL.Entities
 {
     public class Question
     {
+        public Question()
+        {
+
+        }
+
+        public Question(string applicationUserId, string title, string text, DateTime date)
+        {
+            ApplicationUserId = applicationUserId;
+            Title = title;
+            Text = text;
+            Date = date;
+        }
+
         [Key]
         public int Id { get; set; }
         

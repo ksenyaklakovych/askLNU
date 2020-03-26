@@ -66,7 +66,19 @@ namespace askLNU.BLL.Services
 
             if (appLicationUser != null)
             {
-                return _mapper.Map<UserDTO>(appLicationUser);
+                //return _mapper.Map<UserDTO>(appLicationUser);
+                return new UserDTO
+                {
+                    Id = appLicationUser.Id,
+                    UserName = appLicationUser.UserName,
+                    Name = appLicationUser.Name,
+                    Surname = appLicationUser.Surname,
+                    Course = appLicationUser.Course,
+                    FacultyId = appLicationUser.FacultyId,
+                    ImageSrc = appLicationUser.ImageSrc,
+                    IsBlocked = appLicationUser.IsBlocked,
+                    Email = appLicationUser.Email
+                };
             }
             else
             {
