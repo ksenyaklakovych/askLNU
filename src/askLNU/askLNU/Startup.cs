@@ -15,6 +15,9 @@ using askLNU.BLL.Configs;
 using askLNU.BLL.Infrastructure;
 using askLNU.BLL.Services;
 using askLNU.BLL.Interfaces;
+using askLNU.DAL.EF;
+using askLNU.DAL.Interfaces;
+using askLNU.DAL.Repositories;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using AutoMapper;
 
@@ -35,9 +38,14 @@ namespace askLNU
             services.Configure<AdminConfig>(Configuration.GetSection("AdminConfig"));
             services.AddDALDependencies(Configuration.GetConnectionString("DefaultConnection"));
 
+
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISignInService, SignInService>();
-           
+            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
+
+            services.AddTransient<IQuestionService, QuestionService>();
+
+
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
 

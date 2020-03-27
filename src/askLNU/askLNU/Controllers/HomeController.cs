@@ -1,4 +1,5 @@
 ﻿using System;
+using PagedList;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,21 +7,38 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using askLNU.ViewModels;
+using askLNU.BLL.Interfaces;
+using askLNU.BLL.DTO;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace askLNU.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+       // private readonly ILogger<HomeController> _logger;
+        private readonly IQuestionService _questionService;
+        private Mapper _mapper;
+        public HomeController(IQuestionService service)
         {
-            _logger = logger;
+            _questionService = service;
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<QuestionDTO, QuestionViewModel>());
+            _mapper = new Mapper(config);
         }
-
-        public IActionResult Index()
+        
+        public ActionResult Index(int? page, string Faculties)
         {
-            return View();
+            var questions = _mapper.Map<IEnumerable<QuestionViewModel>>(_questionService.GetAll());
+            var facultyID =_questionService.GetIdByFacutyName(Faculties);
+            var nameFaculties = new SelectList(_questionService.GetAllFaculties().Select(f=>f.Title).ToList());
+            ViewBag.Faculties = nameFaculties;
+            if (!String.IsNullOrEmpty(Faculties))
+            {
+                questions = questions.Where(s=>s.FacultyId==facultyID);
+            }
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            return View(questions.ToPagedList(pageNumber, pageSize));
         }
 
         public IActionResult Privacy()
