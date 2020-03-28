@@ -1,0 +1,69 @@
+﻿@model IEnumerable<askLNU.ViewModels.UserProfileViewModel>
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    <div class="container">
+        <h1>@ViewData["Title"]</h1>
+
+        <div class="border border-warning">
+            <div class="row">
+                <div class="col-sm">
+                    <h2>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </h2>
+                </div>
+                <div>
+                    <h2>
+                        @Html.DisplayNameFor(model => model.UserName)
+                    </h2>
+                </div>
+                <div>
+                    <h2>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </h2>
+                </div>
+                <div>
+                    <h2>
+                        @Html.DisplayNameFor(model => model.Surname)
+                    </h2>
+                </div>
+                <div>
+                    <h2>
+                        @Html.DisplayNameFor(model => model.Course)
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        @foreach (var item in Model)
+        {
+            <div>
+                @Html.DisplayFor(modelItem => item.Email)
+            </div>
+            <div>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </div>
+            <div>
+                @Html.DisplayFor(modelItem => item.Name)
+            </div>
+            <div>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </div>
+            <div>
+                @Html.DisplayFor(modelItem => item.Course)
+            </div>
+        }
+    </div>
+
+   
+</body>
+</html>
