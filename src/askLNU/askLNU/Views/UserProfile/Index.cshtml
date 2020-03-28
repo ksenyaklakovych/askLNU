@@ -1,69 +1,55 @@
-﻿@model IEnumerable<askLNU.ViewModels.UserProfileViewModel>
+﻿@model askLNU.ViewModels.UserProfileViewModel
+
 @{
-    ViewData["Title"] = "User Profile";
+    ViewData["Title"] = "Index";
 }
 
+<h1>My profile</h1>
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-</head>
-<body>
-    <div class="container">
-        <h1>@ViewData["Title"]</h1>
-
-        <div class="border border-warning">
-            <div class="row">
-                <div class="col-sm">
-                    <h2>
-                        @Html.DisplayNameFor(model => model.Email)
-                    </h2>
-                </div>
-                <div>
-                    <h2>
-                        @Html.DisplayNameFor(model => model.UserName)
-                    </h2>
-                </div>
-                <div>
-                    <h2>
-                        @Html.DisplayNameFor(model => model.Name)
-                    </h2>
-                </div>
-                <div>
-                    <h2>
-                        @Html.DisplayNameFor(model => model.Surname)
-                    </h2>
-                </div>
-                <div>
-                    <h2>
-                        @Html.DisplayNameFor(model => model.Course)
-                    </h2>
-                </div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-        </div>
-
-        @foreach (var item in Model)
-        {
-            <div>
-                @Html.DisplayFor(modelItem => item.Email)
+           
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
-            <div>
-                @Html.DisplayFor(modelItem => item.UserName)
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div>
-                @Html.DisplayFor(modelItem => item.Name)
+            <div class="form-group">
+                <label asp-for="Surname" class="control-label"></label>
+                <input asp-for="Surname" class="form-control" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
             </div>
-            <div>
-                @Html.DisplayFor(modelItem => item.Surname)
+            <div class="form-group">
+                <label asp-for="Course" class="control-label"></label>
+                <input asp-for="Course" class="form-control" />
+                <span asp-validation-for="Course" class="text-danger"></span>
             </div>
-            <div>
-                @Html.DisplayFor(modelItem => item.Course)
+            <div class="form-group">
+                <label asp-for="ImageSrc" class="control-label"></label>
+                <input asp-for="ImageSrc" class="form-control" />
+                <span asp-validation-for="ImageSrc" class="text-danger"></span>
             </div>
-        }
+            <div class="form-group">
+                <input type="submit" value="Save changes" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
+</div>
 
-   
-</body>
-</html>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
