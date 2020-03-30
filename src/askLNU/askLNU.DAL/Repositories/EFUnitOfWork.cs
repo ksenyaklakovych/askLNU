@@ -16,6 +16,7 @@ namespace askLNU.DAL.Repositories
         private LabelRepository labelRepository;
         private NotificationRepository notificationRepository;
         private QuestionRepository questionRepository;
+        private QuestionTagRepository questionTagRepository;
         private TagRepository tagRepository;
 
 
@@ -32,7 +33,15 @@ namespace askLNU.DAL.Repositories
                 return answerRepository;
             }
         }
-
+        public IRepository<QuestionTag> QuestionTag
+        {
+            get
+            {
+                if (questionTagRepository == null)
+                    questionTagRepository = new QuestionTagRepository(db);
+                return questionTagRepository;
+            }
+        }
         public IRepository<Faculty> Faculties
         {
             get

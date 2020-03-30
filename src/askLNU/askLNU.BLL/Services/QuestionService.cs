@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using askLNU.BLL.DTO;
 using askLNU.DAL.Entities;
 using askLNU.DAL.Interfaces;
@@ -83,5 +84,18 @@ namespace askLNU.BLL.Services
 
         }
 
+        public IEnumerable<string> GetTagsByQuestionID(int? id)
+        {
+            if (id != null)
+            {
+                var tagsIds = _unitOfWork.QuestionTag.GetAll().Where(q=>q.QuestionId==id.Value).Select(q=>q.TagId).ToList();
+                var tagsTexts = _unitOfWork.Tags.GetAll().Where(t => tagsIds.Contains(t.Id)).Select(t => t.Text);
+                return tagsTexts;
+            }
+            else
+            {
+                throw new ArgumentNullException("id");
+            }
+        }
     }
 }

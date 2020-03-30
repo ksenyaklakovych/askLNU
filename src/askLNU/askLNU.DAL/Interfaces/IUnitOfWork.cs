@@ -12,6 +12,7 @@ namespace askLNU.DAL.Interfaces
         IRepository<Label> Labels { get; }
         IRepository<Notification> Notifications { get; }
         IRepository<Question> Questions { get; }
+        IRepository<QuestionTag> QuestionTag { get; }
         IRepository<Tag> Tags { get; }
 
         void Save();

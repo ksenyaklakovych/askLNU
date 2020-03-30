@@ -31,31 +31,39 @@
     <div class="container">
         @foreach (var item in Model)
         {
-            <div class="border border-warning">
-                <div class="row">
-                    <div class="col-sm">
-                        <h2>
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </h2>
-                    </div>
+        <div class="border border-warning">
+            <div class="row">
+                <div class="col-sm">
+                    <h2>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </h2>
                 </div>
-                <div class="row">
-                    <div class="col-8">
-                        @Html.DisplayFor(modelItem => item.Text)
-                    </div>
-                    <div class="col-4">
-                        <h4>
-                            Rate: @Html.DisplayFor(modelItem => item.Rating)
-                        </h4>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm">
-                        Created on: @Html.DisplayFor(modelItem => item.Date)
-                    </div>
-                </div>
-                <a>@Html.ActionLink("Details", "QuestionDetails", new { id = item.Id }, new { @class = "card-link" })</a>
             </div>
+            <div class="row">
+                <div class="col-8">
+                    @Html.DisplayFor(modelItem => item.Text)
+                </div>
+                <div class="col-4">
+                    <h4>
+                        Rate: @Html.DisplayFor(modelItem => item.Rating)
+                    </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    Created on: @Html.DisplayFor(modelItem => item.Date)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    @foreach (var tag in item.Tags)
+                    {
+                        <p class="btn btn-sm btn-dark">@tag </p>
+                    }
+                </div>
+            </div>
+            <a>@Html.ActionLink("Details", "QuestionDetails", new { id = item.Id }, new { @class = "card-link" })</a>
+        </div>
         }
     </div>
     <div class="pagination">

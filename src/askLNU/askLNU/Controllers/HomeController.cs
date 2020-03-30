@@ -28,17 +28,29 @@ namespace askLNU.Controllers
         
         public ActionResult Index(int? page, string Faculties)
         {
-            var questions = _mapper.Map<IEnumerable<QuestionViewModel>>(_questionService.GetAll());
+            var questions = _mapper.Map<IEnumerable<QuestionViewModel>>(_questionService.GetAll()).ToList();
+            for (int i = 0; i < questions.Count(); i++)
+            {
+                questions[i].Tags = _questionService.GetTagsByQuestionID(questions[i].Id).ToList();
+            }
+
+            IEnumerable<QuestionViewModel> questionsWithTags = questions;
+
             var facultyID =_questionService.GetIdByFacutyName(Faculties);
             var nameFaculties = new SelectList(_questionService.GetAllFaculties().Select(f=>f.Title).ToList());
             ViewBag.Faculties = nameFaculties;
+           
             if (!String.IsNullOrEmpty(Faculties))
             {
-                questions = questions.Where(s=>s.FacultyId==facultyID);
+                questionsWithTags = questionsWithTags.Where(s=>s.FacultyId==facultyID);
             }
+           
+            
+
             int pageSize = 5;
             int pageNumber = (page ?? 1);
-            return View(questions.ToPagedList(pageNumber, pageSize));
+           
+            return View(questionsWithTags.ToPagedList(pageNumber, pageSize));
         }
 
         public IActionResult Privacy()

@@ -15,5 +15,6 @@ namespace askLNU.ViewModels
         public bool IsSolved { get; set; }
         public DateTime Date { get; set; }
         public int? FacultyId { get; set; }
+        public List<string> Tags { get; set; }
     }
 }
