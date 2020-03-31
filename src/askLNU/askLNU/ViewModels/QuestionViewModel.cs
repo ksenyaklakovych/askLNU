@@ -16,5 +16,6 @@ namespace askLNU.ViewModels
         public DateTime Date { get; set; }
         public int? FacultyId { get; set; }
         public List<string> Tags { get; set; }
+        public int? numberOfAnswers { get; set; }
     }
 }

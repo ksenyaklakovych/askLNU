@@ -12,7 +12,7 @@ namespace askLNU.BLL.Interfaces
         public IEnumerable<QuestionDTO> GetAll();
         public void Dispose();
 
-        public int GetIdByFacutyName(string name);
+        public int GetFacultyIdByName(string name);
         public IEnumerable<FacultyDTO> GetAllFaculties();
         public IEnumerable<string> GetTagsByQuestionID(int? id);
     }

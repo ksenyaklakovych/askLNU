@@ -44,6 +44,7 @@ namespace askLNU
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
 
             services.AddTransient<IQuestionService, QuestionService>();
+            services.AddTransient<IAnswerService, AnswerService>();
 
 
             services.AddTransient<IEmailSender, EmailSender>();

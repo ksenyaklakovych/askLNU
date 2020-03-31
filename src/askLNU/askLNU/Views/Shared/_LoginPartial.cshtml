@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using askLNU.BLL.Interfaces
 @inject ISignInService SignInService
+@*//inject userservice*@
+
 
 <ul class="navbar-nav">
 @if (SignInService.IsSignedIn(User))
