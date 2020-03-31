@@ -8,6 +8,7 @@ using askLNU.BLL.Infrastructure;
 using askLNU.BLL.Interfaces;
 using AutoMapper;
 using askLNU.BLL.Infrastructure.Exceptions;
+using System.Linq;
 
 namespace askLNU.BLL.Services
 {
@@ -62,6 +63,18 @@ namespace askLNU.BLL.Services
             }
         }
 
+        public int GetFacultyIdByName(string name)
+        {
+            try
+            {
+                var id = _unitOfWork.Faculties.GetAll().Where(f => f.Title == name).Select(f => f.Id).First();
+                return id;
+            }
+            catch(Exception)
+            {
+                return -1;
+            }
+        }
         public void Dispose()
         {
             _unitOfWork.Dispose();

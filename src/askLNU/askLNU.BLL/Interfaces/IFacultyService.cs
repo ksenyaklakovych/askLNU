@@ -11,5 +11,7 @@ namespace askLNU.BLL.Interfaces
         FacultyDTO GetFaculty(int? id);
         IEnumerable<FacultyDTO> GetAll();
         void Dispose();
+        public int GetFacultyIdByName(string name);
+
     }
 }

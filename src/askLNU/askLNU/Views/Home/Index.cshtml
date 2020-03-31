@@ -16,16 +16,21 @@
     <p>@Model.Count() questions</p>
     @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-horizontal" }))
     {
-        <div class="container">
-            <div class="row">
-                <div class="col-md-2">
-                    @Html.DropDownList("Faculties", "Faculty")
-                </div>
-                <div class="col-md-2" id="btext">
-                    <input type="submit" value="Filter" class="btn btn-warning" id="hello-btn" />
-                </div>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <label class="control-label">Tag: </label>
+            <input name="tag" class="form-control" />
         </div>
+        <div class="col-md-2">
+            @Html.DropDownList("Faculties", "Faculty")
+        </div>
+        <div class="col-md-2" id="btext">
+            <input type="submit" value="Filter" class="btn btn-warning" />
+        </div>
+    </div>
+
+</div>
     }
 
 

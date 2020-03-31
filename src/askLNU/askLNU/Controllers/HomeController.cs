@@ -18,16 +18,19 @@ namespace askLNU.Controllers
     {
         private readonly IQuestionService _questionService;
         private readonly IAnswerService _answerService;
+        private readonly IFacultyService _facultyService;
+
         private Mapper _mapper;
-        public HomeController(IQuestionService questService, IAnswerService answerService)
+        public HomeController(IQuestionService questService, IAnswerService answerService, IFacultyService facultyService)
         {
             _questionService = questService;
             _answerService = answerService;
+            _facultyService = facultyService;
             var config = new MapperConfiguration(cfg => cfg.CreateMap<QuestionDTO, QuestionViewModel>());
             _mapper = new Mapper(config);
         }
         
-        public ActionResult Index(int? page, string Faculties)
+        public ActionResult Index(int? page, string Faculties, string tag )
         {
             var questions = _mapper.Map<IEnumerable<QuestionViewModel>>(_questionService.GetAll()).ToList();
             
@@ -37,9 +40,32 @@ namespace askLNU.Controllers
                 questions[i].numberOfAnswers = _answerService.GetAnswersByQuestionId(questions[i].Id).Count();
             }
 
+            if (!String.IsNullOrEmpty(tag))
+            {
+                var list_of_questions = new List<QuestionViewModel> { };
+                for (int i = 0; i < questions.Count(); i++)
+                {
+                    var check = false;
+                    for (int j = 0; j < questions[i].Tags.Count(); j++)
+                    {
+                        if (questions[i].Tags[j].Contains(tag))
+                        {
+                            check = true;
+                            break;
+                        }
+                    }
+                    if (check == true)
+                    {
+                        list_of_questions.Add(questions[i]);
+
+                    }
+                }
+                questions = list_of_questions;
+            }
+           
             IEnumerable<QuestionViewModel> questionsWithTags = questions;
 
-            var facultyID =_questionService.GetFacultyIdByName(Faculties);
+            var facultyID =_facultyService.GetFacultyIdByName(Faculties);
             var nameFaculties = new SelectList(_questionService.GetAllFaculties().Select(f=>f.Title).ToList());
             ViewBag.Faculties = nameFaculties;
            
@@ -47,6 +73,7 @@ namespace askLNU.Controllers
             {
                 questionsWithTags = questionsWithTags.Where(s=>s.FacultyId==facultyID);
             }
+
            
             int pageSize = 5;
             int pageNumber = (page ?? 1);

@@ -65,11 +65,7 @@ namespace askLNU.BLL.Services
         {
             return _mapper.Map<IEnumerable<Question>, List<QuestionDTO>>(_unitOfWork.Questions.GetAll());
         }
-        public int GetFacultyIdByName(string name)
-        {
-            var allFaculties=_unitOfWork.Faculties.GetAll().Where(f=>f.Title==name).Select(f=>f.Id);
-            return -1;
-        }
+      
 
         public IEnumerable<FacultyDTO> GetAllFaculties()
         {
