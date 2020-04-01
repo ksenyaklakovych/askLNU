@@ -50,8 +50,26 @@ namespace askLNU.Tests
             Assert.NotEmpty(result);
             Assert.Equal(3, result.Count());
             Assert.Equal(fakeQuestionsList.First().Text, result.First().Text);
-
         }
 
+        [Fact]
+        public void GetTagsByQuestionID_passNullId_ShouldReturnTrue()
+        {
+            int? id = 0;
+            if (id == 0)
+            {
+                id = null;
+            }
+            //Arrange
+            fakeIUnitOfWork.Setup(m => m.QuestionTag.GetAll()).Returns((IEnumerable<QuestionTag>)null);
+
+            //Act
+            QuestionService questionService = new QuestionService(fakeIUnitOfWork.Object, _mapper);
+
+            //Assert
+            Action act = () => questionService.GetTagsByQuestionID(id);
+            var exception = Assert.Throws<ArgumentNullException>(act);
+            Assert.Equal("Value cannot be null. (Parameter 'id')", exception.Message);
+        }
     }
 }
