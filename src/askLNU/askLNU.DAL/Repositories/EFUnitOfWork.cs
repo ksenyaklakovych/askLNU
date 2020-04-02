@@ -18,6 +18,7 @@ namespace askLNU.DAL.Repositories
         private QuestionRepository questionRepository;
         private QuestionTagRepository questionTagRepository;
         private TagRepository tagRepository;
+        private ApplicationUserFavoriteQuestionRepository favoriteQuestionRepository;
 
 
         public EFUnitOfWork(ApplicationDbContext context)
@@ -88,7 +89,15 @@ namespace askLNU.DAL.Repositories
                 return tagRepository;
             }
         }
-
+        public IRepository<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestion
+        {
+            get
+            {
+                if (favoriteQuestionRepository == null)
+                    favoriteQuestionRepository = new ApplicationUserFavoriteQuestionRepository(db);
+                return favoriteQuestionRepository;
+            }
+        }
         public void Save()
         {
             db.SaveChanges();

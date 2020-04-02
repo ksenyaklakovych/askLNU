@@ -21,6 +21,7 @@ namespace askLNU.DAL.EF
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<QuestionTag> QuestionTag { get; set; }
+        public DbSet<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestion { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

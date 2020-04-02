@@ -11,6 +11,8 @@ using askLNU.BLL.Interfaces;
 using askLNU.BLL.DTO;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
+using askLNU.DAL.Entities;
 
 namespace askLNU.Controllers
 {
@@ -19,25 +21,35 @@ namespace askLNU.Controllers
         private readonly IQuestionService _questionService;
         private readonly IAnswerService _answerService;
         private readonly IFacultyService _facultyService;
+        private readonly UserManager<ApplicationUser> _userManager;
+
 
         private Mapper _mapper;
-        public HomeController(IQuestionService questService, IAnswerService answerService, IFacultyService facultyService)
+        public HomeController(IQuestionService questService, IAnswerService answerService, IFacultyService facultyService, UserManager<ApplicationUser> userManager)
         {
             _questionService = questService;
             _answerService = answerService;
             _facultyService = facultyService;
+            _userManager = userManager;
             var config = new MapperConfiguration(cfg => cfg.CreateMap<QuestionDTO, QuestionViewModel>());
             _mapper = new Mapper(config);
         }
         
-        public ActionResult Index(int? page, string Faculties, string tag )
+        public async Task<IActionResult> Index(int? page, string Faculties, string tag )
         {
+            var userCurrent = await _userManager.GetUserAsync(User);
+
             var questions = _mapper.Map<IEnumerable<QuestionViewModel>>(_questionService.GetAll()).ToList();
             
             for (int i = 0; i < questions.Count(); i++)
             {
                 questions[i].Tags = _questionService.GetTagsByQuestionID(questions[i].Id).ToList();
                 questions[i].numberOfAnswers = _answerService.GetAnswersByQuestionId(questions[i].Id).Count();
+                if (userCurrent!=null)
+                {
+                    questions[i].IsFavorite = _questionService.IsQuestionFavorite(userCurrent.Id, questions[i].Id);
+
+                }
             }
 
             if (!String.IsNullOrEmpty(tag))
@@ -81,6 +93,19 @@ namespace askLNU.Controllers
             return View(questionsWithTags.ToPagedList(pageNumber, pageSize));
         }
 
+        public async Task<IActionResult> AddToFavorites(int questionId)
+        {
+            var userCurrent = await _userManager.GetUserAsync(User);
+            if (_questionService.IsQuestionFavorite(userCurrent.Id,questionId))
+            {
+                _questionService.RemoveFromFavorites(userCurrent.Id, questionId);
+            }
+            else
+            {
+                _questionService.AddToFavorites(userCurrent.Id, questionId);
+            }
+            return RedirectToAction("Index");
+        }
         public IActionResult Privacy()
         {
             return View();

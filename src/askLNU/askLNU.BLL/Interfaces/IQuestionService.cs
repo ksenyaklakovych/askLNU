@@ -14,5 +14,8 @@ namespace askLNU.BLL.Interfaces
 
         public IEnumerable<FacultyDTO> GetAllFaculties();
         public IEnumerable<string> GetTagsByQuestionID(int? id);
+        public void AddToFavorites(string userId, int questionId);
+        public bool IsQuestionFavorite(string userId, int questionId);
+        public void RemoveFromFavorites(string userId, int questionId);
     }
 }

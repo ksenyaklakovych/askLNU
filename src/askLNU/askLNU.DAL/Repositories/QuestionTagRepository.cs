@@ -51,5 +51,10 @@ namespace askLNU.DAL.Repositories
             if (answer != null)
                 db.QuestionTag.Remove(answer);
         }
+
+        public void Remove(string id, int qId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -65,7 +65,7 @@ namespace askLNU.BLL.Services
         {
             return _mapper.Map<IEnumerable<Question>, List<QuestionDTO>>(_unitOfWork.Questions.GetAll());
         }
-      
+
 
         public IEnumerable<FacultyDTO> GetAllFaculties()
         {
@@ -77,7 +77,7 @@ namespace askLNU.BLL.Services
         {
             if (id != null)
             {
-                var tagsIds = _unitOfWork.QuestionTag.GetAll().Where(q=>q.QuestionId==id.Value).Select(q=>q.TagId).ToList();
+                var tagsIds = _unitOfWork.QuestionTag.GetAll().Where(q => q.QuestionId == id.Value).Select(q => q.TagId).ToList();
                 var tagsTexts = _unitOfWork.Tags.GetAll().Where(t => tagsIds.Contains(t.Id)).Select(t => t.Text);
                 return tagsTexts;
             }
@@ -85,6 +85,25 @@ namespace askLNU.BLL.Services
             {
                 throw new ArgumentNullException("id");
             }
+        }
+
+        public void AddToFavorites(string userId, int questionId)
+        {
+            ApplicationUserFavoriteQuestion userFavoriteQuestion = new ApplicationUserFavoriteQuestion { ApplicationUserId = userId, QuestionId = questionId };
+            _unitOfWork.ApplicationUserFavoriteQuestion.Create(userFavoriteQuestion);
+            _unitOfWork.Save();
+        }
+        public void RemoveFromFavorites(string userId, int questionId)
+        {
+            _unitOfWork.ApplicationUserFavoriteQuestion.Remove(userId,questionId);
+            _unitOfWork.Save();
+        }
+        
+
+        public bool IsQuestionFavorite(string userId, int questionId)
+        {
+            bool result=_unitOfWork.ApplicationUserFavoriteQuestion.GetAll().Any(q => q.ApplicationUserId == userId && q.QuestionId == questionId);
+            return result;
         }
     }
 }
