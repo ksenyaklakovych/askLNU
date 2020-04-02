@@ -99,7 +99,6 @@ namespace askLNU.BLL.Services
             _unitOfWork.Save();
         }
         
-
         public bool IsQuestionFavorite(string userId, int questionId)
         {
             bool result=_unitOfWork.ApplicationUserFavoriteQuestion.GetAll().Any(q => q.ApplicationUserId == userId && q.QuestionId == questionId);

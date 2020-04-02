@@ -71,5 +71,40 @@ namespace askLNU.Tests
             var exception = Assert.Throws<ArgumentNullException>(act);
             Assert.Equal("Value cannot be null. (Parameter 'id')", exception.Message);
         }
+        [Fact]
+        public void GetTagsByQuestionID_passCorrectId_ShouldReturnTrue()
+        {
+            int id = 1;
+            IEnumerable<QuestionTag> questionTags = new List<QuestionTag> { new QuestionTag(1,1),new QuestionTag(1,2)};
+            IEnumerable<Tag> tags = new List<Tag> { new Tag(1,"tag1"),new Tag(2,"tag2")};
+            //Arrange
+            fakeIUnitOfWork.Setup(m => m.QuestionTag.GetAll()).Returns(questionTags);
+            fakeIUnitOfWork.Setup(m => m.Tags.GetAll()).Returns(tags);
+
+            //Act
+            QuestionService questionService = new QuestionService(fakeIUnitOfWork.Object, _mapper);
+
+            //Assert
+            var result=questionService.GetTagsByQuestionID(id);
+            Assert.Equal(2, result.Count());
+        }
+        
+        [Fact]
+        public void IsQuestionFavorite_returnsFalse()
+        {
+            string userId = "1";
+            int questionId = 1;
+            IEnumerable<ApplicationUserFavoriteQuestion> userFavoriteQuestions = new List<ApplicationUserFavoriteQuestion> { new ApplicationUserFavoriteQuestion("1",2) };
+
+            //Arrange
+            fakeIUnitOfWork.Setup(m => m.ApplicationUserFavoriteQuestion.GetAll()).Returns(userFavoriteQuestions);
+
+            //Act
+            QuestionService questionService = new QuestionService(fakeIUnitOfWork.Object, _mapper);
+
+            //Assert
+            var result = questionService.IsQuestionFavorite(userId, questionId);
+            Assert.False(result);
+        }
     }
 }

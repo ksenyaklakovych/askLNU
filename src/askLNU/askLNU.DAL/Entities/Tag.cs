@@ -8,6 +8,17 @@ namespace askLNU.DAL.Entities
 {
     public class Tag
     {
+        public Tag()
+        {
+
+        }
+
+        public Tag(int id, string text)
+        {
+            Id = id;
+            Text = text;
+        }
+
         [Key]
         public int Id { get; set; }
 
