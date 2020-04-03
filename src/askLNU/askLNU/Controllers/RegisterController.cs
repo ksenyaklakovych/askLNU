@@ -20,15 +20,18 @@ namespace askLNU.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IUserService _userService;
         private readonly ISignInService _signInService;
+        private readonly IImageService _imageService;
 
         public RegisterController(
             IEmailSender emailSender,
             IUserService userService,
-            ISignInService signInService)
+            ISignInService signInService,
+            IImageService imageService)
         {
             _emailSender = emailSender;
             _userService = userService;
             _signInService = signInService;
+            _imageService = imageService;
         }
 
         public IActionResult Index()
@@ -52,14 +55,15 @@ namespace askLNU.Controllers
                     Email = registerInputModel.Email,
                     Name = registerInputModel.Name,
                     Surname = registerInputModel.Surname,
-                    Course = registerInputModel.Course,
-                    ImageSrc = registerInputModel.ImageSrc
+                    Course = registerInputModel.Course
                 };
 
                 var result = await _userService.CreateUserAsync(user, registerInputModel.Password);
                 if (result.Succeeded)
                 {
                     user = await _userService.GetByEmailAsync(user.Email);
+                    var imageSrc = await _imageService.SaveImage(registerInputModel.Image);
+                    await _userService.UpdateImage(user.Id, imageSrc);
 
                     var code = await _userService.GenerateEmailConfirmationTokenAsync(user.Id);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

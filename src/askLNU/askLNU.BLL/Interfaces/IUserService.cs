@@ -17,5 +17,6 @@ namespace askLNU.BLL.Interfaces
         Task<string> GenerateEmailConfirmationTokenAsync(string userId);
         bool RequireConfirmedAccount();
         string GetUserId(ClaimsPrincipal claims);
+        Task<IdentityResult> UpdateImage(string userId, string imageSrc);
     }
 }
