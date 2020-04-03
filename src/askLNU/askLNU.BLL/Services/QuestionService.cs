@@ -22,17 +22,19 @@ namespace askLNU.BLL.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public void CreateQuestion(QuestionDTO answerDto)
+
+        public void CreateQuestion(QuestionDTO questionDTO)
         {
-            if (answerDto != null)
+            if (questionDTO != null)
             {
-                Question answer = _mapper.Map<Question>(answerDto);
-                _unitOfWork.Questions.Create(answer);
+                Question question = _mapper.Map<Question>(questionDTO);
+                _unitOfWork.Questions.Create(question);
                 _unitOfWork.Save();
+                questionDTO.Id = question.Id;
             }
             else
             {
-                throw new ArgumentNullException("answerDto");
+                throw new ArgumentNullException("questionDTO");
             }
         }
 
@@ -40,14 +42,14 @@ namespace askLNU.BLL.Services
         {
             if (id != null)
             {
-                var answer = _unitOfWork.Questions.Get(id.Value);
-                if (answer != null)
+                var question = _unitOfWork.Questions.Get(id.Value);
+                if (question != null)
                 {
-                    return _mapper.Map<QuestionDTO>(answer);
+                    return _mapper.Map<QuestionDTO>(question);
                 }
                 else
                 {
-                    throw new ItemNotFoundException($"Answer not found.");
+                    throw new ItemNotFoundException("Question not found.");
                 }
             }
             else
@@ -88,7 +90,7 @@ namespace askLNU.BLL.Services
         {
             if (id != null)
             {
-                var tagsIds = _unitOfWork.QuestionTag.GetAll().Where(q=>q.QuestionId==id.Value).Select(q=>q.TagId).ToList();
+                var tagsIds = _unitOfWork.QuestionTag.GetAll().Where(q => q.QuestionId == id.Value).Select(q => q.TagId).ToList();
                 var tagsTexts = _unitOfWork.Tags.GetAll().Where(t => tagsIds.Contains(t.Id)).Select(t => t.Text);
                 return tagsTexts;
             }
@@ -96,6 +98,13 @@ namespace askLNU.BLL.Services
             {
                 throw new ArgumentNullException("id");
             }
+        }
+
+        public void AddTag(int questionId, int tagId)
+        {
+            var question = _unitOfWork.Questions.Get(questionId);
+            question.QuestionTags.Add(new QuestionTag { QuestionId = questionId, TagId = tagId });
+            _unitOfWork.Save();
         }
     }
 }
