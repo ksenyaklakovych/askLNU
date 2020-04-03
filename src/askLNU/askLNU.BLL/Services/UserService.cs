@@ -113,5 +113,12 @@ namespace askLNU.BLL.Services
         {
             return _userManager.GetUserId(claims);
         }
+
+        public async Task<IdentityResult> UpdateImage(string userId, string imageSrc)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            user.ImageSrc = imageSrc;
+            return await _userManager.UpdateAsync(user);
+        }
     }
 }

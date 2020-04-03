@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -22,6 +23,6 @@ namespace askLNU.InputModels
 
         public int Course { get; set; }
 
-        public string ImageSrc { get; set; }
+        public IFormFile Image { get; set; }
     }
 }

@@ -36,19 +36,20 @@ namespace askLNU
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AdminConfig>(Configuration.GetSection("AdminConfig"));
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.Configure<CloudinaryConfig>(Configuration.GetSection("CloudinaryConfig"));
+
+
             services.AddDALDependencies(Configuration.GetConnectionString("DefaultConnection"));
 
-
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
-
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISignInService, SignInService>();
             services.AddTransient<IQuestionService, QuestionService>();
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<IFacultyService, FacultyService>();
             services.AddTransient<IEmailSender, EmailSender>();
-
-            services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.AddTransient<IImageService, ImageService>();
 
             services.Configure<IdentityOptions>(options =>
             {

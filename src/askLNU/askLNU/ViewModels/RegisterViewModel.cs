@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -45,7 +46,7 @@ namespace askLNU.ViewModels
         public int Course { get; set; }
 
         [Display(Name = "Profile Image")]
-        public string ImageSrc { get; set; }
+        public IFormFile Image { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
     }
