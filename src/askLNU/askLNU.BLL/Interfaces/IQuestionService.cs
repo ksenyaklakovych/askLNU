@@ -14,5 +14,7 @@ namespace askLNU.BLL.Interfaces
 
         public int GetIdByFacutyName(string name);
         public IEnumerable<FacultyDTO> GetAllFaculties();
+
+        void AddTag(int questionId, int tagId);
     }
 }

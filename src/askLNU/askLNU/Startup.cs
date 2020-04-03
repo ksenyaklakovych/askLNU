@@ -39,14 +39,15 @@ namespace askLNU
             services.AddDALDependencies(Configuration.GetConnectionString("DefaultConnection"));
 
 
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ISignInService, SignInService>();
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
 
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ISignInService, SignInService>();
             services.AddTransient<IQuestionService, QuestionService>();
-
-
+            services.AddTransient<ITagService, TagService>();
+            services.AddTransient<IFacultyService, FacultyService>();
             services.AddTransient<IEmailSender, EmailSender>();
+
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.Configure<IdentityOptions>(options =>
@@ -57,6 +58,7 @@ namespace askLNU
             services.AddAutoMapper();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/Login");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
