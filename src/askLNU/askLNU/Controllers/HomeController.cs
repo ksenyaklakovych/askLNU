@@ -13,6 +13,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using askLNU.DAL.Entities;
+using System.Linq;
 
 namespace askLNU.Controllers
 {
@@ -35,12 +36,13 @@ namespace askLNU.Controllers
             _mapper = new Mapper(config);
         }
         
-        public async Task<IActionResult> Index(int? page, string Faculties, string tag )
+        public async Task<IActionResult> Index(int? page, string Faculties, string tag,string sortMethod)
         {
+            //checking which user is logged in
             var userCurrent = await _userManager.GetUserAsync(User);
-
+            // get all questions from DataBase 
             var questions = _mapper.Map<IEnumerable<QuestionViewModel>>(_questionService.GetAll()).ToList();
-            
+            //filling all class properties from another table from DataBase
             for (int i = 0; i < questions.Count(); i++)
             {
                 questions[i].Tags = _questionService.GetTagsByQuestionID(questions[i].Id).ToList();
@@ -51,7 +53,7 @@ namespace askLNU.Controllers
 
                 }
             }
-
+            //checking if tag field isn't empty
             if (!String.IsNullOrEmpty(tag))
             {
                 var list_of_questions = new List<QuestionViewModel> { };
@@ -73,21 +75,39 @@ namespace askLNU.Controllers
                     }
                 }
                 questions = list_of_questions;
-            }
-           
-            IEnumerable<QuestionViewModel> questionsWithTags = questions;
 
+            }
+            //change list to IEnumerable
+            IEnumerable<QuestionViewModel> questionsWithTags = questions;
+            //create ViewBag to pass sorting methods to View 
+            ViewBag.sortMethod = new SelectList(new List<string> {"Rating","Date","Number of answers" });
+            //sort depending on sort method
+            switch (sortMethod)
+            {
+                case "Rating":
+                    questionsWithTags = questionsWithTags.OrderBy(s => s.Rating);
+                    break;
+                case "Date":
+                    questionsWithTags = questionsWithTags.OrderBy(s => s.Date);
+                    break;
+                case "Number of answers":
+                    questionsWithTags = questionsWithTags.OrderBy(s => s.numberOfAnswers);
+                    break;
+            }
+            //get faculty id
             var facultyID =_facultyService.GetFacultyIdByName(Faculties);
+            // get list of names of faculties
             var nameFaculties = new SelectList(_questionService.GetAllFaculties().Select(f=>f.Title).ToList());
+            //add faculty name to ViewBag to have names in DropDown kist in View
             ViewBag.Faculties = nameFaculties;
-           
+            // filters all guestions by faculty_id
             if (!String.IsNullOrEmpty(Faculties))
             {
                 questionsWithTags = questionsWithTags.Where(s=>s.FacultyId==facultyID);
             }
 
-           
-            int pageSize = 5;
+           // paganation of mainpage
+            int pageSize = 4;
             int pageNumber = (page ?? 1);
            
             return View(questionsWithTags.ToPagedList(pageNumber, pageSize));
