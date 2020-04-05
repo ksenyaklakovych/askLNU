@@ -29,6 +29,8 @@ namespace askLNU.DAL.Repositories
         {
             return db.Questions
                 .Include(q => q.QuestionTags)
+                .Include(q => q.ApplicationUserVotedQuestions)
+                .Include(q => q.Answers)
                 .Single(q => q.Id == id);
         }
 

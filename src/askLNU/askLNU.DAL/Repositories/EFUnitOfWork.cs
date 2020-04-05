@@ -18,6 +18,7 @@ namespace askLNU.DAL.Repositories
         private QuestionRepository questionRepository;
         private QuestionTagRepository questionTagRepository;
         private TagRepository tagRepository;
+        private ApplicationUserVotedQuestionRepository applicationUserVotedQuestionRepository;
 
 
         public EFUnitOfWork(ApplicationDbContext context)
@@ -86,6 +87,16 @@ namespace askLNU.DAL.Repositories
                 if (tagRepository == null)
                     tagRepository = new TagRepository(db);
                 return tagRepository;
+            }
+        }
+
+        public IRepository<ApplicationUserVotedQuestion> ApplicationUserVotedQuestions
+        {
+            get
+            {
+                if (applicationUserVotedQuestionRepository == null)
+                    applicationUserVotedQuestionRepository = new ApplicationUserVotedQuestionRepository(db);
+                return applicationUserVotedQuestionRepository;
             }
         }
 

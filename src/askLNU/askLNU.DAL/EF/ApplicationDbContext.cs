@@ -21,6 +21,7 @@ namespace askLNU.DAL.EF
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<QuestionTag> QuestionTag { get; set; }
+        public DbSet<ApplicationUserVotedQuestion> ApplicationUserVotedQuestions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,6 +33,9 @@ namespace askLNU.DAL.EF
 
             builder.Entity<QuestionTag>()
                 .HasKey(o => new { o.QuestionId, o.TagId });
+
+            builder.Entity<ApplicationUserVotedQuestion>()
+                .HasKey(o => new { o.ApplicationUserId, o.QuestionId });
 
             // Seed data
             builder.Entity<Faculty>().HasData(
