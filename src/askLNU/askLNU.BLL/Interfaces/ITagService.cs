@@ -12,5 +12,6 @@ namespace askLNU.BLL.Interfaces
         void Dispose();
         int FindOrCreate(string tagText);
         List<string> FindTags(string searchString);
+        TagDTO GetTag(int id);
     }
 }

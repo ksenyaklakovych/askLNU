@@ -64,5 +64,11 @@ namespace askLNU.BLL.Services
             var tags = _unitOfWork.Tags.GetAll();
             return _mapper.Map<IEnumerable<TagDTO>>(tags);
         }
+
+        public TagDTO GetTag(int id)
+        {
+            var tag = _unitOfWork.Tags.Get(id);
+            return _mapper.Map<TagDTO>(tag);
+        }
     }
 }

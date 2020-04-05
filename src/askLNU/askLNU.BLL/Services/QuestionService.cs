@@ -106,5 +106,85 @@ namespace askLNU.BLL.Services
             question.QuestionTags.Add(new QuestionTag { QuestionId = questionId, TagId = tagId });
             _unitOfWork.Save();
         }
+
+        private int Vote(string userId, int questionId, bool voteUp = false, bool voteDown = false)
+        {
+            var vote = _unitOfWork.ApplicationUserVotedQuestions
+                .Find(v => v.ApplicationUserId == userId && v.QuestionId == questionId).FirstOrDefault();
+
+            var question = _unitOfWork.Questions.Get(questionId);
+
+            if (vote == null)
+            {
+                _unitOfWork.ApplicationUserVotedQuestions.Create(new ApplicationUserVotedQuestion
+                {
+                    ApplicationUserId = userId,
+                    QuestionId = questionId,
+                    VotedUp = voteUp,
+                    VotedDown = voteDown
+                });
+                _unitOfWork.Save();
+
+                if (voteUp)
+                {
+                    question.Rating++;
+                }
+                else if (voteDown)
+                {
+                    question.Rating--;
+                }
+            }
+            else
+            {
+                if (!vote.VotedUp && !vote.VotedDown)
+                {
+                    if (voteUp)
+                    {
+                        question.Rating++;
+                        vote.VotedUp = true;
+                    }
+                    else if (voteDown)
+                    {
+                        question.Rating--;
+                        vote.VotedDown = true;
+                    }
+                }
+                else if (voteDown && vote.VotedUp)
+                {
+                    question.Rating--;
+                    vote.VotedUp = false;
+                }
+                else if (voteUp && vote.VotedDown)
+                {
+                    question.Rating++;
+                    vote.VotedDown = false;
+                }
+
+                _unitOfWork.ApplicationUserVotedQuestions.Update(vote);
+            }
+
+            _unitOfWork.Questions.Update(question);
+            _unitOfWork.Save();
+
+            return question.Rating;
+        }
+
+        public int VoteUp(string userId, int questionId)
+        {
+            return Vote(userId, questionId, voteUp: true);
+        }
+
+        public int VoteDown(string userId, int questionId)
+        {
+            return Vote(userId, questionId, voteDown: true);
+        }
+
+        public void AddAnswer(int questionId, AnswerDTO answer)
+        {
+            var question = _unitOfWork.Questions.Get(questionId);
+            question.Answers.Add(_mapper.Map<Answer>(answer));
+            _unitOfWork.Questions.Update(question);
+            _unitOfWork.Save();
+        }
     }
 }

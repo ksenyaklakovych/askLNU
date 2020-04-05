@@ -30,9 +30,38 @@ namespace askLNU.Controllers
             _userService = userService;
         }
 
-        public IActionResult Index()
+        [HttpGet("{controller}/{id}")]
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var question = _questionService.GetQuestion(id);
+            var author = await _userService.GetByIdAsync(question.ApplicationUserId);
+
+            var authorViewModel = new UserShortViewModel
+            {
+                UserName = author.UserName,
+                ImageSrc = author.ImageSrc
+            };
+
+            var viewModel = new QuestionViewModel
+            {
+                Id = question.Id,
+                Title = question.Title,
+                Text = question.Text,
+                Date = question.Date,
+                Author = authorViewModel,
+                Tags = question.TagsId.Select(id => _tagService.GetTag(id).Text).ToList(),
+                Rating = question.Rating,
+                Answers = question.Answers.Select(a => new AnswerViewModel
+                {
+                    Text = a.Text,
+                    Rating = a.Rating,
+                    IsSolution = a.IsSolution,
+                    Date = a.Date,
+                    AuthorName = _userService.GetByIdAsync(a.ApplicationUserId).Result.UserName
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [Authorize(Roles = "User")]
@@ -63,13 +92,52 @@ namespace askLNU.Controllers
 
             _questionService.CreateQuestion(questionDTO);
 
-            foreach (var tag in questionInput.Tags)
+            if (questionInput.Tags != null)
             {
-                var tagId = _tagService.FindOrCreate(tag);
-                _questionService.AddTag(questionDTO.Id, tagId);
+                foreach (var tag in questionInput.Tags)
+                {
+                    var tagId = _tagService.FindOrCreate(tag);
+                    _questionService.AddTag(questionDTO.Id, tagId);
+                }
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPost]
+        public IActionResult VoteUp(int questionId)
+        {
+            var userId = _userService.GetUserId(User);
+            _questionService.VoteUp(userId, questionId);
+
+            return RedirectToAction("Details", new { id = questionId });
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPost]
+        public IActionResult VoteDown(int questionId)
+        {
+            var userId = _userService.GetUserId(User);
+            _questionService.VoteDown(userId, questionId);
+
+            return RedirectToAction("Details", new { id = questionId });
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPost]
+        public IActionResult AddAnswer(int questionId, string answerText)
+        {
+            var answer = new AnswerDTO
+            {
+                Text = answerText,
+                ApplicationUserId = _userService.GetUserId(User),
+                Date = DateTime.UtcNow
+            };
+
+            _questionService.AddAnswer(questionId, answer);
+
+            return RedirectToAction("Details", new { id = questionId });
         }
     }
 }

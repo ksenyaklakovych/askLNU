@@ -62,7 +62,7 @@
                     }
                 </div>
             </div>
-            <a>@Html.ActionLink("Details", "QuestionDetails", new { id = item.Id }, new { @class = "card-link" })</a>
+            <a href="@Url.Action("Details", "Question", new { id = item.Id })">Details</a>
         </div>
         }
     </div>
