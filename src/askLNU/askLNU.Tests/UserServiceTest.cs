@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 using askLNU.BLL.DTO;
 using askLNU.BLL.Interfaces;
+using AutoMapper;
 
 namespace askLNU.Tests
 {
@@ -31,15 +32,19 @@ namespace askLNU.Tests
                     new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
             _logger = new Mock<ILogger<UserService>>();
         }
+   
         [Fact]
         public void GetByEmailAsync_WithCorrectEmail_ShouldReturnTrue()
         {
             string email = "test";
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<ApplicationUser, UserDTO>());
+            var _mapper = new Mapper(config);
+
             //Arrange
             var fakeUser = Task.Run(() => new ApplicationUser("TestName","TestSurname",1,false,"image.jpg"));
             fakeManager.Setup(m => m.FindByEmailAsync(email)).Returns(fakeUser);
             
-            UserService userService = new UserService(fakeManager.Object);
+            UserService userService = new UserService(fakeManager.Object,_mapper);
             //Act
             var result = userService.GetByEmailAsync(email);
 

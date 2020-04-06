@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using askLNU.BLL.DTO;
 using askLNU.DAL.Entities;
 using askLNU.DAL.Interfaces;
@@ -58,6 +59,20 @@ namespace askLNU.BLL.Services
         public void Dispose()
         {
             _unitOfWork.Dispose();
+        }
+
+        public IEnumerable<AnswerDTO> GetAnswersByQuestionId(int? id)
+        {
+            if (id != null)
+            {
+                var answers = _unitOfWork.Answers.GetAll().Where(a => a.QuestionId == id);
+                var answersDTOs= _mapper.Map<IEnumerable<AnswerDTO>>(answers);
+                return answersDTOs;
+            }
+            else
+            {
+                throw new ArgumentNullException("id");
+            }
         }
     }
 }

@@ -8,21 +8,23 @@ using askLNU.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace askLNU.Controllers
 {
     public class LoginController : Controller
     {
         private readonly ISignInService _signInService;
+        private readonly ILogger<LoginController> _logger;
 
-        public LoginController(ISignInService signInService)
+        public LoginController(ISignInService signInService, ILogger<LoginController> logger)
         {
             _signInService = signInService;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
         {
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             var viewModel = new LoginViewModel
@@ -42,7 +44,7 @@ namespace askLNU.Controllers
                 var result = await _signInService.PasswordSignInAsync(loginInputModel.UserName, loginInputModel.Password, loginInputModel.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    // _logger.LogInformation("User logged in.");
+                    _logger.LogInformation("User logged in.");
                     return RedirectToAction("Index", "Home");
                 }
                 if (result.RequiresTwoFactor)
@@ -51,7 +53,7 @@ namespace askLNU.Controllers
                 }
                 if (result.IsLockedOut)
                 {
-                    // _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
                 else
@@ -61,7 +63,6 @@ namespace askLNU.Controllers
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return View("Index");
         }
     }

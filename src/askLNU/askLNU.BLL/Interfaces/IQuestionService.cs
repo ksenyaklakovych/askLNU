@@ -12,9 +12,11 @@ namespace askLNU.BLL.Interfaces
         public IEnumerable<QuestionDTO> GetAll();
         public void Dispose();
 
-        public int GetIdByFacutyName(string name);
         public IEnumerable<FacultyDTO> GetAllFaculties();
         public IEnumerable<string> GetTagsByQuestionID(int? id);
+        public void AddToFavorites(string userId, int questionId);
+        public bool IsQuestionFavorite(string userId, int questionId);
+        public void RemoveFromFavorites(string userId, int questionId);
         void AddTag(int questionId, int tagId);
         int VoteUp(string userId, int questionId);
         int VoteDown(string userId, int questionId);

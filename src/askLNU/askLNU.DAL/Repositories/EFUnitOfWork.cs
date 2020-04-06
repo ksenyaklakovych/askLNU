@@ -18,6 +18,7 @@ namespace askLNU.DAL.Repositories
         private QuestionRepository questionRepository;
         private QuestionTagRepository questionTagRepository;
         private TagRepository tagRepository;
+        private ApplicationUserFavoriteQuestionRepository favoriteQuestionRepository;
         private ApplicationUserVotedQuestionRepository applicationUserVotedQuestionRepository;
 
 
@@ -87,6 +88,15 @@ namespace askLNU.DAL.Repositories
                 if (tagRepository == null)
                     tagRepository = new TagRepository(db);
                 return tagRepository;
+            }
+        }
+        public IRepository<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestion
+        {
+            get
+            {
+                if (favoriteQuestionRepository == null)
+                    favoriteQuestionRepository = new ApplicationUserFavoriteQuestionRepository(db);
+                return favoriteQuestionRepository;
             }
         }
 

@@ -67,18 +67,7 @@ namespace askLNU.BLL.Services
         {
             return _mapper.Map<IEnumerable<Question>, List<QuestionDTO>>(_unitOfWork.Questions.GetAll());
         }
-        public int GetIdByFacutyName(string name)
-        {
-            var allFaculties=_unitOfWork.Faculties.GetAll();
-            foreach (var item in allFaculties)
-            {
-                if (name == item.Title)
-                {
-                    return item.Id;
-                }
-            }
-            return -1;
-        }
+
 
         public IEnumerable<FacultyDTO> GetAllFaculties()
         {
@@ -100,6 +89,22 @@ namespace askLNU.BLL.Services
             }
         }
 
+        public void AddToFavorites(string userId, int questionId)
+        {
+            ApplicationUserFavoriteQuestion userFavoriteQuestion = new ApplicationUserFavoriteQuestion { ApplicationUserId = userId, QuestionId = questionId };
+            _unitOfWork.ApplicationUserFavoriteQuestion.Create(userFavoriteQuestion);
+            _unitOfWork.Save();
+        }
+        public void RemoveFromFavorites(string userId, int questionId)
+        {
+            _unitOfWork.ApplicationUserFavoriteQuestion.Remove(userId,questionId);
+            _unitOfWork.Save();
+        }
+        
+        public bool IsQuestionFavorite(string userId, int questionId)
+        {
+            bool result=_unitOfWork.ApplicationUserFavoriteQuestion.GetAll().Any(q => q.ApplicationUserId == userId && q.QuestionId == questionId);
+            return result;
         public void AddTag(int questionId, int tagId)
         {
             var question = _unitOfWork.Questions.Get(questionId);

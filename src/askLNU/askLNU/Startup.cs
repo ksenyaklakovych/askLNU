@@ -46,6 +46,9 @@ namespace askLNU
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISignInService, SignInService>();
             services.AddTransient<IQuestionService, QuestionService>();
+            services.AddTransient<IAnswerService, AnswerService>();
+
+
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<IFacultyService, FacultyService>();
             services.AddTransient<IEmailSender, EmailSender>();

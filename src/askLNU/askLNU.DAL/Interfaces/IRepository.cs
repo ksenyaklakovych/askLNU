@@ -12,5 +12,6 @@ namespace askLNU.DAL.Interfaces
         void Create(T item);
         void Update(T item);
         void Delete(int id);
+        void Remove(string id, int qId);
     }
 }
