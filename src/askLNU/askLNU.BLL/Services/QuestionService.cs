@@ -100,11 +100,12 @@ namespace askLNU.BLL.Services
             _unitOfWork.ApplicationUserFavoriteQuestion.Remove(userId,questionId);
             _unitOfWork.Save();
         }
-        
+
         public bool IsQuestionFavorite(string userId, int questionId)
         {
-            bool result=_unitOfWork.ApplicationUserFavoriteQuestion.GetAll().Any(q => q.ApplicationUserId == userId && q.QuestionId == questionId);
+            bool result = _unitOfWork.ApplicationUserFavoriteQuestion.GetAll().Any(q => q.ApplicationUserId == userId && q.QuestionId == questionId);
             return result;
+        }
         public void AddTag(int questionId, int tagId)
         {
             var question = _unitOfWork.Questions.Get(questionId);

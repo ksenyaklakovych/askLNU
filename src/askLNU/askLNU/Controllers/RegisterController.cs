@@ -27,8 +27,8 @@ namespace askLNU.Controllers
         public RegisterController(
             IEmailSender emailSender,
             IUserService userService,
-            ISignInService signInService, ILogger<RegisterController> logger)
-            ISignInService signInService,
+            ISignInService signInService, 
+            ILogger<RegisterController> logger,
             IImageService imageService)
         {
             _emailSender = emailSender;

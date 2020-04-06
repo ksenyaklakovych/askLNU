@@ -47,9 +47,15 @@ namespace askLNU.DAL.Repositories
             return db.ApplicationUserVotedQuestions;
         }
 
+        public void Remove(string id, int qId)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(ApplicationUserVotedQuestion item)
         {
             db.Entry(item).State = EntityState.Modified;
         }
+
     }
 }

@@ -15,7 +15,7 @@
 </head>
 <body>
     <h1>All questions</h1>
-    <input type="submit" style="float:right" value="Create new" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Question")'"/>
+    <input type="submit" style="float:right" value="Create new" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Question")'" />
     <p>@Model.Count() questions</p>
     @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-horizontal" }))
     {
@@ -89,8 +89,6 @@
                     </div>
                 </div>
             </div>
-            <a href="@Url.Action("Details", "Question", new { id = item.Id })">Details</a>
-        </div>
         }
         <div class="row">
             <div class="col-12 text-center">
