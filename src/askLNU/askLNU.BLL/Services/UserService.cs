@@ -63,6 +63,7 @@ namespace askLNU.BLL.Services
         public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
+            _logger.LogInformation("Generated email confirmation token.");
             return await _userManager.GenerateEmailConfirmationTokenAsync(user);
         }
 
@@ -72,11 +73,12 @@ namespace askLNU.BLL.Services
 
             if (appLicationUser != null)
             {
-
+                _logger.LogInformation("Got userDTO by email.");
                 return _mapper.Map<UserDTO>(appLicationUser);
             }
             else
             {
+                _logger.LogWarning($"User with email {email} couldn`t be found.");
                 return null;
             }
         }
@@ -94,6 +96,7 @@ namespace askLNU.BLL.Services
         public async Task<UserDTO> GetByIdAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
+            _logger.LogInformation("Got UserDTO by id.");
             return _mapper.Map<UserDTO>(user);
         }
 

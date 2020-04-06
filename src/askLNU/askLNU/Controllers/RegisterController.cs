@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 
 namespace askLNU.Controllers
 {
@@ -20,15 +21,17 @@ namespace askLNU.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IUserService _userService;
         private readonly ISignInService _signInService;
+        private readonly ILogger<RegisterController> _logger;
 
         public RegisterController(
             IEmailSender emailSender,
             IUserService userService,
-            ISignInService signInService)
+            ISignInService signInService, ILogger<RegisterController> logger)
         {
             _emailSender = emailSender;
             _userService = userService;
             _signInService = signInService;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -59,6 +62,7 @@ namespace askLNU.Controllers
                 var result = await _userService.CreateUserAsync(user, registerInputModel.Password);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation("User registered successfully.");
                     user = await _userService.GetByEmailAsync(user.Email);
 
                     var code = await _userService.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -73,11 +77,13 @@ namespace askLNU.Controllers
 
                     if (_userService.RequireConfirmedAccount())
                     {
+                        _logger.LogInformation("Redirected to registration confirmation page.");
                         return RedirectToAction("Confirmation", new { email = registerInputModel.Email });
                     }
                     else
                     {
                         await _signInService.SignInAsync(user, false);
+                        _logger.LogInformation("User signed in.");
                         return RedirectToAction("Index");
                     }
                 }
