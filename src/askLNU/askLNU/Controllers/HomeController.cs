@@ -23,11 +23,12 @@ namespace askLNU.Controllers
         private readonly IAnswerService _answerService;
         private readonly IFacultyService _facultyService;
         private readonly UserManager<ApplicationUser> _userManager;
-
+        private readonly ILogger<HomeController> _logger;
 
         private Mapper _mapper;
-        public HomeController(IQuestionService questService, IAnswerService answerService, IFacultyService facultyService, UserManager<ApplicationUser> userManager)
+        public HomeController(ILogger<HomeController> log,IQuestionService questService, IAnswerService answerService, IFacultyService facultyService, UserManager<ApplicationUser> userManager)
         {
+            _logger = log;
             _questionService = questService;
             _answerService = answerService;
             _facultyService = facultyService;
@@ -38,6 +39,8 @@ namespace askLNU.Controllers
         
         public async Task<IActionResult> Index(int? page, string Faculties, string tag,string sortMethod)
         {
+            _logger.LogInformation("User on main page.");
+
             //checking which user is logged in
             var userCurrent = await _userManager.GetUserAsync(User);
             // get all questions from DataBase 
@@ -56,6 +59,8 @@ namespace askLNU.Controllers
             //checking if tag field isn't empty
             if (!String.IsNullOrEmpty(tag))
             {
+                _logger.LogInformation("Filtering by tags");
+
                 var list_of_questions = new List<QuestionViewModel> { };
                 for (int i = 0; i < questions.Count(); i++)
                 {
@@ -86,12 +91,15 @@ namespace askLNU.Controllers
             {
                 case "Rating":
                     questionsWithTags = questionsWithTags.OrderBy(s => s.Rating);
+                    _logger.LogInformation("Sorting questions by rate.");
                     break;
                 case "Date":
                     questionsWithTags = questionsWithTags.OrderBy(s => s.Date);
+                    _logger.LogInformation("Sorting questions by date.");
                     break;
                 case "Number of answers":
                     questionsWithTags = questionsWithTags.OrderBy(s => s.numberOfAnswers);
+                    _logger.LogInformation("Sorting questions by number of answers.");
                     break;
             }
             //get faculty id
@@ -103,6 +111,7 @@ namespace askLNU.Controllers
             // filters all guestions by faculty_id
             if (!String.IsNullOrEmpty(Faculties))
             {
+                _logger.LogInformation("Filtering by faculty.");
                 questionsWithTags = questionsWithTags.Where(s=>s.FacultyId==facultyID);
             }
 
@@ -118,16 +127,19 @@ namespace askLNU.Controllers
             var userCurrent = await _userManager.GetUserAsync(User);
             if (_questionService.IsQuestionFavorite(userCurrent.Id,questionId))
             {
+                _logger.LogInformation("Adding question to favorites.");
                 _questionService.RemoveFromFavorites(userCurrent.Id, questionId);
             }
             else
             {
+                _logger.LogInformation("Removing question from favorites.");
                 _questionService.AddToFavorites(userCurrent.Id, questionId);
             }
             return RedirectToAction("Index");
         }
         public IActionResult Privacy()
         {
+            _logger.LogInformation("User on privacy page.");
             return View();
         }
 
