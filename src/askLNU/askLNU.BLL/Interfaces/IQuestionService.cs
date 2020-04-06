@@ -17,5 +17,9 @@ namespace askLNU.BLL.Interfaces
         public void AddToFavorites(string userId, int questionId);
         public bool IsQuestionFavorite(string userId, int questionId);
         public void RemoveFromFavorites(string userId, int questionId);
+        void AddTag(int questionId, int tagId);
+        int VoteUp(string userId, int questionId);
+        int VoteDown(string userId, int questionId);
+        void AddAnswer(int questionId, AnswerDTO answer);
     }
 }

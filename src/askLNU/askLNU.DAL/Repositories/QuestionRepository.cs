@@ -27,7 +27,11 @@ namespace askLNU.DAL.Repositories
 
         public Question Get(int id)
         {
-            return db.Questions.Find(id);
+            return db.Questions
+                .Include(q => q.QuestionTags)
+                .Include(q => q.ApplicationUserVotedQuestions)
+                .Include(q => q.Answers)
+                .Single(q => q.Id == id);
         }
 
         public void Create(Question answer)

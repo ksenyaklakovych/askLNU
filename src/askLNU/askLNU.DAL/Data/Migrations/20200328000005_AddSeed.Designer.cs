@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using askLNU.DAL.EF;
 
 namespace askLNU.DAL.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200328000005_AddSeed")]
+    partial class AddSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,27 +305,6 @@ namespace askLNU.DAL.Data.Migrations
                     b.HasIndex("LabelId");
 
                     b.ToTable("ApplicationUserLabel");
-                });
-
-            modelBuilder.Entity("askLNU.DAL.Entities.ApplicationUserVotedQuestion", b =>
-                {
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("VotedDown")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("VotedUp")
-                        .HasColumnType("bit");
-
-                    b.HasKey("ApplicationUserId", "QuestionId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("ApplicationUserVotedQuestions");
                 });
 
             modelBuilder.Entity("askLNU.DAL.Entities.Faculty", b =>
@@ -619,21 +600,6 @@ namespace askLNU.DAL.Data.Migrations
                     b.HasOne("askLNU.DAL.Entities.Label", "Label")
                         .WithMany("ApplicationUserLabels")
                         .HasForeignKey("LabelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("askLNU.DAL.Entities.ApplicationUserVotedQuestion", b =>
-                {
-                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany("ApplicationUserVotedQuestions")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("askLNU.DAL.Entities.Question", "Question")
-                        .WithMany("ApplicationUserVotedQuestions")
-                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -17,7 +17,7 @@
         <p class="divider-text">
             <span class="bg-light">OR</span>
         </p>
-        <form asp-action="Register" method="post">
+        <form asp-action="Register" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <input asp-for="Email" class="form-control" placeholder="Email" />
@@ -49,8 +49,8 @@
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="ImageSrc" class="form-control" placeholder="Image Src" />
-                <span asp-validation-for="ImageSrc" class="text-danger"></span>
+                <input asp-for="Image" class="form-control-file" placeholder="Image" />
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>

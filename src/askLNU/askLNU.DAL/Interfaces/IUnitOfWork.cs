@@ -14,7 +14,10 @@ namespace askLNU.DAL.Interfaces
         IRepository<Question> Questions { get; }
         IRepository<QuestionTag> QuestionTag { get; }
         IRepository<Tag> Tags { get; }
+
         IRepository<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestion { get; }
+
+        IRepository<ApplicationUserVotedQuestion> ApplicationUserVotedQuestions { get; }
 
         void Save();
     }

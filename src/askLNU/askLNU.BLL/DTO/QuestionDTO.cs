@@ -16,5 +16,7 @@ namespace askLNU.BLL.DTO
         public bool IsSolved { get; set; }
         public DateTime Date { get; set; }
         public int? FacultyId { get; set; }
+        public List<int> TagsId { get; set; }
+        public List<AnswerDTO> Answers { get; set; }
     }
 }

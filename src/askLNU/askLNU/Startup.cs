@@ -36,20 +36,23 @@ namespace askLNU
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AdminConfig>(Configuration.GetSection("AdminConfig"));
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.Configure<CloudinaryConfig>(Configuration.GetSection("CloudinaryConfig"));
+
+
             services.AddDALDependencies(Configuration.GetConnectionString("DefaultConnection"));
 
-
+            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISignInService, SignInService>();
-            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
-
             services.AddTransient<IQuestionService, QuestionService>();
             services.AddTransient<IAnswerService, AnswerService>();
+
+
+            services.AddTransient<ITagService, TagService>();
             services.AddTransient<IFacultyService, FacultyService>();
-
-
             services.AddTransient<IEmailSender, EmailSender>();
-            services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.AddTransient<IImageService, ImageService>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -59,6 +62,7 @@ namespace askLNU
             services.AddAutoMapper();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/Login");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

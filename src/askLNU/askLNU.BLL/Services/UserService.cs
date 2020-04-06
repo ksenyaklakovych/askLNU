@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -104,6 +105,18 @@ namespace askLNU.BLL.Services
         {
             var user = await _userManager.FindByIdAsync(userId);
             return await _userManager.ConfirmEmailAsync(user, token);
+        }
+
+        public string GetUserId(ClaimsPrincipal claims)
+        {
+            return _userManager.GetUserId(claims);
+        }
+
+        public async Task<IdentityResult> UpdateImage(string userId, string imageSrc)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            user.ImageSrc = imageSrc;
+            return await _userManager.UpdateAsync(user);
         }
     }
 }

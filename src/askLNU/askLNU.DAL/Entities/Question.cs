@@ -47,5 +47,6 @@ namespace askLNU.DAL.Entities
         public virtual ICollection<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestions { get; set; }
         public virtual ICollection<QuestionTag> QuestionTags { get; set; }
         public virtual ICollection<Answer> Answers { get; set; }
+        public virtual ICollection<ApplicationUserVotedQuestion> ApplicationUserVotedQuestions { get; set; }
     }
 }
