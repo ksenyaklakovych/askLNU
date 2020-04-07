@@ -47,7 +47,7 @@
                 <div class="row">
                     <div class="col-10 text-left">
                         <h2>
-                            @Html.DisplayFor(modelItem => item.Title)
+                            @Html.ActionLink(item.Title, "Details", "Question", new { id = item.Id }, new { style = "text-decoration:none; color: black;" })
                         </h2>
                     </div>
                     @if (SignInService.IsSignedIn(User))
