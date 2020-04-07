@@ -37,7 +37,7 @@ namespace askLNU.Controllers
             _mapper = new Mapper(config);
         }
         
-        public async Task<IActionResult> Index(int? page, string Faculties, string tag,string sortMethod)
+        public async Task<IActionResult> Index(int? page, string faculties, string tag,string sortMethod)
         {
             _logger.LogInformation("User on main page.");
 
@@ -103,13 +103,13 @@ namespace askLNU.Controllers
                     break;
             }
             //get faculty id
-            var facultyID =_facultyService.GetFacultyIdByName(Faculties);
+            var facultyID =_facultyService.GetFacultyIdByName(faculties);
             // get list of names of faculties
             var nameFaculties = new SelectList(_questionService.GetAllFaculties().Select(f=>f.Title).ToList());
             //add faculty name to ViewBag to have names in DropDown kist in View
-            ViewBag.Faculties = nameFaculties;
+            ViewBag.faculties = nameFaculties;
             // filters all guestions by faculty_id
-            if (!String.IsNullOrEmpty(Faculties))
+            if (!String.IsNullOrEmpty(faculties))
             {
                 _logger.LogInformation("Filtering by faculty.");
                 questionsWithTags = questionsWithTags.Where(s=>s.FacultyId==facultyID);
