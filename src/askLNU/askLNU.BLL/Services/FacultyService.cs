@@ -75,9 +75,10 @@ namespace askLNU.BLL.Services
                 return -1;
             }
         }
-        public void Dispose()
+        public void Dispose(int id)
         {
-            _unitOfWork.Dispose();
+            _unitOfWork.Faculties.Delete(id);
+            _unitOfWork.Save();
         }
     }
 }

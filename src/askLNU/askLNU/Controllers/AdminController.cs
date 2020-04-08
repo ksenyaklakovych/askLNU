@@ -90,5 +90,11 @@ namespace askLNU.Controllers
             _facultyService.CreateFaculty(facultyDTO);
             return RedirectToAction("AllFaculties");
         }
+
+        public ActionResult DeleteFaculty(int id)
+        {
+            _facultyService.Dispose(id);
+            return RedirectToAction("AllFaculties");
+        }
     }
 }
