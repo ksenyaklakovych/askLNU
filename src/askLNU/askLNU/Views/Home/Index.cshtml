@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<askLNU.ViewModels.QuestionViewModel>
+﻿@model PagedList.IPagedList<askLNU.ViewModels.QuestionShortViewModel>
 @using askLNU.BLL.Interfaces
 @using PagedList.Mvc;
 @using PagedList;
@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width" />
     <link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <link href="@Url.Content("~/css/register.css")" rel="stylesheet" type="text/css" />
+    @*  <link href="@Url.Content("~/css/register.css")" rel="stylesheet" type="text/css" />*@
 </head>
 <body>
     <h1>All questions</h1>
@@ -43,52 +43,55 @@
     <div class="container-fluid" style="max-width:850px; float:left">
         @foreach (var item in Model)
         {
-            <div class="border border-right-0 border-left-0 border-warning">
-                <div class="row">
-                    <div class="col-10 text-left">
-                        <h2>
-                            @Html.ActionLink(item.Title, "Details", "Question", new { id = item.Id }, new { style = "text-decoration:none; color: black;" })
-                        </h2>
-                    </div>
-                    @if (SignInService.IsSignedIn(User))
-                    {
-                        <div class="col-2 text-right">
-                            <button type="button" class="btn btn-warning btn-lg" onclick="location.href='@Url.Action("AddToFavorites", "", new { questionId=item.Id}) '">
-                                @if (item.IsFavorite == false)
-                                {
-                                    <span class="glyphicon glyphicon-star-empty"></span>
-                                }
-                                else
-                                {
-                                    <span class="glyphicon glyphicon"></span>
-                                }
-                            </button>
+            @if (!item.IsSolved)
+            {
+                <div class="border border-right-0 border-left-0 border-warning">
+                    <div class="row">
+                        <div class="col-10 text-left">
+                            <h2>
+                                @Html.ActionLink(item.Title, "Details", "Question", new { id = item.Id }, new { style = "text-decoration:none; color: black;" })
+                            </h2>
                         </div>
-                    }
-                </div>
-                <div class="row">
-                    <div class="col-2 text-center">
-                        <h3>
-                            @Html.DisplayFor(modelItem => item.numberOfAnswers)
-                        </h3>
-                        answers
-                    </div>
-                    <div class="col-7">
-                        @Html.DisplayFor(modelItem => item.Text)
-                        <div class="w-100"></div>
-                        @foreach (var tag in item.Tags)
+                        @if (SignInService.IsSignedIn(User))
                         {
-                            <p class="btn btn-sm btn-dark">@tag </p>
+                            <div class="col-2 text-right">
+                                <button type="button" class="btn btn-warning btn-lg" onclick="location.href='@Url.Action("AddToFavorites", "", new { questionId = item.Id }) '">
+                                    @if (item.IsFavorite == false)
+                                    {
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="glyphicon glyphicon"></span>
+                                    }
+                                </button>
+                            </div>
                         }
                     </div>
-                    <div class="col-2 text-center">
-                        <h4>
-                            Rate: @Html.DisplayFor(modelItem => item.Rating)
-                        </h4>
-                        @DateTime.Now.Subtract(item.Date).Days.ToString() days ago
+                    <div class="row">
+                        <div class="col-2 text-center">
+                            <h3>
+                                @Html.DisplayFor(modelItem => item.numberOfAnswers)
+                            </h3>
+                            answers
+                        </div>
+                        <div class="col-7">
+                            @Html.DisplayFor(modelItem => item.Text)
+                            <div class="w-100"></div>
+                            @foreach (var tag in item.Tags)
+                            {
+                                <p class="btn btn-sm btn-dark">@tag </p>
+                            }
+                        </div>
+                        <div class="col-2 text-center">
+                            <h4>
+                                Rate: @Html.DisplayFor(modelItem => item.Rating)
+                            </h4>
+                            @DateTime.Now.Subtract(item.Date).Days.ToString() days ago
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         }
         <div class="row">
             <div class="col-12 text-center">

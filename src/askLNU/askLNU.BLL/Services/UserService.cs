@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace askLNU.BLL.Services
@@ -57,7 +58,6 @@ namespace askLNU.BLL.Services
                 await AddUserToRoleAsync(applicationUser, "User");
                 _logger.LogInformation("User created a new account with password.");
             }
-
             return result;
         }
 
@@ -117,6 +117,36 @@ namespace askLNU.BLL.Services
             var user = await _userManager.FindByIdAsync(userId);
             user.ImageSrc = imageSrc;
             return await _userManager.UpdateAsync(user);
+        }
+
+        public IEnumerable<UserDTO> GetUsersByEmail(string email)
+        {
+            var allUsers = _userManager.Users.Where(u => u.Email == email);
+            _logger.LogInformation("Got users DTO by email.");
+            return _mapper.Map<IEnumerable<UserDTO>>(allUsers);
+        }
+
+        public bool CheckIfUserHasRole(UserDTO user, string roleName)
+        {
+            var appUser=_mapper.Map<ApplicationUser>(user);
+            var result = _userManager.IsInRoleAsync(appUser, roleName);
+            _logger.LogInformation($"Checked if userDTO has role {roleName}: {result.Result}.");
+            return result.Result;
+        }
+
+        public void RemoveModeratorRole(string userId)
+        {
+            _logger.LogInformation("Removed Moderator rights from user.");
+            var user = _userManager.FindByIdAsync(userId).Result;
+            _userManager.RemoveFromRoleAsync(user, "Moderator");
+        }
+
+        public void GiveModeratorRole(string userId)
+        {
+            var user = _userManager.FindByIdAsync(userId).Result;
+            _logger.LogInformation("Gave user Moderator rights.");
+            var result=_userManager.AddToRoleAsync(user, "Moderator").Result;
+            var i = 0;
         }
     }
 }

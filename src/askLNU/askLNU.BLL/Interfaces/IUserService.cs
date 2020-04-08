@@ -18,5 +18,10 @@ namespace askLNU.BLL.Interfaces
         bool RequireConfirmedAccount();
         string GetUserId(ClaimsPrincipal claims);
         Task<IdentityResult> UpdateImage(string userId, string imageSrc);
+        IEnumerable<UserDTO> GetUsersByEmail(string email);
+        bool CheckIfUserHasRole(UserDTO user,string roleName);
+        void RemoveModeratorRole(string userId);
+        void GiveModeratorRole(string userId);
+
     }
 }
