@@ -19,7 +19,7 @@ namespace askLNU.BLL.Interfaces
         string GetUserId(ClaimsPrincipal claims);
         Task<IdentityResult> UpdateImage(string userId, string imageSrc);
         IEnumerable<UserDTO> GetUsersByEmail(string email);
-        bool CheckIfUserHasRole(UserDTO user,string roleName);
+        bool CheckIfUserHasRole(string userId,string roleName);
         void RemoveModeratorRole(string userId);
         void GiveModeratorRole(string userId);
 

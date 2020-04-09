@@ -17,7 +17,6 @@ namespace askLNU.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<AdminController> _logger;
         private readonly IUserService _userService;
         private readonly IFacultyService _facultyService;
@@ -27,12 +26,10 @@ namespace askLNU.Controllers
 
 
         public AdminController(ILogger<AdminController> log,
-            UserManager<ApplicationUser> userManager,
             IUserService service,
             IFacultyService facultyService)
         {
             _logger = log;
-            _userManager = userManager;
             _userService = service;
             _facultyService = facultyService;
             var config = new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, UserForAdminViewModel>());
@@ -44,45 +41,47 @@ namespace askLNU.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Index(string email)
         {
+            _logger.LogInformation($"Admin is on page with all users and rights.");
             var usersDTO = _userService.GetUsersByEmail(email);
             var usersViewModel = _mapper.Map<IEnumerable<UserForAdminViewModel>>(usersDTO);
             foreach (var user in usersViewModel)
             {
-                var userDTO = new UserDTO
-                {
-                    UserName = user.UserName,
-                    Name = user.Name,
-                    Surname = user.Surname,
-                    Email = user.Email
-                };
-                user.IsModerator = _userService.CheckIfUserHasRole(userDTO, "Moderator");
+                user.IsModerator = _userService.CheckIfUserHasRole(user.Id, "Moderator");
             }
             return View(usersViewModel);
         }
-
+        
+        [Authorize(Roles = "Admin")]
         public ActionResult ChangeRights(string userId, bool remove)
         {
             if (remove)
             {
+                _logger.LogInformation($"Admin removes Moderator rights from user wirh id {userId}");
                 _userService.RemoveModeratorRole(userId);
             }
             else
             {
+                _logger.LogInformation($"Admin gives Moderator rights to user wirh id {userId}");
                 _userService.GiveModeratorRole(userId);
             }
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult AllFaculties()
         {
             _logger.LogInformation("Display all faculties");
             var all_faculties= _mapperFaculty.Map<IEnumerable <FacultyViewModel>>(_facultyService.GetAll());
             return View(all_faculties);
         }
+        
+        [Authorize(Roles = "Admin")]
         public ActionResult CreateNewFaculty()
         {
             return View();
         }
+        
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult CreateNewFaculty(FacultyViewModel faculty)
         {
@@ -91,6 +90,7 @@ namespace askLNU.Controllers
             return RedirectToAction("AllFaculties");
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteFaculty(int id)
         {
             _facultyService.Dispose(id);

@@ -21,7 +21,6 @@ namespace askLNU.Tests
         private Mock<IUnitOfWork> fakeIUnitOfWork;
         private readonly IMapper _mapper;
 
-
         public QuestionServiceTest()
         {
             fakeIUnitOfWork = new Mock<IUnitOfWork>();
@@ -106,5 +105,9 @@ namespace askLNU.Tests
             var result = questionService.IsQuestionFavorite(userId, questionId);
             Assert.False(result);
         }
+        
+        //TO DO:
+        //RemoveFromFavorites
+        //AddToFavorites
     }
 }

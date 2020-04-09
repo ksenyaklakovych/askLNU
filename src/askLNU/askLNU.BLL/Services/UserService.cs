@@ -29,7 +29,13 @@ namespace askLNU.BLL.Services
             _logger = logger;
             _mapper = mapper;
         }
-
+        public UserService(
+            UserManager<ApplicationUser> userManager,
+            ILogger<UserService> logger)
+        {
+            _userManager = userManager;
+            _logger = logger;
+        }
         public UserService(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
@@ -74,7 +80,7 @@ namespace askLNU.BLL.Services
 
             if (appLicationUser != null)
             {
-                _logger.LogInformation("Got userDTO by email.");
+               _logger.LogInformation("Got userDTO by email.");
                 return _mapper.Map<UserDTO>(appLicationUser);
             }
             else
@@ -126,10 +132,10 @@ namespace askLNU.BLL.Services
             return _mapper.Map<IEnumerable<UserDTO>>(allUsers);
         }
 
-        public bool CheckIfUserHasRole(UserDTO user, string roleName)
+        public bool CheckIfUserHasRole(string userID, string roleName)
         {
-            var appUser=_mapper.Map<ApplicationUser>(user);
-            var result = _userManager.IsInRoleAsync(appUser, roleName);
+            var user = _userManager.FindByIdAsync(userID).Result;
+            var result = _userManager.IsInRoleAsync(user, roleName);
             _logger.LogInformation($"Checked if userDTO has role {roleName}: {result.Result}.");
             return result.Result;
         }
@@ -138,15 +144,15 @@ namespace askLNU.BLL.Services
         {
             _logger.LogInformation("Removed Moderator rights from user.");
             var user = _userManager.FindByIdAsync(userId).Result;
-            _userManager.RemoveFromRoleAsync(user, "Moderator");
+            var res=_userManager.RemoveFromRoleAsync(user, "Moderator").Result;
         }
 
         public void GiveModeratorRole(string userId)
         {
             var user = _userManager.FindByIdAsync(userId).Result;
             _logger.LogInformation("Gave user Moderator rights.");
-            var result=_userManager.AddToRoleAsync(user, "Moderator").Result;
-            var i = 0;
+            var res=_userManager.AddToRoleAsync(user, "Moderator").Result;
         }
+
     }
 }
