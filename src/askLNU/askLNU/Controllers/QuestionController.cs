@@ -11,25 +11,30 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace askLNU.Controllers
 {
+    [Authorize(Roles = "User")]
     public class QuestionController : Controller
     {
         private readonly IFacultyService _facultyService;
         private readonly ITagService _tagService;
         private readonly IQuestionService _questionService;
         private readonly IUserService _userService;
+        private readonly IAnswerService _answerService;
 
         public QuestionController(
             IFacultyService facultyService,
             ITagService tagService,
             IQuestionService questionService,
-            IUserService userService)
+            IUserService userService,
+            IAnswerService answerService)
         {
             _facultyService = facultyService;
             _tagService = tagService;
             _questionService = questionService;
             _userService = userService;
+            _answerService = answerService;
         }
 
+        [AllowAnonymous]
         [HttpGet("{controller}/{id}")]
         public async Task<IActionResult> Details(int id)
         {
@@ -51,20 +56,11 @@ namespace askLNU.Controllers
                 Author = authorViewModel,
                 Tags = question.TagsId.Select(id => _tagService.GetTag(id).Text).ToList(),
                 Rating = question.Rating,
-                Answers = question.Answers.Select(a => new AnswerViewModel
-                {
-                    Text = a.Text,
-                    Rating = a.Rating,
-                    IsSolution = a.IsSolution,
-                    Date = a.Date,
-                    AuthorName = _userService.GetByIdAsync(a.ApplicationUserId).Result.UserName
-                }).ToList()
             };
 
             return View(viewModel);
         }
 
-        [Authorize(Roles = "User")]
         public IActionResult Create()
         {
             var viewModel = new CreateQuestionViewModel
@@ -77,7 +73,6 @@ namespace askLNU.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "User")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(QuestionInputModel questionInput)
         {
@@ -104,29 +99,24 @@ namespace askLNU.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize(Roles = "User")]
         [HttpPost]
-        public IActionResult VoteUp(int questionId)
+        public int VoteUp([FromForm] int questionId)
         {
             var userId = _userService.GetUserId(User);
-            _questionService.VoteUp(userId, questionId);
-
-            return RedirectToAction("Details", new { id = questionId });
+            var rating = _questionService.VoteUp(userId, questionId);
+            return rating;
         }
 
-        [Authorize(Roles = "User")]
         [HttpPost]
-        public IActionResult VoteDown(int questionId)
+        public int VoteDown([FromForm] int questionId)
         {
             var userId = _userService.GetUserId(User);
-            _questionService.VoteDown(userId, questionId);
-
-            return RedirectToAction("Details", new { id = questionId });
+            var rating = _questionService.VoteDown(userId, questionId);
+            return rating;
         }
 
-        [Authorize(Roles = "User")]
         [HttpPost]
-        public IActionResult AddAnswer(int questionId, string answerText)
+        public List<AnswerViewModel> AddAnswer(int questionId, string answerText)
         {
             var answer = new AnswerDTO
             {
@@ -137,7 +127,26 @@ namespace askLNU.Controllers
 
             _questionService.AddAnswer(questionId, answer);
 
-            return RedirectToAction("Details", new { id = questionId });
+            return GetLastAnswers(questionId, 10);
+        }
+
+        [AllowAnonymous]
+        public List<AnswerViewModel> GetLastAnswers(int questionId, int amount)
+        {
+            var answers = _answerService.GetAnswersByQuestionId(questionId);
+            var sortedAnswers = from answer in answers
+                                orderby answer.Date descending
+                                orderby answer.IsSolution descending
+                                select new AnswerViewModel
+                                {
+                                    Text = answer.Text,
+                                    Rating = answer.Rating,
+                                    IsSolution = answer.IsSolution,
+                                    Date = answer.Date.ToLocalTime().ToShortDateString(),
+                                    AuthorName = _userService.GetByIdAsync(answer.ApplicationUserId).Result.UserName
+                                };
+
+            return sortedAnswers.Take(amount).ToList();
         }
     }
 }
