@@ -10,7 +10,7 @@ namespace askLNU.ViewModels
         public string Text { get; set; }
         public int Rating { get; set; }
         public bool IsSolution { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public string AuthorName { get; set; }
     }
 }
