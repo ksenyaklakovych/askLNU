@@ -16,7 +16,5 @@ namespace askLNU.ViewModels
         public string Text { get; set; }
 
         public List<FacultyDTO> Faculties { get; set; }
-
-        public List<TagDTO> Tags { get; set; }
     }
 }
