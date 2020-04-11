@@ -65,7 +65,7 @@ namespace askLNU.BLL.Services
         {
             if (id != null)
             {
-                var answers = _unitOfWork.Answers.GetAll().Where(a => a.QuestionId == id);
+                var answers = _unitOfWork.Answers.Find(a => a.QuestionId == id);
                 var answersDTOs= _mapper.Map<IEnumerable<AnswerDTO>>(answers);
                 return answersDTOs;
             }

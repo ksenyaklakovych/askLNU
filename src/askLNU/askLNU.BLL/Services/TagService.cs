@@ -35,11 +35,6 @@ namespace askLNU.BLL.Services
             }
         }
 
-        public void Dispose()
-        {
-            _unitOfWork.Dispose();
-        }
-
         public int FindOrCreate(string tagText)
         {
             var tag =_unitOfWork.Tags.Find(tag => tag.Text == tagText.ToLower()).FirstOrDefault();

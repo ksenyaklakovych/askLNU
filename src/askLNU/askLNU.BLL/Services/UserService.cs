@@ -153,6 +153,5 @@ namespace askLNU.BLL.Services
             _logger.LogInformation("Gave user Moderator rights.");
             var res=_userManager.AddToRoleAsync(user, "Moderator").Result;
         }
-
     }
 }

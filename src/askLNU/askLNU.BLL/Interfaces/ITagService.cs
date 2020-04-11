@@ -9,7 +9,6 @@ namespace askLNU.BLL.Interfaces
     {
         void CreateTag(TagDTO Dto);
         IEnumerable<TagDTO> GetAll();
-        void Dispose();
         int FindOrCreate(string tagText);
         List<string> FindTags(string searchString);
         TagDTO GetTag(int id);

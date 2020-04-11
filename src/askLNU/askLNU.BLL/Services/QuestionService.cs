@@ -17,7 +17,9 @@ namespace askLNU.BLL.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public QuestionService(IUnitOfWork unitOfWork, IMapper mapper)
+        public QuestionService(
+            IUnitOfWork unitOfWork, 
+            IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -68,19 +70,12 @@ namespace askLNU.BLL.Services
             return _mapper.Map<IEnumerable<Question>, List<QuestionDTO>>(_unitOfWork.Questions.GetAll());
         }
 
-
-        public IEnumerable<FacultyDTO> GetAllFaculties()
-        {
-            return _mapper.Map<IEnumerable<Faculty>, List<FacultyDTO>>(_unitOfWork.Faculties.GetAll());
-
-        }
-
         public IEnumerable<string> GetTagsByQuestionID(int? id)
         {
             if (id != null)
             {
-                var tagsIds = _unitOfWork.QuestionTag.GetAll().Where(q => q.QuestionId == id.Value).Select(q => q.TagId).ToList();
-                var tagsTexts = _unitOfWork.Tags.GetAll().Where(t => tagsIds.Contains(t.Id)).Select(t => t.Text);
+                var tagsIds = _unitOfWork.QuestionTag.Find(q => q.QuestionId == id.Value).Select(q => q.TagId);
+                var tagsTexts = tagsIds.Select(tagId => _unitOfWork.Tags.Get(tagId).Text).ToList();
                 return tagsTexts;
             }
             else
@@ -91,13 +86,23 @@ namespace askLNU.BLL.Services
 
         public void AddToFavorites(string userId, int questionId)
         {
-            ApplicationUserFavoriteQuestion userFavoriteQuestion = new ApplicationUserFavoriteQuestion { ApplicationUserId = userId, QuestionId = questionId };
+            var userFavoriteQuestion = new ApplicationUserFavoriteQuestion 
+            { 
+                ApplicationUserId = userId, 
+                QuestionId = questionId 
+            };
             _unitOfWork.ApplicationUserFavoriteQuestion.Create(userFavoriteQuestion);
             _unitOfWork.Save();
         }
         public void RemoveFromFavorites(string userId, int questionId)
         {
-            _unitOfWork.ApplicationUserFavoriteQuestion.Remove(userId,questionId);
+            var question = _unitOfWork.Questions.Get(questionId);
+            var favorite = question.ApplicationUserFavoriteQuestions
+                .Where(fav => fav.QuestionId == questionId && fav.ApplicationUserId == userId)
+                .FirstOrDefault();
+
+            question.ApplicationUserFavoriteQuestions.Remove(favorite);
+            _unitOfWork.Questions.Update(question);
             _unitOfWork.Save();
         }
 
@@ -115,14 +120,14 @@ namespace askLNU.BLL.Services
 
         private int Vote(string userId, int questionId, bool voteUp = false, bool voteDown = false)
         {
-            var vote = _unitOfWork.ApplicationUserVotedQuestions
+            var vote = _unitOfWork.QuestionVotes
                 .Find(v => v.ApplicationUserId == userId && v.QuestionId == questionId).FirstOrDefault();
 
             var question = _unitOfWork.Questions.Get(questionId);
 
             if (vote == null)
             {
-                _unitOfWork.ApplicationUserVotedQuestions.Create(new ApplicationUserVotedQuestion
+                _unitOfWork.QuestionVotes.Create(new QuestionVote
                 {
                     ApplicationUserId = userId,
                     QuestionId = questionId,
@@ -166,7 +171,7 @@ namespace askLNU.BLL.Services
                     vote.VotedDown = false;
                 }
 
-                _unitOfWork.ApplicationUserVotedQuestions.Update(vote);
+                _unitOfWork.QuestionVotes.Update(vote);
             }
 
             _unitOfWork.Questions.Update(question);
