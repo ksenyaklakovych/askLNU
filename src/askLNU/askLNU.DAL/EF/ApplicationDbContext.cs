@@ -24,7 +24,7 @@ namespace askLNU.DAL.EF
 
         public DbSet<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestion { get; set; }
 
-        public DbSet<ApplicationUserVotedQuestion> ApplicationUserVotedQuestions { get; set; }
+        public DbSet<QuestionVote> QuestionVotes { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -38,7 +38,7 @@ namespace askLNU.DAL.EF
             builder.Entity<QuestionTag>()
                 .HasKey(o => new { o.QuestionId, o.TagId });
 
-            builder.Entity<ApplicationUserVotedQuestion>()
+            builder.Entity<QuestionVote>()
                 .HasKey(o => new { o.ApplicationUserId, o.QuestionId });
 
             // Seed data

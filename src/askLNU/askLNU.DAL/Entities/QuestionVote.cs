@@ -5,7 +5,7 @@ using System.Text;
 
 namespace askLNU.DAL.Entities
 {
-    public class ApplicationUserVotedQuestion
+    public class QuestionVote
     {
         [Key]
         public string ApplicationUserId { get; set; }
