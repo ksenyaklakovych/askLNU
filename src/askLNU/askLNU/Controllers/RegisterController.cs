@@ -140,7 +140,7 @@ namespace askLNU.Controllers
             var viewModel = new ConfirmEmailViewModel
             {
                 StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.",
-                Succeeded = result.Succeeded ? true : false
+                Succeeded = result.Succeeded
             };
 
             return View(viewModel);
