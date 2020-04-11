@@ -1,22 +1,41 @@
-﻿@model PagedList.IPagedList<askLNU.ViewModels.QuestionShortViewModel>
+﻿@model askLNU.ViewModels.PagedViewModel
 @using askLNU.BLL.Interfaces
-@using PagedList.Mvc;
-@using PagedList;
 @inject ISignInService SignInService
-@*@model PagedList.IPagedList<MVC_Views.Models.ViewModel>*@
 @{
     ViewData["Title"] = "Index";
 }
+<html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    @*  <link href="@Url.Content("~/css/register.css")" rel="stylesheet" type="text/css" />*@
+    <style>
+        .pagination {
+            display: inline-block;
+        }
+
+            .pagination a {
+                color: black;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+            }
+
+                .pagination a.active {
+                    background-color: #F3C920;
+                    color: white;
+                    border-radius: 5px;
+                }
+
+                .pagination a:hover:not(.active) {
+                    background-color: #F9E69C;
+                    border-radius: 5px;
+                }
+    </style>
 </head>
 <body>
     <h1>All questions</h1>
     <input type="submit" style="float:right" value="Create new" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Question")'" />
-    <p>@Model.Count() questions</p>
+    <p>@Model.Questions.Count() questions</p>
     @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-horizontal" }))
     {
         <div class="container">
@@ -41,7 +60,7 @@
 
 
     <div class="container-fluid" style="max-width:850px; float:left">
-        @foreach (var item in Model)
+        @foreach (var item in Model.Questions)
         {
             @if (!item.IsSolved)
             {
@@ -96,11 +115,23 @@
         <div class="row">
             <div class="col-12 text-center">
                 <div class="pagination">
-                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-
-                    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
+                    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+                    {
+                        @for (int i = 1; i <= Model.PageCount; i++)
+                        {
+                            @if (i != Model.CurrentPageIndex)
+                            {
+                                @Html.ActionLink($"{i}", "Index", "Home", new { page = i })
+                            }
+                            else 
+                            {
+                                <a class="active">@i</a>
+                            }
+                        }
+                    }
                 </div>
             </div>
         </div>
     </div>
-</body>                                                                        
+</body>
+</html>                                                                     

@@ -13,7 +13,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using askLNU.DAL.Entities;
-using System.Linq;
 
 namespace askLNU.Controllers
 {
@@ -25,7 +24,7 @@ namespace askLNU.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<HomeController> _logger;
         private Mapper _mapper;
-        
+       
         public HomeController(ILogger<HomeController> log,IQuestionService questService, IAnswerService answerService, IFacultyService facultyService, UserManager<ApplicationUser> userManager)
         {
             _logger = log;
@@ -37,7 +36,7 @@ namespace askLNU.Controllers
             _mapper = new Mapper(config);
         }
         
-        public async Task<IActionResult> Index(int? page, string faculties, string tag,string sortMethod)
+        public async Task<IActionResult> Index(string faculties, string tag,string sortMethod, int page = 1)
         {
             _logger.LogInformation("User on main page.");
 
@@ -56,6 +55,7 @@ namespace askLNU.Controllers
 
                 }
             }
+
             //checking if tag field isn't empty
             if (!String.IsNullOrEmpty(tag))
             {
@@ -82,6 +82,7 @@ namespace askLNU.Controllers
                 questions = list_of_questions;
 
             }
+
             //change list to IEnumerable
             IEnumerable<QuestionShortViewModel> questionsWithTags = questions;
             //create ViewBag to pass sorting methods to View 
@@ -115,11 +116,11 @@ namespace askLNU.Controllers
                 questionsWithTags = questionsWithTags.Where(s=>s.FacultyId==facultyID);
             }
 
-           // paganation of mainpage
-            int pageSize = 4;
-            int pageNumber = (page ?? 1);
-           
-            return View(questionsWithTags.ToPagedList(pageNumber, pageSize));
+            int maxRows = 3;
+            var questionsPerPages = questionsWithTags.Skip((page - 1) * maxRows).Take(maxRows);
+            double pageCount = (int)Math.Ceiling((decimal)questionsWithTags.Count() / maxRows);
+            PagedViewModel pagedQuestions = new PagedViewModel { PageCount = (int)Math.Ceiling(pageCount), CurrentPageIndex=page, Questions = questionsPerPages };
+            return View(pagedQuestions);
         }
 
         public async Task<IActionResult> AddToFavorites(int questionId)
