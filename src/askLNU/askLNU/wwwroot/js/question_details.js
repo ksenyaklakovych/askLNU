@@ -43,22 +43,27 @@ function getAnswers() {
 }
 
 function sendAnswer() {
-    $.ajax({
-        url: "/Question/AddAnswer",
-        type: "POST",
-        dataType: "json",
-        data: {
-            questionId: $("#question-id").val(),
-            answerText: $("#answer-text").val()
-        },
-        success: function (response) {
-            $("#answers").render(response);
-            $("#answer-text").val("");
-        },
-        error: function (response) {
-            console.log("error", response);
-        }
-    });
+
+    if ($("#answer-text").val() != "") {
+        $.ajax({
+            url: "/Question/AddAnswer",
+            type: "POST",
+            dataType: "json",
+            data: {
+                questionId: $("#question-id").val(),
+                answerText: $("#answer-text").val()
+            },
+            success: function (response) {
+                if (response != null) {
+                    $("#answers").render(response);
+                }
+                $("#answer-text").val("");
+            },
+            error: function (response) {
+                console.log("error", response);
+            }
+        });
+    }
 }
 
 function sendVote(url) {

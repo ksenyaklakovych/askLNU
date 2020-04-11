@@ -65,8 +65,7 @@ namespace askLNU.Controllers
         {
             var viewModel = new CreateQuestionViewModel
             {
-                Faculties = _facultyService.GetAll().ToList(),
-                Tags = _tagService.GetAll().ToList()
+                Faculties = _facultyService.GetAll().ToList()
             };
 
             return View(viewModel);
@@ -96,7 +95,7 @@ namespace askLNU.Controllers
                 }
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Details", "Question", new { id =  questionDTO.Id});
         }
 
         [HttpPost]
@@ -116,18 +115,25 @@ namespace askLNU.Controllers
         }
 
         [HttpPost]
-        public List<AnswerViewModel> AddAnswer(int questionId, string answerText)
+        public List<AnswerViewModel> AddAnswer(int? questionId, string answerText)
         {
-            var answer = new AnswerDTO
+            if (questionId != null && !string.IsNullOrEmpty(answerText) && !string.IsNullOrWhiteSpace(answerText))
             {
-                Text = answerText,
-                ApplicationUserId = _userService.GetUserId(User),
-                Date = DateTime.UtcNow
-            };
+                var answer = new AnswerDTO
+                {
+                    Text = answerText,
+                    ApplicationUserId = _userService.GetUserId(User),
+                    Date = DateTime.UtcNow
+                };
 
-            _questionService.AddAnswer(questionId, answer);
+                _questionService.AddAnswer(questionId.Value, answer);
 
-            return GetLastAnswers(questionId, 10);
+                return GetLastAnswers(questionId.Value, 10);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [AllowAnonymous]

@@ -36,7 +36,7 @@ namespace askLNU.Controllers
             _mapper = new Mapper(config);
         }
         
-        public async Task<IActionResult> Index(string faculties, string tag,string sortMethod, int page = 1)
+        public async Task<IActionResult> Index(string faculties, string tag, string sortMethod, int page = 1)
         {
             _logger.LogInformation("User on main page.");
 
@@ -106,7 +106,7 @@ namespace askLNU.Controllers
             //get faculty id
             var facultyID =_facultyService.GetFacultyIdByName(faculties);
             // get list of names of faculties
-            var nameFaculties = new SelectList(_questionService.GetAllFaculties().Select(f=>f.Title).ToList());
+            var nameFaculties = new SelectList(_facultyService.GetAll().Select(f=>f.Title).ToList());
             //add faculty name to ViewBag to have names in DropDown kist in View
             ViewBag.faculties = nameFaculties;
             // filters all guestions by faculty_id

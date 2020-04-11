@@ -24,7 +24,6 @@ namespace askLNU.Controllers
         private Mapper _mapper;
         private Mapper _mapperFaculty;
 
-
         public AdminController(ILogger<AdminController> log,
             IUserService service,
             IFacultyService facultyService)

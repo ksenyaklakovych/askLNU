@@ -4,9 +4,9 @@ using System.Text;
 using askLNU.DAL.EF;
 using askLNU.DAL.Interfaces;
 using askLNU.DAL.Entities;
+using askLNU.DAL.Repositories;
 
- 
-namespace askLNU.DAL.Repositories
+namespace askLNU.DAL.EF
 {
     public class EFUnitOfWork : IUnitOfWork
     {
@@ -19,7 +19,7 @@ namespace askLNU.DAL.Repositories
         private QuestionTagRepository questionTagRepository;
         private TagRepository tagRepository;
         private ApplicationUserFavoriteQuestionRepository favoriteQuestionRepository;
-        private ApplicationUserVotedQuestionRepository applicationUserVotedQuestionRepository;
+        private QuestionVoteRepository questionVoteRepository;
 
 
         public EFUnitOfWork(ApplicationDbContext context)
@@ -100,13 +100,13 @@ namespace askLNU.DAL.Repositories
             }
         }
 
-        public IRepository<ApplicationUserVotedQuestion> ApplicationUserVotedQuestions
+        public IRepository<QuestionVote> QuestionVotes
         {
             get
             {
-                if (applicationUserVotedQuestionRepository == null)
-                    applicationUserVotedQuestionRepository = new ApplicationUserVotedQuestionRepository(db);
-                return applicationUserVotedQuestionRepository;
+                if (questionVoteRepository == null)
+                    questionVoteRepository = new QuestionVoteRepository(db);
+                return questionVoteRepository;
             }
         }
 

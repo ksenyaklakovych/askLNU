@@ -65,15 +65,8 @@ namespace askLNU.BLL.Services
 
         public int GetFacultyIdByName(string name)
         {
-            try
-            {
-                var id = _unitOfWork.Faculties.GetAll().Where(f => f.Title == name).Select(f => f.Id).First();
-                return id;
-            }
-            catch(Exception)
-            {
-                return -1;
-            }
+            var faculty = _unitOfWork.Faculties.Find(f => f.Title == name).FirstOrDefault();
+            return faculty?.Id ?? -1;
         }
         public void Dispose(int id)
         {
