@@ -10,6 +10,6 @@ namespace askLNU.BLL.Interfaces
         public void CreateAnswer(AnswerDTO answerDto);
         public AnswerDTO GetAnswer(int? id);
         public IEnumerable<AnswerDTO> GetAnswersByQuestionId(int? id);
-        public void Dispose();
+        public void Dispose(int answerId);
     }
 }

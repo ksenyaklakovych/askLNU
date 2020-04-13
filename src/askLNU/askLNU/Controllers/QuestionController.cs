@@ -166,5 +166,13 @@ namespace askLNU.Controllers
             _questionService.Dispose(questionId);
             return RedirectToAction("Index","Home");
         }
+
+        [Authorize(Roles = "Moderator,Admin")]
+        public ActionResult DeleteAnswer(int answerId)
+        {
+            _logger.LogInformation($"Moderator deleted answer with id {answerId}.");
+            _answerService.Dispose(answerId);
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

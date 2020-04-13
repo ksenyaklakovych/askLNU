@@ -9,6 +9,7 @@ using askLNU.BLL.Infrastructure;
 using askLNU.BLL.Interfaces;
 using AutoMapper;
 using askLNU.BLL.Infrastructure.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace askLNU.BLL.Services
 {
@@ -16,11 +17,14 @@ namespace askLNU.BLL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<AnswerService> _logger;
 
-        public AnswerService(IUnitOfWork unitOfWork, IMapper mapper)
+        public AnswerService(IUnitOfWork unitOfWork, IMapper mapper,
+            ILogger<AnswerService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
         public void CreateAnswer(AnswerDTO answerDto)
         {
@@ -56,9 +60,11 @@ namespace askLNU.BLL.Services
             }
         }
 
-        public void Dispose()
+        public void Dispose(int answerId)
         {
-            _unitOfWork.Dispose();
+            _unitOfWork.Answers.Delete(answerId);
+            _logger.LogInformation($"Deleted answer with id {answerId}");
+            _unitOfWork.Save();
         }
 
         public IEnumerable<AnswerDTO> GetAnswersByQuestionId(int? id)
@@ -66,7 +72,7 @@ namespace askLNU.BLL.Services
             if (id != null)
             {
                 var answers = _unitOfWork.Answers.Find(a => a.QuestionId == id);
-                var answersDTOs= _mapper.Map<IEnumerable<AnswerDTO>>(answers);
+                var answersDTOs = _mapper.Map<IEnumerable<AnswerDTO>>(answers);
                 return answersDTOs;
             }
             else
