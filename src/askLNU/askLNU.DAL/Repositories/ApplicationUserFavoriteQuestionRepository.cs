@@ -52,11 +52,6 @@ namespace askLNU.DAL.Repositories
             if (answer != null)
                 db.ApplicationUserFavoriteQuestion.Remove(answer);
         }
-        public void Remove(string userId, int questionId)
-        {
-            ApplicationUserFavoriteQuestion answer = new ApplicationUserFavoriteQuestion { ApplicationUserId = userId, QuestionId = questionId };
-            if (answer != null)
-                db.ApplicationUserFavoriteQuestion.Remove(answer);
-        }
+       
     }
 }

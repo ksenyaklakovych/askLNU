@@ -59,79 +59,90 @@
     }
 
 
-    <div class="container-fluid" style="max-width:850px; float:left">
-        @foreach (var item in Model.Questions)
+<div class="container-fluid" style="max-width:850px; float:left">
+    @foreach (var item in Model.Questions)
+    {
+        @if (!item.IsSolved)
         {
-            @if (!item.IsSolved)
-            {
-                <div class="border border-right-0 border-left-0 border-warning">
-                    <div class="row">
-                        <div class="col-10 text-left">
-                            <h2>
-                                @Html.ActionLink(item.Title, "Details", "Question", new { id = item.Id }, new { style = "text-decoration:none; color: black;" })
-                            </h2>
-                        </div>
-                        @if (SignInService.IsSignedIn(User))
-                        {
-                            <div class="col-2 text-right">
-                                <button type="button" class="btn btn-warning btn-lg" onclick="location.href='@Url.Action("AddToFavorites", "", new { questionId = item.Id }) '">
-                                    @if (item.IsFavorite == false)
-                                    {
-                                        <span class="glyphicon glyphicon-star-empty"></span>
-                                    }
-                                    else
-                                    {
-                                        <span class="glyphicon glyphicon"></span>
-                                    }
-                                </button>
-                            </div>
-                        }
+            <div class="border border-right-0 border-left-0 border-warning">
+                <div class="row">
+                    <div class="col-10 text-left">
+                        <h2>
+                            @Html.ActionLink(item.Title, "Details", "Question", new { id = item.Id }, new { style = "text-decoration:none; color: black;" })
+                        </h2>
                     </div>
-                    <div class="row">
-                        <div class="col-2 text-center">
-                            <h3>
-                                @Html.DisplayFor(modelItem => item.numberOfAnswers)
-                            </h3>
-                            answers
-                        </div>
-                        <div class="col-7">
-                            @Html.DisplayFor(modelItem => item.Text)
-                            <div class="w-100"></div>
-                            @foreach (var tag in item.Tags)
-                            {
-                                <p class="btn btn-sm btn-dark">@tag </p>
-                            }
-                        </div>
-                        <div class="col-2 text-center">
-                            <h4>
-                                Rate: @Html.DisplayFor(modelItem => item.Rating)
-                            </h4>
-                            @DateTime.Now.Subtract(item.Date).Days.ToString() days ago
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        <div class="row">
-            <div class="col-12 text-center">
-                <div class="pagination">
-                    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+                 
+                    @if (User.IsInRole("Moderator"))
                     {
-                        @for (int i = 1; i <= Model.PageCount; i++)
+                        <div class="col-2 text-right">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="location.href='@Url.Action("DeleteQuestion", "Question", new { questionId = item.Id }) '">
+                                <i class="fa fa-trash-o" style="font-size:15px;color:white"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    <div class="col-2 text-center">
+                        <h3>
+                            @Html.DisplayFor(modelItem => item.numberOfAnswers)
+                        </h3>
+                        answers
+                    </div>
+                    <div class="col-7">
+                        @Html.DisplayFor(modelItem => item.Text)
+                        <div class="w-100"></div>
+                        @foreach (var tag in item.Tags)
                         {
-                            @if (i != Model.CurrentPageIndex)
-                            {
-                                @Html.ActionLink($"{i}", "Index", "Home", new { page = i })
-                            }
-                            else 
-                            {
-                                <a class="active">@i</a>
-                            }
+                            <p class="btn btn-sm btn-dark">@tag </p>
                         }
+                    </div>
+                    <div class="col-2 text-center">
+                        <h4>
+                            Rate: @Html.DisplayFor(modelItem => item.Rating)
+                        </h4>
+                        @DateTime.Now.Subtract(item.Date).Days.ToString() days ago
+                    </div>
+                    @if (SignInService.IsSignedIn(User))
+                    {
+                        <div class="col-1 text-right">
+                            <button type="button" class="btn btn-warning btn-lg" onclick="location.href='@Url.Action("AddToFavorites", "", new { questionId = item.Id }) '">
+                                @if (item.IsFavorite == false)
+                                {
+                                    <span class="glyphicon glyphicon-star-empty"></span>
+                                }
+                                else
+                                {
+                                    <span class="glyphicon glyphicon"></span>
+                                }
+                            </button>
+                        </div>
                     }
                 </div>
             </div>
+        }
+    }
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="pagination">
+                @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+                {
+                    @for (int i = 1; i <= Model.PageCount; i++)
+                    {
+                        @if (i != Model.CurrentPageIndex)
+                        {
+                            @Html.ActionLink($"{i}", "Index", "Home", new { page = i })
+                        }
+                        else
+                        {
+                            <a class="active">@i</a>
+                        }
+                    }
+                }
+            </div>
         </div>
     </div>
+    <br />
+    <br />
+</div>
 </body>
 </html>                                                                     

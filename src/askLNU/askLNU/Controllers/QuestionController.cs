@@ -8,6 +8,7 @@ using askLNU.InputModels;
 using askLNU.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace askLNU.Controllers
 {
@@ -19,12 +20,14 @@ namespace askLNU.Controllers
         private readonly IQuestionService _questionService;
         private readonly IUserService _userService;
         private readonly IAnswerService _answerService;
+        private readonly ILogger<QuestionController> _logger;
 
         public QuestionController(
             IFacultyService facultyService,
             ITagService tagService,
             IQuestionService questionService,
             IUserService userService,
+            ILogger<QuestionController> logger,
             IAnswerService answerService)
         {
             _facultyService = facultyService;
@@ -32,6 +35,7 @@ namespace askLNU.Controllers
             _questionService = questionService;
             _userService = userService;
             _answerService = answerService;
+            _logger = logger;
         }
 
         [AllowAnonymous]
@@ -95,7 +99,7 @@ namespace askLNU.Controllers
                 }
             }
 
-            return RedirectToAction("Details", "Question", new { id =  questionDTO.Id});
+            return RedirectToAction("Details", "Question", new { id = questionDTO.Id });
         }
 
         [HttpPost]
@@ -153,6 +157,14 @@ namespace askLNU.Controllers
                                 };
 
             return sortedAnswers.Take(amount).ToList();
+        }
+
+        [Authorize(Roles = "Moderator,Admin")]
+        public ActionResult DeleteQuestion(int questionId)
+        {
+            _logger.LogInformation($"Moderator deleted question with id {questionId}.");
+            _questionService.Dispose(questionId);
+            return RedirectToAction("Index","Home");
         }
     }
 }

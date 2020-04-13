@@ -9,6 +9,7 @@ using askLNU.BLL.Infrastructure;
 using askLNU.BLL.Interfaces;
 using AutoMapper;
 using askLNU.BLL.Infrastructure.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace askLNU.BLL.Services
 {
@@ -16,12 +17,16 @@ namespace askLNU.BLL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<QuestionService> _logger;
+
 
         public QuestionService(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
+            ILogger<QuestionService> logger,
             IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _logger = logger;
             _mapper = mapper;
         }
 
@@ -60,9 +65,32 @@ namespace askLNU.BLL.Services
             }
         }
 
-        public void Dispose()
+        public void Dispose(int questionId)
         {
-            _unitOfWork.Dispose();
+            var question = _unitOfWork.Questions.Get(questionId);
+            var answersToQuestion = _unitOfWork.Answers.Find(a => a.QuestionId == questionId);
+            foreach (var answer in answersToQuestion)
+            {
+                _unitOfWork.Answers.Delete(answer.Id);
+            }
+            while (true)
+            {
+                try
+                {
+                    var favorite = question.ApplicationUserFavoriteQuestions
+                                      .Where(fav => fav.QuestionId == questionId).First();
+                    question.ApplicationUserFavoriteQuestions.Remove(favorite);
+                    _unitOfWork.Questions.Update(question);
+                }
+                catch (System.InvalidOperationException)
+                {
+                    break;
+                }
+                
+            }
+            _unitOfWork.Questions.Delete(questionId);
+            _logger.LogInformation($"Deleted question with id {questionId}");
+            _unitOfWork.Save();
         }
 
         public IEnumerable<QuestionDTO> GetAll()
