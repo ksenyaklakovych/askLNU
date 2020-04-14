@@ -42,58 +42,60 @@ namespace askLNU.Controllers
         {
             _logger.LogInformation($"Admin is on page with all users and rights.");
             var usersDTO = _userService.GetUsersByEmail(email);
-            var usersViewModel = _mapper.Map<IEnumerable<UserForAdminViewModel>>(usersDTO);
+            var usersViewModel = this._mapper.Map<IEnumerable<UserForAdminViewModel>>(usersDTO);
             foreach (var user in usersViewModel)
             {
-                user.IsModerator = _userService.CheckIfUserHasRole(user.Id, "Moderator");
+                user.IsModerator = this._userService.CheckIfUserHasRole(user.Id, "Moderator");
             }
-            return View(usersViewModel);
+
+            return this.View(usersViewModel);
         }
-        
+
         [Authorize(Roles = "Admin")]
         public ActionResult ChangeRights(string userId, bool remove)
         {
             if (remove)
             {
-                _logger.LogInformation($"Admin removes Moderator rights from user wirh id {userId}");
-                _userService.RemoveModeratorRole(userId);
+                this._logger.LogInformation($"Admin removes Moderator rights from user wirh id {userId}");
+                this._userService.RemoveModeratorRole(userId);
             }
             else
             {
-                _logger.LogInformation($"Admin gives Moderator rights to user wirh id {userId}");
-                _userService.GiveModeratorRole(userId);
+                this._logger.LogInformation($"Admin gives Moderator rights to user wirh id {userId}");
+                this._userService.GiveModeratorRole(userId);
             }
-            return RedirectToAction("Index");
+
+            return this.RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admin")]
         public ActionResult AllFaculties()
         {
-            _logger.LogInformation("Display all faculties");
-            var all_faculties= _mapperFaculty.Map<IEnumerable <FacultyViewModel>>(_facultyService.GetAll());
-            return View(all_faculties);
+            this._logger.LogInformation("Display all faculties");
+            var all_faculties = this._mapperFaculty.Map<IEnumerable<FacultyViewModel>>(this._facultyService.GetAll());
+            return this.View(all_faculties);
         }
-        
+
         [Authorize(Roles = "Admin")]
         public ActionResult CreateNewFaculty()
         {
             return View();
         }
-        
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult CreateNewFaculty(FacultyViewModel faculty)
         {
             FacultyDTO facultyDTO = new FacultyDTO { Title = faculty.Title };
-            _facultyService.CreateFaculty(facultyDTO);
-            return RedirectToAction("AllFaculties");
+            this._facultyService.CreateFaculty(facultyDTO);
+            return this.RedirectToAction("AllFaculties");
         }
 
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteFaculty(int id)
         {
-            _facultyService.Dispose(id);
-            return RedirectToAction("AllFaculties");
+            this._facultyService.Dispose(id);
+            return this.RedirectToAction("AllFaculties");
         }
     }
 }

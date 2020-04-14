@@ -29,7 +29,13 @@ namespace askLNU.BLL.Services
             _logger = logger;
             _mapper = mapper;
         }
-
+        public QuestionService(
+            IUnitOfWork unitOfWork,
+            IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
         public void CreateQuestion(QuestionDTO questionDTO)
         {
             if (questionDTO != null)

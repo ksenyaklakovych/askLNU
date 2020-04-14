@@ -95,7 +95,7 @@ namespace askLNU.Tests
             var result = userService.GetUsersByEmail(testEmail);
 
             //Assert
-            Assert.Equal(1,result.Count());
+            Assert.Single(result);
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace askLNU.Tests
             var result = userService.GetUsersByEmail(testEmail);
 
             //Assert
-            Assert.Equal(0, result.Count());
+            Assert.Empty(result);
         }
         //TO DO:
         //CheckIfUserHasRole

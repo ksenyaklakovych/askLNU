@@ -44,26 +44,28 @@ namespace askLNU.Controllers
                 var result = await _signInService.PasswordSignInAsync(loginInputModel.UserName, loginInputModel.Password, loginInputModel.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return RedirectToAction("Index", "Home");
+                    this._logger.LogInformation("User logged in.");
+                    return this.RedirectToAction("Index", "Home");
                 }
+
                 if (result.RequiresTwoFactor)
                 {
                     // return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
+
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
+                    this._logger.LogWarning("User account locked out.");
+                    return this.RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View("Index");
+                    this.ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return this.View("Index");
                 }
             }
 
-            return View("Index");
+            return this.View("Index");
         }
     }
 }

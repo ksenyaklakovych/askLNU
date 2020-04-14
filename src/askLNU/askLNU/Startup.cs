@@ -39,7 +39,6 @@ namespace askLNU
             services.Configure<AuthMessageSenderOptions>(Configuration);
             services.Configure<CloudinaryConfig>(Configuration.GetSection("CloudinaryConfig"));
 
-
             services.AddDALDependencies(Configuration.GetConnectionString("DefaultConnection"));
 
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
@@ -47,7 +46,6 @@ namespace askLNU
             services.AddTransient<ISignInService, SignInService>();
             services.AddTransient<IQuestionService, QuestionService>();
             services.AddTransient<IAnswerService, AnswerService>();
-
 
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<IFacultyService, FacultyService>();
@@ -76,9 +74,11 @@ namespace askLNU
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

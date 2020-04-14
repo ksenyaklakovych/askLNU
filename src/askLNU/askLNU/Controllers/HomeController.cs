@@ -24,8 +24,8 @@ namespace askLNU.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<HomeController> _logger;
         private Mapper _mapper;
-       
-        public HomeController(ILogger<HomeController> log,IQuestionService questService, IAnswerService answerService, IFacultyService facultyService, UserManager<ApplicationUser> userManager)
+
+        public HomeController(ILogger<HomeController> log, IQuestionService questService, IAnswerService answerService, IFacultyService facultyService, UserManager<ApplicationUser> userManager)
         {
             _logger = log;
             _questionService = questService;
@@ -35,29 +35,30 @@ namespace askLNU.Controllers
             var config = new MapperConfiguration(cfg => cfg.CreateMap<QuestionDTO, QuestionShortViewModel>());
             _mapper = new Mapper(config);
         }
-        
+
         public async Task<IActionResult> Index(string faculties, string tag, string sortMethod, int page = 1)
         {
-            _logger.LogInformation("User on main page.");
+            this._logger.LogInformation("User on main page.");
 
             //checking which user is logged in
-            var userCurrent = await _userManager.GetUserAsync(User);
-            // get all questions from DataBase 
-            var questions = _mapper.Map<IEnumerable<QuestionShortViewModel>>(_questionService.GetAll()).ToList();
-            //filling all class properties from another table from DataBase
+            var userCurrent = await this._userManager.GetUserAsync(User);
+
+            // get all questions from DataBase
+            var questions = this._mapper.Map<IEnumerable<QuestionShortViewModel>>(_questionService.GetAll()).ToList();
+
+            // filling all class properties from another table from DataBase
             for (int i = 0; i < questions.Count(); i++)
             {
                 questions[i].Tags = _questionService.GetTagsByQuestionID(questions[i].Id).ToList();
                 questions[i].numberOfAnswers = _answerService.GetAnswersByQuestionId(questions[i].Id).Count();
-                if (userCurrent!=null)
+                if (userCurrent != null)
                 {
                     questions[i].IsFavorite = _questionService.IsQuestionFavorite(userCurrent.Id, questions[i].Id);
-
                 }
             }
 
-            //checking if tag field isn't empty
-            if (!String.IsNullOrEmpty(tag))
+            // checking if tag field isn't empty
+            if (!string.IsNullOrEmpty(tag))
             {
                 _logger.LogInformation("Filtering by tags");
 
@@ -73,81 +74,88 @@ namespace askLNU.Controllers
                             break;
                         }
                     }
+
                     if (check == true)
                     {
                         list_of_questions.Add(questions[i]);
-
                     }
                 }
-                questions = list_of_questions;
 
+                questions = list_of_questions;
             }
 
-            //change list to IEnumerable
+            // change list to IEnumerable
             IEnumerable<QuestionShortViewModel> questionsWithTags = questions;
-            //create ViewBag to pass sorting methods to View 
-            ViewBag.sortMethod = new SelectList(new List<string> {"Rating","Date","Number of answers" });
-            //sort depending on sort method
+
+            // create ViewBag to pass sorting methods to View 
+            this.ViewBag.sortMethod = new SelectList(new List<string> { "Rating", "Date", "Number of answers" });
+
+            // sort depending on sort method
             switch (sortMethod)
             {
                 case "Rating":
                     questionsWithTags = questionsWithTags.OrderBy(s => s.Rating);
-                    _logger.LogInformation("Sorting questions by rate.");
+                    this._logger.LogInformation("Sorting questions by rate.");
                     break;
                 case "Date":
                     questionsWithTags = questionsWithTags.OrderBy(s => s.Date);
-                    _logger.LogInformation("Sorting questions by date.");
+                    this._logger.LogInformation("Sorting questions by date.");
                     break;
                 case "Number of answers":
                     questionsWithTags = questionsWithTags.OrderBy(s => s.numberOfAnswers);
-                    _logger.LogInformation("Sorting questions by number of answers.");
+                    this._logger.LogInformation("Sorting questions by number of answers.");
                     break;
             }
-            //get faculty id
-            var facultyID =_facultyService.GetFacultyIdByName(faculties);
+
+            // get faculty id
+            var facultyID = this._facultyService.GetFacultyIdByName(faculties);
+
             // get list of names of faculties
-            var nameFaculties = new SelectList(_facultyService.GetAll().Select(f=>f.Title).ToList());
-            //add faculty name to ViewBag to have names in DropDown kist in View
+            var nameFaculties = new SelectList(this._facultyService.GetAll().Select(f => f.Title).ToList());
+
+            // add faculty name to ViewBag to have names in DropDown kist in View
             ViewBag.faculties = nameFaculties;
             // filters all guestions by faculty_id
             if (!String.IsNullOrEmpty(faculties))
             {
                 _logger.LogInformation("Filtering by faculty.");
-                questionsWithTags = questionsWithTags.Where(s=>s.FacultyId==facultyID);
+                questionsWithTags = questionsWithTags.Where(s => s.FacultyId == facultyID);
             }
 
             int maxRows = 3;
             var questionsPerPages = questionsWithTags.Skip((page - 1) * maxRows).Take(maxRows);
             double pageCount = (int)Math.Ceiling((decimal)questionsWithTags.Count() / maxRows);
-            PagedViewModel pagedQuestions = new PagedViewModel { PageCount = (int)Math.Ceiling(pageCount), CurrentPageIndex=page, Questions = questionsPerPages };
+            PagedViewModel pagedQuestions = new PagedViewModel { PageCount = (int)Math.Ceiling(pageCount), CurrentPageIndex = page, Questions = questionsPerPages };
             return View(pagedQuestions);
         }
 
         public async Task<IActionResult> AddToFavorites(int questionId)
         {
             var userCurrent = await _userManager.GetUserAsync(User);
-            if (_questionService.IsQuestionFavorite(userCurrent.Id,questionId))
+            if (_questionService.IsQuestionFavorite(userCurrent.Id, questionId))
             {
                 _logger.LogInformation("Adding question to favorites.");
                 _questionService.RemoveFromFavorites(userCurrent.Id, questionId);
             }
             else
             {
-                _logger.LogInformation("Removing question from favorites.");
-                _questionService.AddToFavorites(userCurrent.Id, questionId);
+                this._logger.LogInformation("Removing question from favorites.");
+                this._questionService.AddToFavorites(userCurrent.Id, questionId);
             }
-            return RedirectToAction("Index");
+
+            return this.RedirectToAction("Index");
         }
+
         public IActionResult Privacy()
         {
-            _logger.LogInformation("User on privacy page.");
-            return View();
+            this._logger.LogInformation("User on privacy page.");
+            return this.View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

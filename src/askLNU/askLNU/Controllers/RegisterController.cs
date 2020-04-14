@@ -31,11 +31,11 @@ namespace askLNU.Controllers
             ILogger<RegisterController> logger,
             IImageService imageService)
         {
-            _emailSender = emailSender;
-            _userService = userService;
-            _signInService = signInService;
-            _logger = logger;
-            _imageService = imageService;
+            this._emailSender = emailSender;
+            this._userService = userService;
+            this._signInService = signInService;
+            this._logger = logger;
+            this._imageService = imageService;
         }
 
         public IActionResult Index()
@@ -45,13 +45,13 @@ namespace askLNU.Controllers
                 ExternalLogins = new List<AuthenticationScheme>()
             };
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterInputModel registerInputModel)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 var user = new UserDTO
                 {
@@ -62,39 +62,40 @@ namespace askLNU.Controllers
                     Course = registerInputModel.Course
                 };
 
-                var result = await _userService.CreateUserAsync(user, registerInputModel.Password);
+                var result = await this._userService.CreateUserAsync(user, registerInputModel.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User registered successfully.");
-                    user = await _userService.GetByEmailAsync(user.Email);
-                    var imageSrc = await _imageService.SaveImage(registerInputModel.Image);
-                    await _userService.UpdateImage(user.Id, imageSrc);
+                    this._logger.LogInformation("User registered successfully.");
+                    user = await this._userService.GetByEmailAsync(user.Email);
+                    var imageSrc = await this._imageService.SaveImage(registerInputModel.Image);
+                    await this._userService.UpdateImage(user.Id, imageSrc);
 
-                    var code = await _userService.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var code = await this._userService.GenerateEmailConfirmationTokenAsync(user.Id);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Action(
                          "ConfirmEmail", "Register",
                          new { userId = user.Id, code = code },
-                         protocol: Request.Scheme);
+                         protocol: this.Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(registerInputModel.Email, "Confirm your email",
+                    await this._emailSender.SendEmailAsync(registerInputModel.Email, "Confirm your email",
                         $"Please confirm your registration at askLNU website by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    if (_userService.RequireConfirmedAccount())
+                    if (this._userService.RequireConfirmedAccount())
                     {
-                        _logger.LogInformation("Redirected to registration confirmation page.");
-                        return RedirectToAction("Confirmation", new { email = registerInputModel.Email });
+                        this._logger.LogInformation("Redirected to registration confirmation page.");
+                        return this.RedirectToAction("Confirmation", new { email = registerInputModel.Email });
                     }
                     else
                     {
-                        await _signInService.SignInAsync(user, false);
-                        _logger.LogInformation("User signed in.");
-                        return RedirectToAction("Index");
+                        await this._signInService.SignInAsync(user, false);
+                        this._logger.LogInformation("User signed in.");
+                        return this.RedirectToAction("Index");
                     }
                 }
+
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    this.ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
 

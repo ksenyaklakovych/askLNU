@@ -23,7 +23,7 @@ namespace askLNU.Controllers.Api
         public List<string> FindTags(string searchString)
         {
             if (searchString == null)
-            { 
+            {
                 return new List<string>();
             }
 
