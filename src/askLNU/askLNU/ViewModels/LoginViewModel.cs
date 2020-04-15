@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace askLNU.ViewModels
+﻿namespace askLNU.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authentication;
+
     public class LoginViewModel
     {
         [Required]

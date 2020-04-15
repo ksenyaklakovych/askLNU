@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using askLNU.BLL.DTO;
-using askLNU.BLL.Interfaces;
-using askLNU.InputModels;
-using askLNU.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
-namespace askLNU.Controllers
+﻿namespace askLNU.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using askLNU.BLL.DTO;
+    using askLNU.BLL.Interfaces;
+    using askLNU.InputModels;
+    using askLNU.ViewModels;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+
     [Authorize(Roles = "User")]
     public class QuestionController : Controller
     {
@@ -30,25 +30,25 @@ namespace askLNU.Controllers
             ILogger<QuestionController> logger,
             IAnswerService answerService)
         {
-            _facultyService = facultyService;
-            _tagService = tagService;
-            _questionService = questionService;
-            _userService = userService;
-            _answerService = answerService;
-            _logger = logger;
+            this._facultyService = facultyService;
+            this._tagService = tagService;
+            this._questionService = questionService;
+            this._userService = userService;
+            this._answerService = answerService;
+            this._logger = logger;
         }
 
         [AllowAnonymous]
         [HttpGet("{controller}/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            var question = _questionService.GetQuestion(id);
-            var author = await _userService.GetByIdAsync(question.ApplicationUserId);
+            var question = this._questionService.GetQuestion(id);
+            var author = await this._userService.GetByIdAsync(question.ApplicationUserId);
 
             var authorViewModel = new UserShortViewModel
             {
                 UserName = author.UserName,
-                ImageSrc = author.ImageSrc
+                ImageSrc = author.ImageSrc,
             };
 
             var viewModel = new QuestionViewModel
@@ -58,21 +58,21 @@ namespace askLNU.Controllers
                 Text = question.Text,
                 Date = question.Date,
                 Author = authorViewModel,
-                Tags = question.TagsId.Select(id => _tagService.GetTag(id).Text).ToList(),
+                Tags = question.TagsId.Select(id => this._tagService.GetTag(id).Text).ToList(),
                 Rating = question.Rating,
             };
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         public IActionResult Create()
         {
             var viewModel = new CreateQuestionViewModel
             {
-                Faculties = _facultyService.GetAll().ToList()
+                Faculties = this._facultyService.GetAll().ToList(),
             };
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         [HttpPost]
@@ -85,36 +85,36 @@ namespace askLNU.Controllers
                 Text = questionInput.Text,
                 FacultyId = questionInput.FacultyId,
                 Date = DateTime.Now,
-                ApplicationUserId = _userService.GetUserId(User)
+                ApplicationUserId = this._userService.GetUserId(this.User),
             };
 
-            _questionService.CreateQuestion(questionDTO);
+            this._questionService.CreateQuestion(questionDTO);
 
             if (questionInput.Tags != null)
             {
                 foreach (var tag in questionInput.Tags)
                 {
-                    var tagId = _tagService.FindOrCreate(tag);
-                    _questionService.AddTag(questionDTO.Id, tagId);
+                    var tagId = this._tagService.FindOrCreate(tag);
+                    this._questionService.AddTag(questionDTO.Id, tagId);
                 }
             }
 
-            return RedirectToAction("Details", "Question", new { id = questionDTO.Id });
+            return this.RedirectToAction("Details", "Question", new { id = questionDTO.Id });
         }
 
         [HttpPost]
         public int VoteUp([FromForm] int questionId)
         {
-            var userId = _userService.GetUserId(User);
-            var rating = _questionService.VoteUp(userId, questionId);
+            var userId = this._userService.GetUserId(this.User);
+            var rating = this._questionService.VoteUp(userId, questionId);
             return rating;
         }
 
         [HttpPost]
         public int VoteDown([FromForm] int questionId)
         {
-            var userId = _userService.GetUserId(User);
-            var rating = _questionService.VoteDown(userId, questionId);
+            var userId = this._userService.GetUserId(this.User);
+            var rating = this._questionService.VoteDown(userId, questionId);
             return rating;
         }
 
@@ -126,13 +126,13 @@ namespace askLNU.Controllers
                 var answer = new AnswerDTO
                 {
                     Text = answerText,
-                    ApplicationUserId = _userService.GetUserId(User),
-                    Date = DateTime.UtcNow
+                    ApplicationUserId = this._userService.GetUserId(this.User),
+                    Date = DateTime.UtcNow,
                 };
 
-                _questionService.AddAnswer(questionId.Value, answer);
+                this._questionService.AddAnswer(questionId.Value, answer);
 
-                return GetLastAnswers(questionId.Value, 10);
+                return this.GetLastAnswers(questionId.Value, 10);
             }
             else
             {
@@ -143,7 +143,7 @@ namespace askLNU.Controllers
         [AllowAnonymous]
         public List<AnswerViewModel> GetLastAnswers(int questionId, int amount)
         {
-            var answers = _answerService.GetAnswersByQuestionId(questionId);
+            var answers = this._answerService.GetAnswersByQuestionId(questionId);
             var sortedAnswers = from answer in answers
                                 orderby answer.Date descending
                                 orderby answer.IsSolution descending
@@ -153,7 +153,7 @@ namespace askLNU.Controllers
                                     Rating = answer.Rating,
                                     IsSolution = answer.IsSolution,
                                     Date = answer.Date.ToLocalTime().ToShortDateString(),
-                                    AuthorName = _userService.GetByIdAsync(answer.ApplicationUserId).Result.UserName
+                                    AuthorName = this._userService.GetByIdAsync(answer.ApplicationUserId).Result.UserName,
                                 };
 
             return sortedAnswers.Take(amount).ToList();
@@ -162,17 +162,17 @@ namespace askLNU.Controllers
         [Authorize(Roles = "Moderator,Admin")]
         public ActionResult DeleteQuestion(int questionId)
         {
-            _logger.LogInformation($"Moderator deleted question with id {questionId}.");
-            _questionService.Dispose(questionId);
-            return RedirectToAction("Index","Home");
+            this._logger.LogInformation($"Moderator deleted question with id {questionId}.");
+            this._questionService.Dispose(questionId);
+            return this.RedirectToAction("Index", "Home");
         }
 
         [Authorize(Roles = "Moderator,Admin")]
         public ActionResult DeleteAnswer(int answerId)
         {
-            _logger.LogInformation($"Moderator deleted answer with id {answerId}.");
-            _answerService.Dispose(answerId);
-            return RedirectToAction("Index", "Home");
+            this._logger.LogInformation($"Moderator deleted answer with id {answerId}.");
+            this._answerService.Dispose(answerId);
+            return this.RedirectToAction("Index", "Home");
         }
     }
 }

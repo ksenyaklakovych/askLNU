@@ -52,6 +52,3 @@ namespace askLNU.DAL.Repositories
 
     }
 }
-    
-    
-

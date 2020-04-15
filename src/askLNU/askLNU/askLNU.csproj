@@ -6,6 +6,26 @@
     <UserSecretsId>aspnet-askLNU-6C6E514C-8476-441A-A2AB-C978F0CBD99C</UserSecretsId>
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <Content Remove="stylecop.json" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Remove="Settings.StyleCop" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <AdditionalFiles Include="Settings.StyleCop" />
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />

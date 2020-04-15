@@ -1,9 +1,9 @@
-﻿using askLNU.DAL.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-
-namespace askLNU.DAL.EF
+﻿namespace askLNU.DAL.EF
 {
+    using askLNU.DAL.Entities;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
+
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -12,11 +12,17 @@ namespace askLNU.DAL.EF
         }
 
         public DbSet<Faculty> Faculties { get; set; }
+
         public DbSet<Notification> Notifications { get; set; }
+
         public DbSet<Label> Labels { get; set; }
+
         public DbSet<Question> Questions { get; set; }
+
         public DbSet<Answer> Answers { get; set; }
+
         public DbSet<Tag> Tags { get; set; }
+
         public DbSet<QuestionTag> QuestionTag { get; set; }
 
         public DbSet<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestion { get; set; }

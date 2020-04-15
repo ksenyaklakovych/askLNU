@@ -1,33 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using askLNU.BLL.Configs;
-using askLNU.BLL.Infrastructure;
-using askLNU.BLL.Services;
-using askLNU.BLL.Interfaces;
-using askLNU.DAL.EF;
-using askLNU.DAL.Interfaces;
-using askLNU.DAL.Repositories;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using AutoMapper;
-
 namespace askLNU
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using askLNU.BLL.Configs;
+    using askLNU.BLL.Infrastructure;
+    using askLNU.BLL.Interfaces;
+    using askLNU.BLL.Services;
+    using askLNU.DAL.EF;
+    using askLNU.DAL.Interfaces;
+    using askLNU.DAL.Repositories;
+    using AutoMapper;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.HttpsPolicy;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Identity.UI;
+    using Microsoft.AspNetCore.Identity.UI.Services;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -35,9 +35,9 @@ namespace askLNU
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AdminConfig>(Configuration.GetSection("AdminConfig"));
-            services.Configure<AuthMessageSenderOptions>(Configuration);
-            services.Configure<CloudinaryConfig>(Configuration.GetSection("CloudinaryConfig"));
+            services.Configure<AdminConfig>(this.Configuration.GetSection("AdminConfig"));
+            services.Configure<AuthMessageSenderOptions>(this.Configuration);
+            services.Configure<CloudinaryConfig>(this.Configuration.GetSection("CloudinaryConfig"));
 
             services.AddDALDependencies(Configuration.GetConnectionString("DefaultConnection"));
 

@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using askLNU.BLL.DTO;
-using askLNU.BLL.Interfaces;
-using askLNU.DAL.Entities;
-using askLNU.InputModels;
-using askLNU.ViewModels;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
-namespace askLNU.Controllers
+﻿namespace askLNU.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using askLNU.BLL.DTO;
+    using askLNU.BLL.Interfaces;
+    using askLNU.DAL.Entities;
+    using askLNU.InputModels;
+    using askLNU.ViewModels;
+    using AutoMapper;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+
     public class AdminController : Controller
     {
         private readonly ILogger<AdminController> _logger;
@@ -24,24 +24,25 @@ namespace askLNU.Controllers
         private Mapper _mapper;
         private Mapper _mapperFaculty;
 
-        public AdminController(ILogger<AdminController> log,
+        public AdminController(
+            ILogger<AdminController> log,
             IUserService service,
             IFacultyService facultyService)
         {
-            _logger = log;
-            _userService = service;
-            _facultyService = facultyService;
+            this._logger = log;
+            this._userService = service;
+            this._facultyService = facultyService;
             var config = new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, UserForAdminViewModel>());
             var config2 = new MapperConfiguration(cfg => cfg.CreateMap<FacultyDTO, FacultyViewModel>());
-            _mapper = new Mapper(config);
-            _mapperFaculty = new Mapper(config2);
+            this._mapper = new Mapper(config);
+            this._mapperFaculty = new Mapper(config2);
         }
 
         [Authorize(Roles = "Admin")]
         public ActionResult Index(string email)
         {
-            _logger.LogInformation($"Admin is on page with all users and rights.");
-            var usersDTO = _userService.GetUsersByEmail(email);
+            this._logger.LogInformation($"Admin is on page with all users and rights.");
+            var usersDTO = this._userService.GetUsersByEmail(email);
             var usersViewModel = this._mapper.Map<IEnumerable<UserForAdminViewModel>>(usersDTO);
             foreach (var user in usersViewModel)
             {
@@ -79,7 +80,7 @@ namespace askLNU.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult CreateNewFaculty()
         {
-            return View();
+            return this.View();
         }
 
         [Authorize(Roles = "Admin")]

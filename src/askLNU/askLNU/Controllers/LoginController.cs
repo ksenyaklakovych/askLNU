@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using askLNU.BLL.Interfaces;
-using askLNU.InputModels;
-using askLNU.ViewModels;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
-namespace askLNU.Controllers
+﻿namespace askLNU.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using askLNU.BLL.Interfaces;
+    using askLNU.InputModels;
+    using askLNU.ViewModels;
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+
     public class LoginController : Controller
     {
         private readonly ISignInService _signInService;
@@ -19,29 +19,29 @@ namespace askLNU.Controllers
 
         public LoginController(ISignInService signInService, ILogger<LoginController> logger)
         {
-            _signInService = signInService;
-            _logger = logger;
+            this._signInService = signInService;
+            this._logger = logger;
         }
 
         public async Task<IActionResult> Index()
         {
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            await this.HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             var viewModel = new LoginViewModel
             {
-                ExternalLogins = new List<AuthenticationScheme>()
+                ExternalLogins = new List<AuthenticationScheme>(),
             };
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         public async Task<IActionResult> Login(LoginInputModel loginInputModel)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInService.PasswordSignInAsync(loginInputModel.UserName, loginInputModel.Password, loginInputModel.RememberMe, lockoutOnFailure: false);
+                var result = await this._signInService.PasswordSignInAsync(loginInputModel.UserName, loginInputModel.Password, loginInputModel.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     this._logger.LogInformation("User logged in.");

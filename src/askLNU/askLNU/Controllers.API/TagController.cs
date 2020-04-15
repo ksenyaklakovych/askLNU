@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using askLNU.BLL.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-namespace askLNU.Controllers.Api
+﻿namespace askLNU.Controllers.Api
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using askLNU.BLL.Interfaces;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+
     [Route("api/[controller]")]
     [ApiController]
     public class TagController : ControllerBase
@@ -16,7 +16,7 @@ namespace askLNU.Controllers.Api
 
         public TagController(ITagService tagService)
         {
-            _tagService = tagService;
+            this._tagService = tagService;
         }
 
         [HttpGet("Find")]
@@ -27,7 +27,7 @@ namespace askLNU.Controllers.Api
                 return new List<string>();
             }
 
-            return _tagService.FindTags(searchString);
+            return this._tagService.FindTags(searchString);
         }
     }
 }
