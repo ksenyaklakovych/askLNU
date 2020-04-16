@@ -20,6 +20,7 @@
         private readonly ILogger<AdminController> _logger;
         private readonly IUserService _userService;
         private readonly IFacultyService _facultyService;
+        private readonly ITagService _tagService;
 
         private Mapper _mapper;
         private Mapper _mapperFaculty;
@@ -27,7 +28,8 @@
         public AdminController(
             ILogger<AdminController> log,
             IUserService service,
-            IFacultyService facultyService)
+            IFacultyService facultyService,
+            ITagService tagService)
         {
             this._logger = log;
             this._userService = service;
@@ -35,6 +37,7 @@
             var config = new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, UserForAdminViewModel>());
             var config2 = new MapperConfiguration(cfg => cfg.CreateMap<FacultyDTO, FacultyViewModel>());
             this._mapper = new Mapper(config);
+            this._tagService = tagService;
             this._mapperFaculty = new Mapper(config2);
         }
 
@@ -78,7 +81,20 @@
         }
 
         [Authorize(Roles = "Admin")]
+        public ActionResult AllTags()
+        {
+            var all_tags = this._tagService.GetAll();
+            return this.View(all_tags);
+        }
+
+        [Authorize(Roles = "Admin")]
         public ActionResult CreateNewFaculty()
+        {
+            return this.View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult CreateNewTag()
         {
             return this.View();
         }
@@ -93,10 +109,26 @@
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public ActionResult CreateNewTag(TagDTO tag)
+        {
+            TagDTO tagDTO = new TagDTO { Text = tag.Text };
+            this._tagService.CreateTag(tagDTO);
+            return this.RedirectToAction("AllTags");
+        }
+
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteFaculty(int id)
         {
             this._facultyService.Dispose(id);
             return this.RedirectToAction("AllFaculties");
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult DeleteTag(int id)
+        {
+            this._tagService.Dispose(id);
+            return this.RedirectToAction("AllTags");
         }
     }
 }

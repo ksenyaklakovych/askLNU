@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Logging;
+
 
 namespace askLNU.BLL.Services
 {
@@ -14,11 +16,13 @@ namespace askLNU.BLL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<TagService> _logger;
 
-        public TagService(IUnitOfWork unitOfWork, IMapper mapper)
+        public TagService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TagService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public void CreateTag(TagDTO tagDTO)
@@ -64,6 +68,13 @@ namespace askLNU.BLL.Services
         {
             var tag = _unitOfWork.Tags.Get(id);
             return _mapper.Map<TagDTO>(tag);
+        }
+
+        public void Dispose(int id)
+        {
+            _logger.LogInformation("Deleted tag");
+            _unitOfWork.Tags.Delete(id);
+            _unitOfWork.Save();
         }
     }
 }

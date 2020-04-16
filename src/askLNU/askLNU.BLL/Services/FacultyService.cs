@@ -9,6 +9,7 @@ using askLNU.BLL.Interfaces;
 using AutoMapper;
 using askLNU.BLL.Infrastructure.Exceptions;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace askLNU.BLL.Services
 {
@@ -16,11 +17,14 @@ namespace askLNU.BLL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<FacultyService> _logger;
 
-        public FacultyService(IUnitOfWork unitOfWork, IMapper mapper)
+
+        public FacultyService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<FacultyService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public void CreateFaculty(FacultyDTO facultyDTO)
