@@ -75,7 +75,7 @@
         [Authorize(Roles = "Admin")]
         public ActionResult AllFaculties()
         {
-            this._logger.LogInformation("Display all faculties");
+            this._logger.LogInformation("Admin opened page with all faculties");
             var all_faculties = this._mapperFaculty.Map<IEnumerable<FacultyViewModel>>(this._facultyService.GetAll());
             return this.View(all_faculties);
         }
@@ -83,6 +83,7 @@
         [Authorize(Roles = "Admin")]
         public ActionResult AllTags()
         {
+            this._logger.LogInformation("Admin opened page with all tags");
             var all_tags = this._tagService.GetAll();
             return this.View(all_tags);
         }
@@ -103,6 +104,7 @@
         [HttpPost]
         public ActionResult CreateNewFaculty(FacultyViewModel faculty)
         {
+            this._logger.LogInformation("Admin created new faculty");
             FacultyDTO facultyDTO = new FacultyDTO { Title = faculty.Title };
             this._facultyService.CreateFaculty(facultyDTO);
             return this.RedirectToAction("AllFaculties");
@@ -112,6 +114,7 @@
         [HttpPost]
         public ActionResult CreateNewTag(TagDTO tag)
         {
+            this._logger.LogInformation("Admin created new tag");
             TagDTO tagDTO = new TagDTO { Text = tag.Text };
             this._tagService.CreateTag(tagDTO);
             return this.RedirectToAction("AllTags");
@@ -120,6 +123,7 @@
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteFaculty(int id)
         {
+            this._logger.LogInformation("Admin deleted faculty");
             this._facultyService.Dispose(id);
             return this.RedirectToAction("AllFaculties");
         }
@@ -127,6 +131,7 @@
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteTag(int id)
         {
+            this._logger.LogInformation("Admin deleted tag");
             this._tagService.Dispose(id);
             return this.RedirectToAction("AllTags");
         }
