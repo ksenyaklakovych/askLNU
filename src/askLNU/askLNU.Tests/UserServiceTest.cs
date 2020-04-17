@@ -13,6 +13,7 @@ using AutoMapper;
 using askLNU.DAL.Interfaces;
 using System.Linq;
 using System.Collections.Generic;
+using askLNU.BLL.Infrastructure.Exceptions;
 
 namespace askLNU.Tests
 {
@@ -73,11 +74,9 @@ namespace askLNU.Tests
             fakeManager.Setup(m => m.FindByEmailAsync(email)).Returns(Task.FromResult((ApplicationUser)null));
 
             UserService userService = new UserService(fakeManager.Object, _logger.Object);
-            //Act
-            var result = userService.GetByEmailAsync(email);
 
             //Assert
-            Assert.Null(result.Result);
+            Assert.ThrowsAsync<ItemNotFoundException>(() => userService.GetByEmailAsync(email));
         }
 
         [Fact]
