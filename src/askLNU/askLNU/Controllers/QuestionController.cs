@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using askLNU.BLL.DTO;
+    using askLNU.BLL.Infrastructure.Exceptions;
     using askLNU.BLL.Interfaces;
     using askLNU.InputModels;
     using askLNU.ViewModels;
@@ -42,27 +43,33 @@
         [HttpGet("{controller}/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            var question = this._questionService.GetQuestion(id);
-            var author = await this._userService.GetByIdAsync(question.ApplicationUserId);
-
-            var authorViewModel = new UserShortViewModel
+            try
             {
-                UserName = author.UserName,
-                ImageSrc = author.ImageSrc,
-            };
+                var question = this._questionService.GetQuestion(id);
+                var author = await this._userService.GetByIdAsync(question.ApplicationUserId);
+                var authorViewModel = new UserShortViewModel
+                {
+                    UserName = author.UserName,
+                    ImageSrc = author.ImageSrc,
+                };
 
-            var viewModel = new QuestionViewModel
+                var viewModel = new QuestionViewModel
+                {
+                    Id = question.Id,
+                    Title = question.Title,
+                    Text = question.Text,
+                    Date = question.Date,
+                    Author = authorViewModel,
+                    Tags = question.TagsId.Select(id => this._tagService.GetTag(id).Text).ToList(),
+                    Rating = question.Rating,
+                };
+
+                return this.View(viewModel);
+            }
+            catch (ItemNotFoundException exception)
             {
-                Id = question.Id,
-                Title = question.Title,
-                Text = question.Text,
-                Date = question.Date,
-                Author = authorViewModel,
-                Tags = question.TagsId.Select(id => this._tagService.GetTag(id).Text).ToList(),
-                Rating = question.Rating,
-            };
-
-            return this.View(viewModel);
+                return this.RedirectToAction("ShowError", "CustomError", new { errorMessage = exception.Message });
+            }
         }
 
         public IActionResult Create()
@@ -98,6 +105,8 @@
                     this._questionService.AddTag(questionDTO.Id, tagId);
                 }
             }
+
+            this._logger.LogInformation($"Question #{questionDTO.Id} created.");
 
             return this.RedirectToAction("Details", "Question", new { id = questionDTO.Id });
         }

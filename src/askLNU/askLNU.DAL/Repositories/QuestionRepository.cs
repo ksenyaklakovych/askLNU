@@ -32,7 +32,7 @@ namespace askLNU.DAL.Repositories
                 .Include(q => q.QuestionVotes)
                 .Include(q => q.Answers)
                 .Include(q => q.ApplicationUserFavoriteQuestions)
-                .Single(q => q.Id == id);
+                .SingleOrDefault(q => q.Id == id);
         }
 
         public void Create(Question answer)

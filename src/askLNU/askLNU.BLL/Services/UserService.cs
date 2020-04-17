@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
+using askLNU.BLL.Infrastructure.Exceptions;
 
 namespace askLNU.BLL.Services
 {
@@ -85,8 +86,9 @@ namespace askLNU.BLL.Services
             }
             else
             {
-                _logger.LogWarning($"User with email {email} couldn`t be found.");
-                return null;
+                var message = $"User with email {email} couldn`t be found.";
+                _logger.LogWarning(message);
+                throw new ItemNotFoundException(message);
             }
         }
 

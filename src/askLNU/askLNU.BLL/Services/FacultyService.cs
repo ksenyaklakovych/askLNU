@@ -58,7 +58,9 @@ namespace askLNU.BLL.Services
                 }
                 else
                 {
-                    throw new ItemNotFoundException($"Faculty not found.");
+                    var message = $"Faculty with id {id} not found.";
+                    _logger.LogWarning(message);
+                    throw new ItemNotFoundException(message);
                 }
             }
             else
