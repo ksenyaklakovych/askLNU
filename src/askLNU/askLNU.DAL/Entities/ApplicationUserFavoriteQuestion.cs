@@ -21,10 +21,12 @@ namespace askLNU.DAL.Entities
 
         [Key]
         public string ApplicationUserId { get; set; }
+       
         public ApplicationUser ApplicationUser { get; set; }
 
         [Key]
         public int QuestionId { get; set; }
+       
         public Question Question { get; set; }
     }
 }

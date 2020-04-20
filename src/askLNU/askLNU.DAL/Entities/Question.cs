@@ -26,6 +26,7 @@ namespace askLNU.DAL.Entities
         
         [Required]
         public string ApplicationUserId { get; set; }
+        
         public ApplicationUser ApplicationUser { get; set; }
 
         [Required]
@@ -42,11 +43,15 @@ namespace askLNU.DAL.Entities
         public DateTime Date { get; set; }
 
         public int? FacultyId { get; set; }
+       
         public Faculty Faculty { get; set; }
 
         public virtual ICollection<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestions { get; set; }
+        
         public virtual ICollection<QuestionTag> QuestionTags { get; set; }
+        
         public virtual ICollection<Answer> Answers { get; set; }
+        
         public virtual ICollection<QuestionVote> QuestionVotes { get; set; }
     }
 }

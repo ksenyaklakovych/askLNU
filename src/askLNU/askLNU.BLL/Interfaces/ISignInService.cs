@@ -12,9 +12,13 @@ namespace askLNU.BLL.Interfaces
     public interface ISignInService
     {
         Task SignInAsync(UserDTO user, bool isPersistent);
+       
         Task<List<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync();
+        
         bool IsSignedIn(ClaimsPrincipal claimsPrincipal);
+      
         Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isPersistent, bool lockoutOnFailure);
+        
         Task SignOutAsync();
     }
 }

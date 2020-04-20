@@ -74,6 +74,7 @@ namespace askLNU.BLL.Services
             var faculty = _unitOfWork.Faculties.Find(f => f.Title == name).FirstOrDefault();
             return faculty?.Id ?? -1;
         }
+        
         public void Dispose(int id)
         {
             _unitOfWork.Faculties.Delete(id);

@@ -14,6 +14,7 @@ namespace askLNU.BLL.Services
     public class ImageService : IImageService
     {
         private readonly Account cloudinaryAccount;
+        
         public ImageService(IOptions<CloudinaryConfig> options)
         {
             cloudinaryAccount = new Account(

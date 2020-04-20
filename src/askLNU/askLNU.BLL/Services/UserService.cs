@@ -30,6 +30,7 @@ namespace askLNU.BLL.Services
             _logger = logger;
             _mapper = mapper;
         }
+       
         public UserService(
             UserManager<ApplicationUser> userManager,
             ILogger<UserService> logger)
@@ -37,10 +38,12 @@ namespace askLNU.BLL.Services
             _userManager = userManager;
             _logger = logger;
         }
+       
         public UserService(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
+       
         public UserService(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _userManager = userManager;
@@ -65,6 +68,7 @@ namespace askLNU.BLL.Services
                 await AddUserToRoleAsync(applicationUser, "User");
                 _logger.LogInformation("User created a new account with password.");
             }
+
             return result;
         }
 

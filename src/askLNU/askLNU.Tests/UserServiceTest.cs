@@ -58,6 +58,7 @@ namespace askLNU.Tests
 
             UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper);
             //Act
+
             var result = userService.GetByEmailAsync(email);
 
             //Assert
@@ -65,6 +66,7 @@ namespace askLNU.Tests
             Assert.Equal("TestSurname", result.Result.Surname);
             Assert.False(result.Result.IsBlocked);
         }
+
         [Fact]
         public void GetByEmailAsync_WithIncorrectEmail_ShouldReturnTrue()
         {

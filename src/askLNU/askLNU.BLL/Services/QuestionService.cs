@@ -29,6 +29,7 @@ namespace askLNU.BLL.Services
             _logger = logger;
             _mapper = mapper;
         }
+        
         public QuestionService(
             IUnitOfWork unitOfWork,
             IMapper mapper)
@@ -36,6 +37,7 @@ namespace askLNU.BLL.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        
         public void CreateQuestion(QuestionDTO questionDTO)
         {
             if (questionDTO != null)
@@ -81,6 +83,7 @@ namespace askLNU.BLL.Services
             {
                 _unitOfWork.Answers.Delete(answer.Id);
             }
+
             while (true)
             {
                 try
@@ -130,6 +133,7 @@ namespace askLNU.BLL.Services
             _unitOfWork.ApplicationUserFavoriteQuestion.Create(userFavoriteQuestion);
             _unitOfWork.Save();
         }
+       
         public void RemoveFromFavorites(string userId, int questionId)
         {
             var question = _unitOfWork.Questions.Get(questionId);
@@ -147,6 +151,7 @@ namespace askLNU.BLL.Services
             bool result = _unitOfWork.ApplicationUserFavoriteQuestion.GetAll().Any(q => q.ApplicationUserId == userId && q.QuestionId == questionId);
             return result;
         }
+        
         public void AddTag(int questionId, int tagId)
         {
             var question = _unitOfWork.Questions.Get(questionId);

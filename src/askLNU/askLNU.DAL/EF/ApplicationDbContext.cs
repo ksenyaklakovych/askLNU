@@ -53,6 +53,7 @@
                     new Faculty { Id = 3, Title = "Philology" },
                     new Faculty { Id = 4, Title = "Mechanics and Mathematics" }
                 }
+
             );
 
             builder.Entity<Tag>().HasData(
@@ -66,6 +67,7 @@
                     new Tag { Id = 6, Text = "спортивні секції" },
                     new Tag { Id = 7, Text = "медогляд" }
                 }
+
             );
 
             base.OnModelCreating(builder);

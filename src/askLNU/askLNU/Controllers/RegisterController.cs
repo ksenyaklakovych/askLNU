@@ -42,7 +42,7 @@
         {
             var viewModel = new RegisterViewModel
             {
-                ExternalLogins = new List<AuthenticationScheme>()
+                ExternalLogins = new List<AuthenticationScheme>(),
             };
 
             return this.View(viewModel);

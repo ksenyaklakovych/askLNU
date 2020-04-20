@@ -52,6 +52,5 @@ namespace askLNU.DAL.Repositories
             if (answer != null)
                 db.ApplicationUserFavoriteQuestion.Remove(answer);
         }
-       
     }
 }

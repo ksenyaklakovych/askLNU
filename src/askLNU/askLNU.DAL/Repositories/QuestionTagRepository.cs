@@ -9,10 +9,8 @@ using System.Linq;
 
 namespace askLNU.DAL.Repositories
 {
-
     class QuestionTagRepository : IRepository<QuestionTag>
     {
-
         private ApplicationDbContext db;
 
         public QuestionTagRepository(ApplicationDbContext context)

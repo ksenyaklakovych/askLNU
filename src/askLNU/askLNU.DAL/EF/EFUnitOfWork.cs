@@ -26,6 +26,7 @@ namespace askLNU.DAL.EF
         {
             db = context;
         }
+        
         public IRepository<Answer> Answers
         {
             get
@@ -35,6 +36,7 @@ namespace askLNU.DAL.EF
                 return answerRepository;
             }
         }
+
         public IRepository<QuestionTag> QuestionTag
         {
             get
@@ -44,6 +46,7 @@ namespace askLNU.DAL.EF
                 return questionTagRepository;
             }
         }
+
         public IRepository<Faculty> Faculties
         {
             get
@@ -63,6 +66,7 @@ namespace askLNU.DAL.EF
                 return labelRepository;
             }
         }
+
         public IRepository<Notification> Notifications
         {
             get
@@ -72,6 +76,7 @@ namespace askLNU.DAL.EF
                 return notificationRepository;
             }
         }
+
         public IRepository<Question> Questions
         {
             get
@@ -81,6 +86,7 @@ namespace askLNU.DAL.EF
                 return questionRepository;
             }
         }
+
         public IRepository<Tag> Tags
         {
             get
@@ -90,6 +96,7 @@ namespace askLNU.DAL.EF
                 return tagRepository;
             }
         }
+        
         public IRepository<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestion
         {
             get
@@ -125,6 +132,7 @@ namespace askLNU.DAL.EF
                 {
                     db.Dispose();
                 }
+
                 this.disposed = true;
             }
         }

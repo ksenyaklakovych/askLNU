@@ -12,7 +12,6 @@ namespace askLNU.DAL.Repositories
 
     class QuestionRepository : IRepository<Question>
     {
-
         private ApplicationDbContext db;
 
         public QuestionRepository(ApplicationDbContext context)
