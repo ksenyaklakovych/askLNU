@@ -116,8 +116,48 @@ namespace askLNU.Tests
             //Assert
             Assert.Empty(result);
         }
+
+        [Fact]
+        public void CheckIfUserHasRole_ShouldReturnTrue()
+        {
+            string userId = "testId";
+            string userRole = "Admin";
+
+            //Arrange
+            Task<ApplicationUser> fakeUser = Task.Run(() => new ApplicationUser("TestName", "TestSurname", 1, false, "image.jpg"));
+            Task<bool> trueTask = Task.FromResult(true);
+            fakeManager.Setup(m => m.FindByIdAsync(userId)).Returns(fakeUser);
+            fakeManager.Setup(m => m.IsInRoleAsync(fakeUser.Result, userRole)).Returns(trueTask);
+
+            UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper);
+            //Act
+            var result = userService.CheckIfUserHasRole(userId,userRole);
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void CheckIfUserHasRole_ShouldReturnFalse()
+        {
+            string userId = "testId";
+            string userRole = "Admin";
+
+            //Arrange
+            Task<ApplicationUser> fakeUser = Task.Run(() => new ApplicationUser("TestName", "TestSurname", 1, false, "image.jpg"));
+            Task<bool> falseTask = Task.FromResult(false);
+            fakeManager.Setup(m => m.FindByIdAsync(userId)).Returns(fakeUser);
+            fakeManager.Setup(m => m.IsInRoleAsync(fakeUser.Result, userRole)).Returns(falseTask);
+
+            UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper);
+            //Act
+            var result = userService.CheckIfUserHasRole(userId, userRole);
+
+            //Assert
+            Assert.False(result);
+        }
+
         //TO DO:
-        //CheckIfUserHasRole
         //RemoveModeratorRole
         //GiveModeratorRole
 
