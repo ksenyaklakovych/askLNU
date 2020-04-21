@@ -159,5 +159,20 @@ namespace askLNU.BLL.Services
             _logger.LogInformation("Gave user Moderator rights.");
             var res=_userManager.AddToRoleAsync(user, "Moderator").Result;
         }
+        public void BlockUserById(string userId)
+        {
+            var user = _userManager.FindByIdAsync(userId).Result;
+            _logger.LogInformation("Blocked user.");
+            user.IsBlocked=true;
+            var res=_userManager.UpdateAsync(user).Result;
+        }
+
+        public void UnBlockUserById(string userId)
+        {
+            var user = _userManager.FindByIdAsync(userId).Result;
+            _logger.LogInformation("UnBlocked user.");
+            user.IsBlocked = false;
+            var res = _userManager.UpdateAsync(user).Result;
+        }
     }
 }

@@ -63,11 +63,24 @@
             <td>
                 @if (item.IsModerator)
                 {
-                    <input type="submit" value="Remove rights" class="btn btn-danger"  onclick="location.href='@Url.Action("ChangeRights", "Admin", new {userId=item.Id, remove=true}) '"/>
+                    <input type="submit" value="Remove rights" class="btn btn-danger" onclick="location.href='@Url.Action("ChangeRights", "Admin", new {userId=item.Id, remove=true}) '" />
                 }
                 else
                 {
-                    <input type="submit" value="Give rights" class="btn btn-danger"  onclick="location.href='@Url.Action("ChangeRights", "Admin", new { userId=item.Id,remove=false}) '"/>
+                    <input type="submit" value="Give rights" class="btn btn-danger" onclick="location.href='@Url.Action("ChangeRights", "Admin", new { userId=item.Id,remove=false}) '" />
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsBlocked)
+            </td>
+            <td>
+                @if (item.IsBlocked)
+                {
+                    <input type="submit" value="UnBlock" class="btn btn-danger" onclick="location.href='@Url.Action("BlockUser", "Admin", new {userId=item.Id, block=false}) '" />
+                }
+                else
+                {
+                    <input type="submit" value="Block" class="btn btn-danger" onclick="location.href='@Url.Action("BlockUser", "Admin", new { userId=item.Id,block=true}) '" />
                 }
             </td>
         </tr>

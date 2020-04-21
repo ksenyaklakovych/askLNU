@@ -31,5 +31,9 @@ namespace askLNU.BLL.Interfaces
         void RemoveModeratorRole(string userId);
         
         void GiveModeratorRole(string userId);
+
+        void BlockUserById(string userId);
+        void UnBlockUserById(string userId);
+
     }
 }

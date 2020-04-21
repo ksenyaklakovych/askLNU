@@ -21,5 +21,6 @@
 
         [Display(Name = "Has moderator rights")]
         public bool IsModerator { get; set; }
+        public bool IsBlocked { get; set; }
     }
 }
