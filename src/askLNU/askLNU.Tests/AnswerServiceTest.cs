@@ -74,7 +74,7 @@ namespace askLNU.Tests
 
             using var context = new ApplicationDbContext(options);
 
-            context.Questions.Add(new Question { Id = 1 });
+            context.Questions.Add(new Question { Id = 100 });
             context.Answers.Add(new Answer { QuestionId = 1, Text = "Answer1" });
 
             context.SaveChanges();
@@ -88,5 +88,32 @@ namespace askLNU.Tests
             var exception = Assert.Throws<ArgumentNullException>(act);
             Assert.Equal("Value cannot be null. (Parameter 'id')", exception.Message);
         }
+        
+        [Fact]
+        public void Dispose_ShouldReturnTrue()
+        {
+            int answerId = 10;
+
+            //Arrange
+            using var context = new ApplicationDbContext(options);
+
+            context.Answers.Add(new Answer { Id = 10, Text = "Answer1" });
+            context.Answers.Add(new Answer { Id = 20, Text = "Answer2" });
+            context.Answers.Add(new Answer { Id = 30, Text = "Answer3" });
+            context.Answers.Add(new Answer { Id = 40, Text = "Answer4" });
+
+            context.SaveChanges();
+
+            var unitOfWork = new EFUnitOfWork(context);
+
+            //Act
+            AnswerService answerService = new AnswerService(unitOfWork, _mapper, _logger.Object);
+            answerService.Dispose(answerId);
+
+            //Assert
+            var emptyList = new List<Answer>() { };
+            Assert.Equal(emptyList, unitOfWork.Answers.Find(e=>e.Id==answerId).ToList());
+        }
+
     }
 }

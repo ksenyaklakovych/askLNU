@@ -35,6 +35,7 @@ namespace askLNU.Tests
                 .Options;
 
         }
+
         [Fact]
         public void GetAll_ShouldReturnTrue()
         {
@@ -123,7 +124,7 @@ namespace askLNU.Tests
             using var context = new ApplicationDbContext(options);
 
             string userId = "0000";
-            int questionId = 1;
+            int questionId = 5;
 
             context.Questions.Add(new Question 
             {

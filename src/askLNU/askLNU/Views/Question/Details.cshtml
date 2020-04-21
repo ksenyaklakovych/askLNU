@@ -62,7 +62,7 @@
                             <span data-bind="date"></span>
                             @if (User.IsInRole("Moderator"))
                             {
-                                <button type="button" class="btn btn-danger btn-sm" onclick="location.href='@Url.Action("DeleteQuestion", "Question", new { questionId = Model.Id }) '">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="location.href='@Url.Action("DeleteAnswer", "Question", new { questionId = Model.Id }) '">
                                     <span class="fa fa-trash-o" style="font-size:15px;color:white"></span>
                                 </button>
                             }

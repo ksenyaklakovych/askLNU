@@ -44,6 +44,7 @@ namespace askLNU.BLL.Services
         public IEnumerable<FacultyDTO> GetAll()
         {
             var faculties = _unitOfWork.Faculties.GetAll();
+            _logger.LogInformation("Got all faculties from database.");
             return _mapper.Map<IEnumerable<FacultyDTO>>(faculties);
         }
 
