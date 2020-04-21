@@ -21,6 +21,7 @@ namespace askLNU.Tests
     public class FacultyServiceTest
     {
         private readonly IMapper _mapper;
+        private readonly IMapper _mapper_2;
         private readonly DbContextOptions<ApplicationDbContext> options;
         private Mock<ILogger<FacultyService>> _logger;
 
@@ -28,6 +29,9 @@ namespace askLNU.Tests
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Faculty, FacultyDTO>());
             _mapper = new Mapper(config);
+
+            var config_2 = new MapperConfiguration(cfg => cfg.CreateMap<FacultyDTO, Faculty>());
+            _mapper_2 = new Mapper(config_2);
 
             options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "FakeDatabaseFaculty")
@@ -118,6 +122,24 @@ namespace askLNU.Tests
 
             //Assert
             Assert.Equal(-1, result);
+        }
+
+        [Fact]
+        public void CreateFaculty_PassCorrectName()
+        {
+            var facultyDTO = new FacultyDTO {Id=7,Title="Pravo5" } ;
+            //Arrange
+            using var context = new ApplicationDbContext(options);
+
+            context.SaveChanges();
+            var unitOfWork = new EFUnitOfWork(context);
+
+            FacultyService facultyService = new FacultyService(unitOfWork, _mapper_2, _logger.Object);
+            //Act
+            facultyService.CreateFaculty(facultyDTO);
+
+            //Assert
+            Assert.Equal(7, unitOfWork.Faculties.Find(a=>a.Title=="Pravo5").Select(i=>i.Id).First());
         }
     }
 }
