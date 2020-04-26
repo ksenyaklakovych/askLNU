@@ -9,9 +9,13 @@
     using askLNU.BLL.Interfaces;
     using askLNU.InputModels;
     using askLNU.ViewModels;
+    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using Microsoft.AspNetCore.Identity;
+    using askLNU.DAL.Entities;
+
 
     [Authorize(Roles = "User")]
     public class QuestionController : Controller
@@ -22,8 +26,13 @@
         private readonly IUserService _userService;
         private readonly IAnswerService _answerService;
         private readonly ILogger<QuestionController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private Mapper _mapper;
+
+
 
         public QuestionController(
+             UserManager<ApplicationUser> userManager,
             IFacultyService facultyService,
             ITagService tagService,
             IQuestionService questionService,
@@ -31,12 +40,15 @@
             ILogger<QuestionController> logger,
             IAnswerService answerService)
         {
+            this._userManager = userManager;
             this._facultyService = facultyService;
             this._tagService = tagService;
             this._questionService = questionService;
             this._userService = userService;
             this._answerService = answerService;
             this._logger = logger;
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<QuestionDTO, CreatedQuestionsViewModel>());
+            this._mapper = new Mapper(config);
         }
 
         [AllowAnonymous]
@@ -182,6 +194,14 @@
             this._logger.LogInformation($"Moderator deleted answer with id {answerId}.");
             this._answerService.Dispose(answerId);
             return this.RedirectToAction("Index", "Home");
+        }
+
+        public async Task<ActionResult> CreatedQuestions ()
+        {
+            var user = await _userManager.GetUserAsync(this.User);
+            var allQuestions = _questionService.GetAll().Where(u => u.ApplicationUserId == user.Id);
+            var allQuestionsForView = _mapper.Map<IEnumerable<CreatedQuestionsViewModel>>(allQuestions); 
+            return View(allQuestionsForView);
         }
     }
 }
