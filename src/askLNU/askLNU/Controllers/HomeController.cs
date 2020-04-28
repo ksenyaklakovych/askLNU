@@ -10,6 +10,7 @@
     using askLNU.DAL.Entities;
     using askLNU.ViewModels;
     using AutoMapper;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -156,6 +157,12 @@
         public IActionResult Error()
         {
             return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
+        }
+
+        [Authorize(Roles = "User, Moderator, Admin")]
+        public ActionResult Chat()
+        {
+            return this.View();
         }
     }
 }

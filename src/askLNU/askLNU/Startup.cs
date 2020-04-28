@@ -22,6 +22,10 @@ namespace askLNU
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Owin;
+    using Owin;
+    using Microsoft.AspNetCore.SignalR;
+    using askLNU.Hubs;
 
     public class Startup
     {
@@ -39,7 +43,7 @@ namespace askLNU
             services.Configure<AuthMessageSenderOptions>(this.Configuration);
             services.Configure<CloudinaryConfig>(this.Configuration.GetSection("CloudinaryConfig"));
 
-            services.AddDALDependencies(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddDALDependencies(this.Configuration.GetConnectionString("DefaultConnection"));
 
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddTransient<IUserService, UserService>();
@@ -56,7 +60,7 @@ namespace askLNU
             {
                 options.User.RequireUniqueEmail = true;
             });
-
+            services.AddSignalR();
             services.AddAutoMapper();
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -92,6 +96,7 @@ namespace askLNU
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
 
             serviceProvider.CreateUserRoles().Wait();

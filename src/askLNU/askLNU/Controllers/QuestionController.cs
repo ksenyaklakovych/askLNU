@@ -7,15 +7,14 @@
     using askLNU.BLL.DTO;
     using askLNU.BLL.Infrastructure.Exceptions;
     using askLNU.BLL.Interfaces;
+    using askLNU.DAL.Entities;
     using askLNU.InputModels;
     using askLNU.ViewModels;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Microsoft.AspNetCore.Identity;
-    using askLNU.DAL.Entities;
-
 
     [Authorize(Roles = "User")]
     public class QuestionController : Controller
@@ -28,8 +27,6 @@
         private readonly ILogger<QuestionController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private Mapper _mapper;
-
-
 
         public QuestionController(
              UserManager<ApplicationUser> userManager,
@@ -198,10 +195,10 @@
 
         public async Task<ActionResult> CreatedQuestions ()
         {
-            var user = await _userManager.GetUserAsync(this.User);
-            var allQuestions = _questionService.GetAll().Where(u => u.ApplicationUserId == user.Id);
-            var allQuestionsForView = _mapper.Map<IEnumerable<CreatedQuestionsViewModel>>(allQuestions); 
-            return View(allQuestionsForView);
+            var user = await this._userManager.GetUserAsync(this.User);
+            var allQuestions = this._questionService.GetAll().Where(u => u.ApplicationUserId == user.Id);
+            var allQuestionsForView = this._mapper.Map<IEnumerable<CreatedQuestionsViewModel>>(allQuestions); 
+            return this.View(allQuestionsForView);
         }
     }
 }
