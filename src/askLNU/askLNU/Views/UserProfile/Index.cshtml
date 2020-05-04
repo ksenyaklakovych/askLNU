@@ -17,7 +17,9 @@
 
                 <form asp-action="Index">
                     <div class="form-row">
+
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                         <div class="form-group col-md-5">
                             <label asp-for="Email" class="control-label"></label>
                             <input asp-for="Email" class="form-control" />
@@ -29,91 +31,38 @@
                             <input asp-for="UserName" class="form-control" />
                             <span asp-validation-for="UserName" class="text-danger"></span>
                         </div>
+
                         <div class="form-group col-md-5">
                             <label asp-for="Name" class="control-label"></label>
                             <input asp-for="Name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
+
                         <div class="form-group col-md-5">
                             <label asp-for="Surname" class="control-label"></label>
                             <input asp-for="Surname" class="form-control" />
                             <span asp-validation-for="Surname" class="text-danger"></span>
                         </div>
+
                         <div class="form-group col-md-5">
                             <label asp-for="Course" class="control-label"></label>
                             <input asp-for="Course" class="form-control" />
                             <span asp-validation-for="Course" class="text-danger"></span>
                         </div>
+
                         <div class="form-group col-md-5">
                             <label asp-for="ImageSrc" class="control-label"></label>
                             <input asp-for="ImageSrc" class="form-control" />
                             <span asp-validation-for="ImageSrc" class="text-danger"></span>
                         </div>
+
                         <div class="form-group col-md-10" id="button">
                             <input type="submit" value="Save changes" class="btn btn-primary" />
                         </div>
+
                     </div>
                 </form>
-
-
-                @*<div class="col-md-5">
-                        <form asp-action="Index">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
-                                <label asp-for="Email" class="control-label"></label>
-                                <input asp-for="Email" class="form-control" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="UserName" class="control-label"></label>
-                                <input asp-for="UserName" class="form-control" />
-                                <span asp-validation-for="UserName" class="text-danger"></span>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-md-5">
-                        <form asp-action="Index">
-
-                            <div class="form-group">
-                                <label asp-for="Name" class="control-label"></label>
-                                <input asp-for="Name" class="form-control" />
-                                <span asp-validation-for="Name" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Surname" class="control-label"></label>
-                                <input asp-for="Surname" class="form-control" />
-                                <span asp-validation-for="Surname" class="text-danger"></span>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-md-5">
-                        <form asp-action="Index">
-                            <div class="form-group">
-                                <label asp-for="Course" class="control-label"></label>
-                                <input asp-for="Course" class="form-control" />
-                                <span asp-validation-for="Course" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="ImageSrc" class="control-label"></label>
-                                <input asp-for="ImageSrc" class="form-control" />
-                                <span asp-validation-for="ImageSrc" class="text-danger"></span>
-                            </div>
-                        </form>
-
-                    </div>
-
-                    <div class="col-md-5">
-                        <form asp-action="Index">
-                            <div class="form-group">
-                                <input type="submit" value="Save changes" class="btn btn-primary" />
-                            </div>
-                        </form>
-                    </div>*@
-
     </div>
-
 </div>
 
 
