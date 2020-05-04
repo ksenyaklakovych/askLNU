@@ -200,5 +200,16 @@
             var allQuestionsForView = this._mapper.Map<IEnumerable<CreatedQuestionsViewModel>>(allQuestions); 
             return this.View(allQuestionsForView);
         }
+
+        public async Task<AcceptedResult> FavoriteUserQuestions()
+        {
+            var answers = this._answerService.GetAnswersByQuestionId(questionId);
+
+            var user = await this._userManager.GetUserAsync(this.User);
+            var question = this._questionService.IsQuestionFavorite();
+            var favoriteQuestions = _unitOfWork.ApplicationUserFavoriteQuestion.GetAll().Any(q => q.ApplicationUserId == user && q.QuestionId == questionId);
+
+
+        }
     }
 }
