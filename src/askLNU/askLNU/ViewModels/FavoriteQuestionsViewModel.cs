@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace askLNU.ViewModels
+﻿namespace askLNU.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class FavoriteQuestionsViewModel
     {
         public int Id { get; set; }
 
         public string ApplicationUserID { get; set; }
+
         public string Title { get; set; }
 
         public string Text { get; set; }
@@ -19,7 +20,5 @@ namespace askLNU.ViewModels
         public bool IsSolved { get; set; }
 
         public DateTime Date { get; set; }
-
-
     }
 }

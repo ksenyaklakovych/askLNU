@@ -14,6 +14,8 @@ namespace askLNU.BLL.Interfaces
         public IEnumerable<QuestionDTO> GetAll();
         
         public void Dispose(int questionId);
+
+        public IEnumerable<QuestionDTO> GetFavQuestByUserId(string userId);
         
         public IEnumerable<string> GetTagsByQuestionID(int? id);
         

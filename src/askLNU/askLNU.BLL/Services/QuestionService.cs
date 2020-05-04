@@ -238,5 +238,17 @@ namespace askLNU.BLL.Services
             _unitOfWork.Questions.Update(question);
             _unitOfWork.Save();
         }
+
+        public IEnumerable<QuestionDTO> GetFavQuestByUserId(string userId)
+        {
+            var questionsIds=_unitOfWork.ApplicationUserFavoriteQuestion.GetAll().Where(q => q.ApplicationUserId == userId).Select(q => q.QuestionId);
+            var questions = new List<QuestionDTO> { };
+            foreach (var id in questionsIds)
+            {
+                questions.Add(_mapper.Map<QuestionDTO>(_unitOfWork.Questions.Get(id)));
+            }
+            _logger.LogInformation($"Returned favorite questions for user with id {userId}");
+            return questions;
+        }
     }
 }

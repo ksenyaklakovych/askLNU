@@ -193,23 +193,20 @@
             return this.RedirectToAction("Index", "Home");
         }
 
-        public async Task<ActionResult> CreatedQuestions ()
+        public async Task<ActionResult> CreatedQuestions()
         {
             var user = await this._userManager.GetUserAsync(this.User);
             var allQuestions = this._questionService.GetAll().Where(u => u.ApplicationUserId == user.Id);
-            var allQuestionsForView = this._mapper.Map<IEnumerable<CreatedQuestionsViewModel>>(allQuestions); 
+            var allQuestionsForView = this._mapper.Map<IEnumerable<CreatedQuestionsViewModel>>(allQuestions);
             return this.View(allQuestionsForView);
         }
 
-        public async Task<AcceptedResult> FavoriteUserQuestions()
+        public async Task<ActionResult> FavoriteUserQuestions()
         {
-            var answers = this._answerService.GetAnswersByQuestionId(questionId);
-
             var user = await this._userManager.GetUserAsync(this.User);
-            var question = this._questionService.IsQuestionFavorite();
-            var favoriteQuestions = _unitOfWork.ApplicationUserFavoriteQuestion.GetAll().Any(q => q.ApplicationUserId == user && q.QuestionId == questionId);
-
-
+            var questions = this._questionService.GetFavQuestByUserId(user.Id);
+            var allQuestionsForView = this._mapper.Map<IEnumerable<CreatedQuestionsViewModel>>(questions);
+            return this.View(allQuestionsForView);
         }
     }
 }
