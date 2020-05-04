@@ -9,6 +9,7 @@ namespace askLNU.BLL.DTO
     public class FacultyDTO
     {
         public int Id { get; set; }
+      
         public string Title { get; set; }
     }
 }

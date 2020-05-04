@@ -4,9 +4,9 @@ using System.Text;
 using askLNU.DAL.EF;
 using askLNU.DAL.Interfaces;
 using askLNU.DAL.Entities;
+using askLNU.DAL.Repositories;
 
- 
-namespace askLNU.DAL.Repositories
+namespace askLNU.DAL.EF
 {
     public class EFUnitOfWork : IUnitOfWork
     {
@@ -16,13 +16,17 @@ namespace askLNU.DAL.Repositories
         private LabelRepository labelRepository;
         private NotificationRepository notificationRepository;
         private QuestionRepository questionRepository;
+        private QuestionTagRepository questionTagRepository;
         private TagRepository tagRepository;
+        private ApplicationUserFavoriteQuestionRepository favoriteQuestionRepository;
+        private QuestionVoteRepository questionVoteRepository;
 
 
         public EFUnitOfWork(ApplicationDbContext context)
         {
             db = context;
         }
+        
         public IRepository<Answer> Answers
         {
             get
@@ -30,6 +34,16 @@ namespace askLNU.DAL.Repositories
                 if (answerRepository == null)
                     answerRepository = new AnswerRepository(db);
                 return answerRepository;
+            }
+        }
+
+        public IRepository<QuestionTag> QuestionTag
+        {
+            get
+            {
+                if (questionTagRepository == null)
+                    questionTagRepository = new QuestionTagRepository(db);
+                return questionTagRepository;
             }
         }
 
@@ -52,6 +66,7 @@ namespace askLNU.DAL.Repositories
                 return labelRepository;
             }
         }
+
         public IRepository<Notification> Notifications
         {
             get
@@ -61,6 +76,7 @@ namespace askLNU.DAL.Repositories
                 return notificationRepository;
             }
         }
+
         public IRepository<Question> Questions
         {
             get
@@ -70,6 +86,7 @@ namespace askLNU.DAL.Repositories
                 return questionRepository;
             }
         }
+
         public IRepository<Tag> Tags
         {
             get
@@ -77,6 +94,26 @@ namespace askLNU.DAL.Repositories
                 if (tagRepository == null)
                     tagRepository = new TagRepository(db);
                 return tagRepository;
+            }
+        }
+        
+        public IRepository<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestion
+        {
+            get
+            {
+                if (favoriteQuestionRepository == null)
+                    favoriteQuestionRepository = new ApplicationUserFavoriteQuestionRepository(db);
+                return favoriteQuestionRepository;
+            }
+        }
+
+        public IRepository<QuestionVote> QuestionVotes
+        {
+            get
+            {
+                if (questionVoteRepository == null)
+                    questionVoteRepository = new QuestionVoteRepository(db);
+                return questionVoteRepository;
             }
         }
 
@@ -95,6 +132,7 @@ namespace askLNU.DAL.Repositories
                 {
                     db.Dispose();
                 }
+
                 this.disposed = true;
             }
         }

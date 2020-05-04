@@ -9,10 +9,8 @@ using System.Linq;
 
 namespace askLNU.DAL.Repositories
 {
-
     class TagRepository : IRepository<Tag>
     {
-
         private ApplicationDbContext db;
 
         public TagRepository(ApplicationDbContext context)
@@ -51,5 +49,6 @@ namespace askLNU.DAL.Repositories
             if (answer != null)
                 db.Tags.Remove(answer);
         }
+
     }
 }

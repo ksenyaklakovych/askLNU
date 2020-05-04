@@ -9,6 +9,7 @@ namespace askLNU.BLL.DTO
     public class TagDTO
     {
         public int Id { get; set; }
+       
         public string Text { get; set; }
     }
 }

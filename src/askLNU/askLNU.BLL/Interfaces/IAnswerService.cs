@@ -8,7 +8,11 @@ namespace askLNU.BLL.Interfaces
     public interface IAnswerService
     {
         public void CreateAnswer(AnswerDTO answerDto);
+        
         public AnswerDTO GetAnswer(int? id);
-        public void Dispose();
+        
+        public IEnumerable<AnswerDTO> GetAnswersByQuestionId(int? id);
+        
+        public void Dispose(int answerId);
     }
 }

@@ -8,6 +8,8 @@ using askLNU.BLL.Infrastructure;
 using askLNU.BLL.Interfaces;
 using AutoMapper;
 using askLNU.BLL.Infrastructure.Exceptions;
+using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace askLNU.BLL.Services
 {
@@ -15,11 +17,14 @@ namespace askLNU.BLL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<FacultyService> _logger;
 
-        public FacultyService(IUnitOfWork unitOfWork, IMapper mapper)
+
+        public FacultyService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<FacultyService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public void CreateFaculty(FacultyDTO facultyDTO)
@@ -39,6 +44,7 @@ namespace askLNU.BLL.Services
         public IEnumerable<FacultyDTO> GetAll()
         {
             var faculties = _unitOfWork.Faculties.GetAll();
+            _logger.LogInformation("Got all faculties from database.");
             return _mapper.Map<IEnumerable<FacultyDTO>>(faculties);
         }
 
@@ -53,7 +59,9 @@ namespace askLNU.BLL.Services
                 }
                 else
                 {
-                    throw new ItemNotFoundException($"Faculty not found.");
+                    var message = $"Faculty with id {id} not found.";
+                    _logger.LogWarning(message);
+                    throw new ItemNotFoundException(message);
                 }
             }
             else
@@ -62,9 +70,16 @@ namespace askLNU.BLL.Services
             }
         }
 
-        public void Dispose()
+        public int GetFacultyIdByName(string name)
         {
-            _unitOfWork.Dispose();
+            var faculty = _unitOfWork.Faculties.Find(f => f.Title == name).FirstOrDefault();
+            return faculty?.Id ?? -1;
+        }
+        
+        public void Dispose(int id)
+        {
+            _unitOfWork.Faculties.Delete(id);
+            _unitOfWork.Save();
         }
     }
 }

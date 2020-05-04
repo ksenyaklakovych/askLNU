@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using askLNU.DAL.Data;
 using askLNU.DAL.EF;
 
 namespace askLNU.DAL.Data.Migrations
@@ -16,7 +15,7 @@ namespace askLNU.DAL.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -155,7 +154,7 @@ namespace askLNU.DAL.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("askLNU.Models.Answer", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.Answer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,7 +190,7 @@ namespace askLNU.DAL.Data.Migrations
                     b.ToTable("Answers");
                 });
 
-            modelBuilder.Entity("askLNU.Models.ApplicationUser", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -276,7 +275,7 @@ namespace askLNU.DAL.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("askLNU.Models.ApplicationUserFavoriteQuestion", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.ApplicationUserFavoriteQuestion", b =>
                 {
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
@@ -291,7 +290,7 @@ namespace askLNU.DAL.Data.Migrations
                     b.ToTable("ApplicationUserFavoriteQuestion");
                 });
 
-            modelBuilder.Entity("askLNU.Models.ApplicationUserLabel", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.ApplicationUserLabel", b =>
                 {
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
@@ -306,7 +305,7 @@ namespace askLNU.DAL.Data.Migrations
                     b.ToTable("ApplicationUserLabel");
                 });
 
-            modelBuilder.Entity("askLNU.Models.Faculty", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.Faculty", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -320,9 +319,31 @@ namespace askLNU.DAL.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Faculties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Title = "Applied mathematics and computer science"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Title = "Electronics"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Title = "Philology"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Title = "Mechanics and Mathematics"
+                        });
                 });
 
-            modelBuilder.Entity("askLNU.Models.Label", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.Label", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -342,7 +363,7 @@ namespace askLNU.DAL.Data.Migrations
                     b.ToTable("Labels");
                 });
 
-            modelBuilder.Entity("askLNU.Models.Notification", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.Notification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -370,7 +391,7 @@ namespace askLNU.DAL.Data.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("askLNU.Models.Question", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.Question", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -410,7 +431,7 @@ namespace askLNU.DAL.Data.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("askLNU.Models.QuestionTag", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.QuestionTag", b =>
                 {
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
@@ -425,7 +446,28 @@ namespace askLNU.DAL.Data.Migrations
                     b.ToTable("QuestionTag");
                 });
 
-            modelBuilder.Entity("askLNU.Models.Tag", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.QuestionVote", b =>
+                {
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("VotedDown")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("VotedUp")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ApplicationUserId", "QuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("QuestionVotes");
+                });
+
+            modelBuilder.Entity("askLNU.DAL.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -439,6 +481,43 @@ namespace askLNU.DAL.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Text = "навчальний процес"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Text = "сесія"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Text = "стипендія"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Text = "студентська рада"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Text = "бібліотека"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Text = "спортивні секції"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Text = "медогляд"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -452,7 +531,7 @@ namespace askLNU.DAL.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("askLNU.Models.ApplicationUser", null)
+                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -461,7 +540,7 @@ namespace askLNU.DAL.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("askLNU.Models.ApplicationUser", null)
+                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -476,7 +555,7 @@ namespace askLNU.DAL.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("askLNU.Models.ApplicationUser", null)
+                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -485,98 +564,113 @@ namespace askLNU.DAL.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("askLNU.Models.ApplicationUser", null)
+                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("askLNU.Models.Answer", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.Answer", b =>
                 {
-                    b.HasOne("askLNU.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("askLNU.Models.Question", "Question")
+                    b.HasOne("askLNU.DAL.Entities.Question", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("askLNU.Models.ApplicationUser", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.ApplicationUser", b =>
                 {
-                    b.HasOne("askLNU.Models.Faculty", "Faculty")
+                    b.HasOne("askLNU.DAL.Entities.Faculty", "Faculty")
                         .WithMany("ApplicationUsers")
                         .HasForeignKey("FacultyId");
                 });
 
-            modelBuilder.Entity("askLNU.Models.ApplicationUserFavoriteQuestion", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.ApplicationUserFavoriteQuestion", b =>
                 {
-                    b.HasOne("askLNU.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany("ApplicationUserFavoriteQuestions")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("askLNU.Models.Question", "Question")
+                    b.HasOne("askLNU.DAL.Entities.Question", "Question")
                         .WithMany("ApplicationUserFavoriteQuestions")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("askLNU.Models.ApplicationUserLabel", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.ApplicationUserLabel", b =>
                 {
-                    b.HasOne("askLNU.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany("ApplicationUserLabels")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("askLNU.Models.Label", "Label")
+                    b.HasOne("askLNU.DAL.Entities.Label", "Label")
                         .WithMany("ApplicationUserLabels")
                         .HasForeignKey("LabelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("askLNU.Models.Notification", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.Notification", b =>
                 {
-                    b.HasOne("askLNU.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany("Notifications")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("askLNU.Models.Question", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.Question", b =>
                 {
-                    b.HasOne("askLNU.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("askLNU.Models.Faculty", "Faculty")
+                    b.HasOne("askLNU.DAL.Entities.Faculty", "Faculty")
                         .WithMany("Questions")
                         .HasForeignKey("FacultyId");
                 });
 
-            modelBuilder.Entity("askLNU.Models.QuestionTag", b =>
+            modelBuilder.Entity("askLNU.DAL.Entities.QuestionTag", b =>
                 {
-                    b.HasOne("askLNU.Models.Question", "Question")
+                    b.HasOne("askLNU.DAL.Entities.Question", "Question")
                         .WithMany("QuestionTags")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("askLNU.Models.Tag", "Tag")
+                    b.HasOne("askLNU.DAL.Entities.Tag", "Tag")
                         .WithMany("QuestionTags")
                         .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("askLNU.DAL.Entities.QuestionVote", b =>
+                {
+                    b.HasOne("askLNU.DAL.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany("QuestionVotes")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("askLNU.DAL.Entities.Question", "Question")
+                        .WithMany("QuestionVotes")
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

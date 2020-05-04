@@ -1,50 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using askLNU.BLL.DTO;
-using askLNU.BLL.Interfaces;
-using askLNU.InputModels;
-using askLNU.ViewModels;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-
-namespace askLNU.Controllers
+﻿namespace askLNU.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Text.Encodings.Web;
+    using System.Threading.Tasks;
+    using askLNU.BLL.DTO;
+    using askLNU.BLL.Interfaces;
+    using askLNU.InputModels;
+    using askLNU.ViewModels;
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Identity.UI.Services;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.WebUtilities;
+    using Microsoft.Extensions.Logging;
+
     public class RegisterController : Controller
     {
         private readonly IEmailSender _emailSender;
         private readonly IUserService _userService;
         private readonly ISignInService _signInService;
+        private readonly ILogger<RegisterController> _logger;
+        private readonly IImageService _imageService;
 
         public RegisterController(
             IEmailSender emailSender,
             IUserService userService,
-            ISignInService signInService)
+            ISignInService signInService,
+            ILogger<RegisterController> logger,
+            IImageService imageService)
         {
-            _emailSender = emailSender;
-            _userService = userService;
-            _signInService = signInService;
+            this._emailSender = emailSender;
+            this._userService = userService;
+            this._signInService = signInService;
+            this._logger = logger;
+            this._imageService = imageService;
         }
 
         public IActionResult Index()
         {
             var viewModel = new RegisterViewModel
             {
-                ExternalLogins = new List<AuthenticationScheme>()
+                ExternalLogins = new List<AuthenticationScheme>(),
             };
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterInputModel registerInputModel)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 var user = new UserDTO
                 {
@@ -53,86 +60,91 @@ namespace askLNU.Controllers
                     Name = registerInputModel.Name,
                     Surname = registerInputModel.Surname,
                     Course = registerInputModel.Course,
-                    ImageSrc = registerInputModel.ImageSrc
                 };
 
-                var result = await _userService.CreateUserAsync(user, registerInputModel.Password);
+                var result = await this._userService.CreateUserAsync(user, registerInputModel.Password);
                 if (result.Succeeded)
                 {
-                    user = await _userService.GetByEmailAsync(user.Email);
+                    this._logger.LogInformation("User registered successfully.");
+                    user = await this._userService.GetByEmailAsync(user.Email);
+                    var imageSrc = await this._imageService.SaveImage(registerInputModel.Image);
+                    await this._userService.UpdateImage(user.Id, imageSrc);
 
-                    var code = await _userService.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var code = await this._userService.GenerateEmailConfirmationTokenAsync(user.Id);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Action(
+                    var callbackUrl = this.Url.Action(
                          "ConfirmEmail", "Register",
-                         new { userId = user.Id, code = code },
-                         protocol: Request.Scheme);
+                         new { userId = user.Id, code = code, },
+                         protocol: this.Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(registerInputModel.Email, "Confirm your email",
+                    await this._emailSender.SendEmailAsync(registerInputModel.Email, "Confirm your email",
                         $"Please confirm your registration at askLNU website by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    if (_userService.RequireConfirmedAccount())
+                    if (this._userService.RequireConfirmedAccount())
                     {
-                        return RedirectToAction("Confirmation", new { email = registerInputModel.Email });
+                        this._logger.LogInformation("Redirected to registration confirmation page.");
+                        return this.RedirectToAction("Confirmation", new { email = registerInputModel.Email });
                     }
                     else
                     {
-                        await _signInService.SignInAsync(user, false);
-                        return RedirectToAction("Index");
+                        await this._signInService.SignInAsync(user, false);
+                        this._logger.LogInformation("User signed in.");
+                        return this.RedirectToAction("Index");
                     }
                 }
+
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    this.ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
 
-            return View("Index");
+            return this.View("Index");
         }
 
         public async Task<IActionResult> Confirmation(string email)
         {
             if (email == null)
             {
-                return RedirectToAction("Index");
+                return this.RedirectToAction("Index");
             }
 
-            var user = await _userService.GetByEmailAsync(email);
+            var user = await this._userService.GetByEmailAsync(email);
             if (user == null)
             {
-                return NotFound($"Unable to load user with email '{email}'.");
+                return this.NotFound($"Unable to load user with email '{email}'.");
             }
 
             var viewModel = new RegisterConfirmationViewModel();
 
             viewModel.DisplayConfirmAccountLink = false;
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null)
             {
-                return RedirectToPage("/Index");
+                return this.RedirectToPage("/Index");
             }
 
-            var user = await _userService.GetByIdAsync(userId);
+            var user = await this._userService.GetByIdAsync(userId);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{userId}'.");
+                return this.NotFound($"Unable to load user with ID '{userId}'.");
             }
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-            var result = await _userService.ConfirmEmailAsync(userId, code);
+            var result = await this._userService.ConfirmEmailAsync(userId, code);
 
             var viewModel = new ConfirmEmailViewModel
             {
                 StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.",
-                Succeeded = result.Succeeded ? true : false
+                Succeeded = result.Succeeded,
             };
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
     }
 }

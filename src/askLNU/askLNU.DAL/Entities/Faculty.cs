@@ -15,6 +15,7 @@ namespace askLNU.DAL.Entities
         public string Title { get; set; }
 
         public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }        
+       
         public virtual ICollection<Question> Questions { get; set; }
     }
 }

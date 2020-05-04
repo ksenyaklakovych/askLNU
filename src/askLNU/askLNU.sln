@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "askLNU.DAL", "askLNU.DAL\as
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "askLNU.BLL", "askLNU.BLL\askLNU.BLL.csproj", "{31452A4F-0AE7-4355-BC87-6712D4C15006}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "askLNU.Tests", "askLNU.Tests\askLNU.Tests.csproj", "{844573CF-70D6-41E8-B4D3-9DD4E69CD0A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "askLNU.Tests", "askLNU.Tests\askLNU.Tests.csproj", "{844573CF-70D6-41E8-B4D3-9DD4E69CD0A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D256F354-5449-4149-A58B-B04710874265}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -51,5 +51,6 @@ namespace askLNU.DAL.Repositories
             if (answer != null)
                 db.Notifications.Remove(answer);
         }
+
     }
 }

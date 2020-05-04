@@ -8,8 +8,14 @@ namespace askLNU.BLL.Interfaces
     public interface IFacultyService
     {
         void CreateFaculty(FacultyDTO Dto);
+      
         FacultyDTO GetFaculty(int? id);
+        
         IEnumerable<FacultyDTO> GetAll();
-        void Dispose();
+        
+        void Dispose(int id);
+        
+        public int GetFacultyIdByName(string name);
+
     }
 }

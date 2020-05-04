@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using askLNU.BLL.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
-namespace askLNU.Controllers
+﻿namespace askLNU.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using askLNU.BLL.Interfaces;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+
     public class LogoutController : Controller
     {
         private readonly ISignInService _signInService;
@@ -17,17 +17,17 @@ namespace askLNU.Controllers
             ISignInService signInService,
             ILogger<LogoutController> logger)
         {
-            _signInService = signInService;
-            _logger = logger;
+            this._signInService = signInService;
+            this._logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            await _signInService.SignOutAsync();
-            _logger.LogInformation("User logged out.");
+            await this._signInService.SignOutAsync();
+            this._logger.LogInformation("User logged out.");
 
-            return RedirectToAction("Index", "Home");
+            return this.RedirectToAction("Index", "Home");
         }
     }
 }

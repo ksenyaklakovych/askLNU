@@ -32,6 +32,7 @@ namespace askLNU.DAL.Entities
         public int Course { get; set; }
 
         public int? FacultyId { get; set; }
+        
         public Faculty Faculty { get; set; }
 
         public bool IsBlocked { get; set; }
@@ -39,7 +40,11 @@ namespace askLNU.DAL.Entities
         public string ImageSrc { get; set; }
 
         public virtual ICollection<ApplicationUserLabel> ApplicationUserLabels { get; set; }
+        
         public virtual ICollection<ApplicationUserFavoriteQuestion> ApplicationUserFavoriteQuestions { get; set; }
+        
         public virtual ICollection<Notification> Notifications { get; set; }
+
+        public virtual ICollection<QuestionVote> QuestionVotes { get; set; }
     }
 }

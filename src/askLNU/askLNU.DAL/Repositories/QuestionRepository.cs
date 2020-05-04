@@ -12,7 +12,6 @@ namespace askLNU.DAL.Repositories
 
     class QuestionRepository : IRepository<Question>
     {
-
         private ApplicationDbContext db;
 
         public QuestionRepository(ApplicationDbContext context)
@@ -27,7 +26,12 @@ namespace askLNU.DAL.Repositories
 
         public Question Get(int id)
         {
-            return db.Questions.Find(id);
+            return db.Questions
+                .Include(q => q.QuestionTags)
+                .Include(q => q.QuestionVotes)
+                .Include(q => q.Answers)
+                .Include(q => q.ApplicationUserFavoriteQuestions)
+                .SingleOrDefault(q => q.Id == id);
         }
 
         public void Create(Question answer)
@@ -51,5 +55,6 @@ namespace askLNU.DAL.Repositories
             if (answer != null)
                 db.Questions.Remove(answer);
         }
+
     }
 }

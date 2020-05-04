@@ -1,0 +1,99 @@
+﻿@model askLNU.ViewModels.QuestionViewModel
+
+@{
+	ViewData["Title"] = Model.Title;
+    ViewData["Disabled"] = User.IsInRole("User") ? "" : "disabled";
+}
+
+    <div class="row">
+
+        <div class="col-1 flex-column mt-3 p-0">
+            <form id="vote-form">
+                <input type="hidden" value="@Model.Id" id="question-id" />
+                <div class="text-center">
+                    <button id="vote-up-button" class="fas fa-chevron-up fa-2x" @ViewData["Disabled"]></button>
+                </div>
+                <div class="text-center" id="question-rating">@Model.Rating</div>
+                <div class="text-center">
+                    <button id="vote-down-button" class="fas fa-chevron-down fa-2x" @ViewData["Disabled"]></button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        @Model.Title
+                        <small class="text-muted" id="question-id">#@Model.Id</small>
+                    </h2>
+                    <p class="card-text">@Model.Text</p>
+                </div>
+            </div>
+
+            @if (User.IsInRole("User"))
+            {
+                <form class="mt-3">
+                    <div class="form-group">
+                        <textarea id="answer-text" class="form-control" rows="5" style="resize: none;"></textarea>
+                        <input type="hidden" value="@Model.Id" name="question-id" />
+                    </div>
+                    <div class="form-group">
+                        <button id="send-answer-button" class="btn btn-primary">Send answer</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="alert alert-primary mt-3" role="alert">
+                    <a href="@Url.Action("Index", "Login")" class="alert-link">Log In</a> to write answer.
+                </div>
+            }
+
+            <div id="answers" style="visibility: hidden;">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <p class="card-text" data-bind="text"></p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="mb-0">
+                            <strong data-bind="authorName"></strong>
+                            <span> - </span>
+                            <span data-bind="date"></span>
+                            @if (User.IsInRole("Moderator"))
+                            {
+                                <button type="button" class="btn btn-danger btn-sm" onclick="location.href='@Url.Action("DeleteAnswer", "Question", new { questionId = Model.Id }) '">
+                                    <span class="fa fa-trash-o" style="font-size:15px;color:white"></span>
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="col-3">
+            <div class="media">
+                <img src="@Model.Author.ImageSrc" class="mr-3" width="64">
+                <div class="media-body">
+                    <h5 class="mt-0">@Model.Author.UserName</h5>
+                    @Model.Date.ToShortDateString()
+                </div>
+            </div>
+
+            <div class="mt-3">
+                @foreach (var tag in Model.Tags)
+                {
+                    <p class="btn btn-sm btn-dark mb-1">@tag</p>
+                    <br />
+                }
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript" src="~/js/question_details.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/transparency/0.9.9/transparency.min.js"></script>
+}
