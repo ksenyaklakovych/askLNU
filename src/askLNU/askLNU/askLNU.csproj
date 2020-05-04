@@ -58,5 +58,10 @@
     <ProjectReference Include="..\askLNU.BLL\askLNU.BLL.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Pages\Account\" />
+  </ItemGroup>
+
 </Project>
 
