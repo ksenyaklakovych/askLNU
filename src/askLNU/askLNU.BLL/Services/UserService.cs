@@ -133,7 +133,7 @@ namespace askLNU.BLL.Services
 
         public IEnumerable<UserDTO> GetUsersByEmail(string email)
         {
-            var allUsers = _userManager.Users.Where(u => u.Email == email);
+            var allUsers = _userManager.Users.Where(u => u.Email.Contains(email));
             _logger.LogInformation("Got users DTO by email.");
             return _mapper.Map<IEnumerable<UserDTO>>(allUsers);
         }

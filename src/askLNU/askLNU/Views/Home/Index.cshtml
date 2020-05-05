@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">*@
     <style>
         .pagination {
             display: inline-block;
@@ -107,11 +107,11 @@
                             <button type="button" class="btn btn-warning btn-lg" onclick="location.href='@Url.Action("AddToFavorites", "", new { questionId = item.Id }) '">
                                 @if (item.IsFavorite == false)
                                 {
-                                    <span class="glyphicon glyphicon-star-empty"></span>
+                                    <span class="fa fa-star-o"></span>
                                 }
                                 else
                                 {
-                                    <span class="glyphicon glyphicon"></span>
+                                    <span class="fa fa-star"></span>
                                 }
                             </button>
                         </div>
