@@ -22,18 +22,21 @@ namespace askLNU.Tests
     {
         private Mock<IUnitOfWork> fakeIUnitOfWork;
         private readonly IMapper _mapper;
+        private readonly IMapper _mapperToQuestion;
         private readonly DbContextOptions<ApplicationDbContext> options;
+        private Mock<ILogger<QuestionService>> _logger;
 
         public QuestionServiceTest()
         {
             fakeIUnitOfWork = new Mock<IUnitOfWork>();
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Question, QuestionDTO>());
             _mapper = new Mapper(config);
-
+            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<QuestionDTO, Question>());
+            _mapperToQuestion = new Mapper(config2);
             options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "FakeDatabase")
                 .Options;
-
+            _logger = new Mock<ILogger<QuestionService>>();
         }
 
         [Fact]
@@ -143,6 +146,88 @@ namespace askLNU.Tests
             Assert.Empty(unitOfWork.Questions.Get(questionId).ApplicationUserFavoriteQuestions);
         }
 
+        [Fact]
+        public void CreateQuestion_ShouldReturnTrue()
+        {
+            var questionDTO = new QuestionDTO { Id=6, Text = "someText", Title = "someTitle" };
+            using var context = new ApplicationDbContext(options);
+            var unitOfWork = new EFUnitOfWork(context);
+            var fakeQuestionService = new QuestionService(unitOfWork,_logger.Object,_mapperToQuestion);
+
+            fakeQuestionService.CreateQuestion(questionDTO);
+
+            Assert.NotNull(unitOfWork.Questions.Find(e=>e.Id==6).First());
+        }
+
+        [Fact]
+        public void VoteUp_ShouldReturnOne()
+        {
+            var userId = "userId";
+            var questionId = 60;
+
+            using var context = new ApplicationDbContext(options);
+
+            context.QuestionVotes.Add(new QuestionVote { ApplicationUserId=userId, QuestionId=questionId});
+            context.Questions.Add(new Question{Id=questionId, Text="question1",Rating=0});
+
+            context.SaveChanges();
+
+            var unitOfWork = new EFUnitOfWork(context);
+
+            var fakeQuestionService = new QuestionService(unitOfWork, _logger.Object, _mapperToQuestion);
+
+            int result = fakeQuestionService.VoteUp(userId, questionId);
+
+            Assert.Equal(1,result);
+        }
+
+        [Fact]
+        public void VoteDown_ShouldReturnZero()
+        {
+            var userId = "userId";
+            var questionId = 60;
+
+            using var context = new ApplicationDbContext(options);
+
+            context.QuestionVotes.Add(new QuestionVote { ApplicationUserId = userId, QuestionId = questionId });
+            context.Questions.Add(new Question { Id = questionId, Text = "question1", Rating = 1 });
+
+            context.SaveChanges();
+
+            var unitOfWork = new EFUnitOfWork(context);
+
+            var fakeQuestionService = new QuestionService(unitOfWork, _logger.Object, _mapperToQuestion);
+
+            int result = fakeQuestionService.VoteDown(userId, questionId);
+
+            Assert.Equal(0, result);
+        }
+
+        [Fact]
+        public void DisposeQuestion_ShouldReturnTrue()
+        {
+            int questionId = 70;
+
+            //Arrange
+            using var context = new ApplicationDbContext(options);
+            
+            context.Questions.Add(new Question { Id = 70, Text = "Question1" });
+
+            context.Answers.Add(new Answer { Id = 30, Text = "Answer3" , QuestionId=70});
+            context.Answers.Add(new Answer { Id = 40, Text = "Answer4" , QuestionId=70});
+
+            context.SaveChanges();
+
+            var unitOfWork = new EFUnitOfWork(context);
+
+            //Act
+            QuestionService questionService = new QuestionService(unitOfWork, _logger.Object);
+            questionService.Dispose(questionId);
+
+            //Assert
+            var emptyList = new List<Question>() { };
+            Assert.Equal(emptyList, unitOfWork.Questions.Find(e => e.Id == questionId).ToList());
+        }
         //TO DO:
         //AddToFavorites
     }

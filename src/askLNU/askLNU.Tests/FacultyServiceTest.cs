@@ -62,7 +62,7 @@ namespace askLNU.Tests
         }
 
         [Fact]
-        public void Dispose_PassFacultyId()
+        public void DisposeFaculty_PassFacultyId()
         {
             int facultyId = 3;
             //Arrange

@@ -32,9 +32,11 @@ namespace askLNU.BLL.Services
                 var tag = _mapper.Map<Tag>(tagDTO);
                 _unitOfWork.Tags.Create(tag);
                 _unitOfWork.Save();
+                _logger.LogInformation("Created Tag");
             }
             else
             {
+                _logger.LogWarning("Error creating tag");
                 throw new ArgumentNullException("tagDTO");
             }
         }

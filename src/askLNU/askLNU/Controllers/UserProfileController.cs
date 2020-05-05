@@ -41,7 +41,7 @@ namespace askLNU.Controllers
             userCurrent.ImageSrc = user.ImageSrc;
             userCurrent.UserName = user.UserName;
 
-            var updatedUser=await _userManager.UpdateAsync(userCurrent);
+            var updatedUser = await _userManager.UpdateAsync(userCurrent);
             var userModel = _mapper.Map<UserProfileViewModel>(userCurrent);
             return View(userModel);
         }

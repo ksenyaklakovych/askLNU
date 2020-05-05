@@ -29,7 +29,15 @@ namespace askLNU.BLL.Services
             _logger = logger;
             _mapper = mapper;
         }
-        
+
+        public QuestionService(
+            IUnitOfWork unitOfWork,
+            ILogger<QuestionService> logger)
+        {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
+        }
+
         public QuestionService(
             IUnitOfWork unitOfWork,
             IMapper mapper)
@@ -46,9 +54,11 @@ namespace askLNU.BLL.Services
                 _unitOfWork.Questions.Create(question);
                 _unitOfWork.Save();
                 questionDTO.Id = question.Id;
+                _logger.LogInformation("Created new question.");
             }
             else
             {
+                _logger.LogWarning("Could not create new question.");
                 throw new ArgumentNullException("questionDTO");
             }
         }

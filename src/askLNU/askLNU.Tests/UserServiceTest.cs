@@ -157,6 +157,25 @@ namespace askLNU.Tests
             Assert.False(result);
         }
 
+        [Fact]
+        public void CreateUserAsync_ShouldReturnFalse()
+        {
+            UserDTO fakeUser = new UserDTO("name", "name", "surname", 1, false, "image", "test@test.com");
+            string fakePassword = "password";
+            Task<bool> trueTask = Task.FromResult(true);
+            var nullUser = Task.Run(() => new ApplicationUser());
+            fakeManager.Setup(m => m.FindByEmailAsync(fakeUser.Email)).Returns(Task.FromResult((ApplicationUser)null));
+
+            UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper2);
+
+            var result= userService.CreateUserAsync(fakeUser, fakePassword);
+
+            Assert.Equal(IdentityResult.Success,result.Result);
+
+        }
+
+       
+        
         //TO DO:
         //RemoveModeratorRole
         //GiveModeratorRole
