@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class CreatedQuestionsViewModel
+    public class FavoriteQuestionsViewModel
     {
         public int Id { get; set; }
 
