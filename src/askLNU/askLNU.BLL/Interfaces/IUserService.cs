@@ -27,13 +27,13 @@ namespace askLNU.BLL.Interfaces
         IEnumerable<UserDTO> GetUsersByEmail(string email);
         
         bool CheckIfUserHasRole(string userId, string roleName);
-        
-        void RemoveModeratorRole(string userId);
-        
-        void GiveModeratorRole(string userId);
 
-        void BlockUserById(string userId);
-        void UnBlockUserById(string userId);
+        IdentityResult RemoveModeratorRole(string userId);
+
+        IdentityResult GiveModeratorRole(string userId);
+
+        IdentityResult BlockUserById(string userId);
+        IdentityResult UnBlockUserById(string userId);
 
     }
 }

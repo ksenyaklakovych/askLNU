@@ -30,7 +30,7 @@ namespace askLNU.BLL.Services
             _logger = logger;
             _mapper = mapper;
         }
-       
+
         public UserService(
             UserManager<ApplicationUser> userManager,
             ILogger<UserService> logger)
@@ -38,12 +38,12 @@ namespace askLNU.BLL.Services
             _userManager = userManager;
             _logger = logger;
         }
-       
+
         public UserService(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
-       
+
         public UserService(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _userManager = userManager;
@@ -85,7 +85,7 @@ namespace askLNU.BLL.Services
 
             if (appLicationUser != null)
             {
-               _logger.LogInformation("Got userDTO by email.");
+                _logger.LogInformation("Got userDTO by email.");
                 return _mapper.Map<UserDTO>(appLicationUser);
             }
             else
@@ -146,33 +146,37 @@ namespace askLNU.BLL.Services
             return result.Result;
         }
 
-        public void RemoveModeratorRole(string userId)
+        public IdentityResult RemoveModeratorRole(string userId)
         {
             _logger.LogInformation("Removed Moderator rights from user.");
             var user = _userManager.FindByIdAsync(userId).Result;
-            var res=_userManager.RemoveFromRoleAsync(user, "Moderator").Result;
+            var res = _userManager.RemoveFromRoleAsync(user, "Moderator").Result;
+            return res;
         }
 
-        public void GiveModeratorRole(string userId)
+        public IdentityResult GiveModeratorRole(string userId)
         {
             var user = _userManager.FindByIdAsync(userId).Result;
             _logger.LogInformation("Gave user Moderator rights.");
-            var res=_userManager.AddToRoleAsync(user, "Moderator").Result;
+            var res = _userManager.AddToRoleAsync(user, "Moderator").Result;
+            return res;
         }
-        public void BlockUserById(string userId)
+        public IdentityResult BlockUserById(string userId)
         {
             var user = _userManager.FindByIdAsync(userId).Result;
             _logger.LogInformation("Blocked user.");
-            user.IsBlocked=true;
-            var res=_userManager.UpdateAsync(user).Result;
+            user.IsBlocked = true;
+            var res = _userManager.UpdateAsync(user).Result;
+            return res;
         }
 
-        public void UnBlockUserById(string userId)
+        public IdentityResult UnBlockUserById(string userId)
         {
             var user = _userManager.FindByIdAsync(userId).Result;
             _logger.LogInformation("UnBlocked user.");
             user.IsBlocked = false;
             var res = _userManager.UpdateAsync(user).Result;
+            return res;
         }
     }
 }

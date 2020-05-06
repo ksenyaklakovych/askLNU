@@ -25,6 +25,12 @@ namespace askLNU.BLL.Services
             _signInManager = signInManager;
             _mapper = mapper;
         }
+            
+        public SignInService(SignInManager<ApplicationUser> signInManager)
+        {
+            _signInManager = signInManager;
+
+        }
 
         public async Task<List<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync()
         {

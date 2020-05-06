@@ -61,12 +61,12 @@
             if (remove)
             {
                 this._logger.LogInformation($"Admin removes Moderator rights from user with id {userId}");
-                this._userService.RemoveModeratorRole(userId);
+                var res = this._userService.RemoveModeratorRole(userId);
             }
             else
             {
                 this._logger.LogInformation($"Admin gives Moderator rights to user with id {userId}");
-                this._userService.GiveModeratorRole(userId);
+                var res = this._userService.GiveModeratorRole(userId);
             }
 
             return this.RedirectToAction("Index");
@@ -78,12 +78,12 @@
             if (block)
             {
                 this._logger.LogInformation($"Admin blocked user with id {userId}");
-                this._userService.BlockUserById(userId);
+                var result = this._userService.BlockUserById(userId);
             }
             else
             {
                 this._logger.LogInformation($"Admin unblocked user with id {userId}");
-                this._userService.UnBlockUserById(userId);
+                var result = this._userService.UnBlockUserById(userId);
             }
 
             return this.RedirectToAction("Index");

@@ -158,24 +158,124 @@ namespace askLNU.Tests
         }
 
         [Fact]
-        public void CreateUserAsync_ShouldReturnFalse()
+        public void GiveModeratorRole_ShouldReturnSuccess()
         {
-            UserDTO fakeUser = new UserDTO("name", "name", "surname", 1, false, "image", "test@test.com");
-            string fakePassword = "password";
-            Task<bool> trueTask = Task.FromResult(true);
-            var nullUser = Task.Run(() => new ApplicationUser());
-            fakeManager.Setup(m => m.FindByEmailAsync(fakeUser.Email)).Returns(Task.FromResult((ApplicationUser)null));
+            string userId = "testId";
+            string userRole = "Moderator";
 
-            UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper2);
+            //Arrange
+            Task<ApplicationUser> fakeUser = Task.Run(() => new ApplicationUser("TestName", "TestSurname", 1, false, "image.jpg"));
+            Task<IdentityResult> trueTask = Task.FromResult(IdentityResult.Success);
+            fakeManager.Setup(m => m.FindByIdAsync(userId)).Returns(fakeUser);
+            fakeManager.Setup(m => m.AddToRoleAsync(fakeUser.Result, userRole)).Returns(trueTask);
 
-            var result= userService.CreateUserAsync(fakeUser, fakePassword);
+            UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper);
+            //Act
+            var result = userService.GiveModeratorRole(userId);
 
-            Assert.Equal(IdentityResult.Success,result.Result);
-
+            //Assert
+            Assert.Equal(IdentityResult.Success, result);
         }
 
-       
-        
+        [Fact]
+        public void RemoveModeratorRole_ShouldReturnFalse()
+        {
+            string userId = "testId";
+            string userRole = "Moderator";
+
+            //Arrange
+            Task<ApplicationUser> fakeUser = Task.Run(() => new ApplicationUser("TestName", "TestSurname", 1, false, "image.jpg"));
+            Task<IdentityResult> trueTask = Task.FromResult(IdentityResult.Success);
+            fakeManager.Setup(m => m.FindByIdAsync(userId)).Returns(fakeUser);
+            fakeManager.Setup(m => m.AddToRoleAsync(fakeUser.Result, userRole)).Returns(trueTask);
+
+            UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper);
+            //Act
+            var result = userService.RemoveModeratorRole(userId);
+
+            //Assert
+            Assert.False( userService.CheckIfUserHasRole(userId,userRole));
+        }
+
+        [Fact]
+        public void BlockUserById_ShouldReturnTrue()
+        {
+            string userId = "testId";
+
+            //Arrange
+            Task<ApplicationUser> fakeUser = Task.Run(() => new ApplicationUser("TestName", "TestSurname", 1, false, "image.jpg"));
+            Task<IdentityResult> trueTask = Task.FromResult(IdentityResult.Success);
+
+            fakeManager.Setup(m => m.FindByIdAsync(userId)).Returns(fakeUser);
+            fakeManager.Setup(m => m.UpdateAsync(fakeUser.Result)).Returns(trueTask);
+
+            UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper);
+            //Act
+            var result = userService.BlockUserById(userId);
+
+            //Assert
+            Assert.Equal(trueTask.Result, result);
+        }
+
+        [Fact]
+        public void UnblockUserById_ShouldReturnFalse()
+        {
+            string userId = "testId";
+
+            //Arrange
+            Task<ApplicationUser> fakeUser = Task.Run(() => new ApplicationUser("TestName", "TestSurname", 1, false, "image.jpg"));
+            Task<IdentityResult> trueTask = Task.FromResult(IdentityResult.Success);
+
+            fakeManager.Setup(m => m.FindByIdAsync(userId)).Returns(fakeUser);
+            fakeManager.Setup(m => m.UpdateAsync(fakeUser.Result)).Returns(trueTask);
+
+            UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper);
+            //Act
+            var result = userService.UnBlockUserById(userId);
+
+            //Assert
+            Assert.False(userService.GetByIdAsync(userId).Result.IsBlocked);
+        }
+
+        [Fact]
+        public void UpdateImage_ShouldReturnFalse()
+        {
+            string userId = "testId";
+            string newImage = "newImage";
+
+            //Arrange
+            Task<ApplicationUser> fakeUser = Task.Run(() => new ApplicationUser("TestName", "TestSurname", 1, false, "image.jpg"));
+            Task<IdentityResult> trueTask = Task.FromResult(IdentityResult.Success);
+
+            fakeManager.Setup(m => m.FindByIdAsync(userId)).Returns(fakeUser);
+            fakeManager.Setup(m => m.UpdateAsync(fakeUser.Result)).Returns(trueTask);
+
+            UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper);
+            //Act
+            var result = userService.UpdateImage(userId, newImage);
+
+            //Assert
+            Assert.Equal(newImage, userService.GetByIdAsync(userId).Result.ImageSrc);
+        }
+        //[Fact]
+        //public void CreateUserAsync_ShouldReturnFalse()
+        //{
+        //    UserDTO fakeUser = new UserDTO("name", "name", "surname", 1, false, "image", "test@test.com");
+        //    string fakePassword = "password";
+        //    Task<bool> trueTask = Task.FromResult(true);
+        //    var nullUser = Task.Run(() => new ApplicationUser());
+        //    fakeManager.Setup(m => m.FindByEmailAsync(fakeUser.Email)).Returns(Task.FromResult((ApplicationUser)null));
+
+        //    UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper2);
+
+        //    var result= userService.CreateUserAsync(fakeUser, fakePassword);
+
+        //    Assert.Equal(IdentityResult.Success,result.Result);
+
+        //}
+
+
+
         //TO DO:
         //RemoveModeratorRole
         //GiveModeratorRole

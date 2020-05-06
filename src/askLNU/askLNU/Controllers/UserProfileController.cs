@@ -1,39 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using askLNU.ViewModels;
-using askLNU.DAL.Entities;
-using Microsoft.AspNetCore.Identity;
-using AutoMapper;
-
-namespace askLNU.Controllers
+﻿namespace askLNU.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using askLNU.DAL.Entities;
+    using askLNU.ViewModels;
+    using AutoMapper;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+
     public class UserProfileController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private Mapper _mapper;
+
         public UserProfileController(
            UserManager<ApplicationUser> userManager)
         {
-            _userManager = userManager;
+            this._userManager = userManager;
             var config = new MapperConfiguration(cfg => cfg.CreateMap<ApplicationUser,UserProfileViewModel>());
-            _mapper = new Mapper(config);
+            this._mapper = new Mapper(config);
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
-            var userModel =  _mapper.Map<UserProfileViewModel>(user);
-            return View(userModel);
+            var user = await this._userManager.GetUserAsync(this.User);
+            var userModel = this._mapper.Map<UserProfileViewModel>(user);
+            return this.View(userModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Index(UserProfileViewModel user)
         {
-            var userCurrent = await _userManager.GetUserAsync(User);
+            var userCurrent = await this._userManager.GetUserAsync(this.User);
             userCurrent.Name = user.Name;
             userCurrent.Surname = user.Surname;
             userCurrent.Email = user.Email;
@@ -41,10 +42,9 @@ namespace askLNU.Controllers
             userCurrent.ImageSrc = user.ImageSrc;
             userCurrent.UserName = user.UserName;
 
-            var updatedUser = await _userManager.UpdateAsync(userCurrent);
-            var userModel = _mapper.Map<UserProfileViewModel>(userCurrent);
-            return View(userModel);
+            var updatedUser = await this._userManager.UpdateAsync(userCurrent);
+            var userModel = this._mapper.Map<UserProfileViewModel>(userCurrent);
+            return this.View(userModel);
         }
     }
 }
-
