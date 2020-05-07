@@ -17,7 +17,7 @@ using askLNU.BLL.Infrastructure.Exceptions;
 
 namespace askLNU.Tests
 {
-    public class UserServiceTest
+    public class UserServiceTests
     {
         private Mock<UserManager<ApplicationUser>> fakeManager;
         private Mock<ILogger<UserService>> _logger;
@@ -25,7 +25,7 @@ namespace askLNU.Tests
         private readonly IMapper _mapper;
         private readonly IMapper _mapper2;
 
-        public UserServiceTest()
+        public UserServiceTests()
         {
             fakeManager = new Mock<UserManager<ApplicationUser>>(
                     new Mock<IUserStore<ApplicationUser>>().Object,

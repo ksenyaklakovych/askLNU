@@ -141,6 +141,7 @@ namespace askLNU.BLL.Services
                 QuestionId = questionId 
             };
             _unitOfWork.ApplicationUserFavoriteQuestion.Create(userFavoriteQuestion);
+            _logger.LogInformation($"Question with id {questionId} added to favourites to user with id {userId}.");
             _unitOfWork.Save();
         }
        

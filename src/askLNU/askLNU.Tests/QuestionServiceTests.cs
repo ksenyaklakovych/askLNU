@@ -18,7 +18,7 @@ using askLNU.DAL.EF;
 
 namespace askLNU.Tests
 {
-    public class QuestionServiceTest
+    public class QuestionServiceTests
     {
         private Mock<IUnitOfWork> fakeIUnitOfWork;
         private readonly IMapper _mapper;
@@ -26,7 +26,7 @@ namespace askLNU.Tests
         private readonly DbContextOptions<ApplicationDbContext> options;
         private Mock<ILogger<QuestionService>> _logger;
 
-        public QuestionServiceTest()
+        public QuestionServiceTests()
         {
             fakeIUnitOfWork = new Mock<IUnitOfWork>();
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Question, QuestionDTO>());
@@ -40,7 +40,7 @@ namespace askLNU.Tests
         }
 
         [Fact]
-        public void GetAll_ShouldReturnTrue()
+        public void GetAllQuestions_ShouldReturnTrue()
         {
             //Arrange
             DateTime date1 = DateTime.Parse("5/1/2008 8:30:52 AM",
@@ -104,7 +104,7 @@ namespace askLNU.Tests
         }
         
         [Fact]
-        public void IsQuestionFavorite_returnsFalse()
+        public void IsQuestionFavorite_ShoulReturnFalse()
         {
             string userId = "1";
             int questionId = 1;
@@ -122,7 +122,7 @@ namespace askLNU.Tests
         }
 
         [Fact]
-        public void RemoveFromFavorites_ShouldReturnTrue()
+        public void RemoveFromFavorites_ShouldReturnEmpty()
         {
             using var context = new ApplicationDbContext(options);
 
@@ -147,6 +147,27 @@ namespace askLNU.Tests
         }
 
         [Fact]
+        public void AddToFavorites_ShouldReturnSingle()
+        {
+            string userId = "0000";
+            int questionId = 153;
+
+            using var context = new ApplicationDbContext(options);
+
+            context.Questions.Add(new Question
+            {
+                Id = questionId
+            });
+            context.SaveChanges();
+            var unitOfWork = new EFUnitOfWork(context);
+
+            var fakeQuestionService = new QuestionService(unitOfWork, _logger.Object, _mapper);
+            fakeQuestionService.AddToFavorites(userId, questionId);
+
+            Assert.Single(unitOfWork.ApplicationUserFavoriteQuestion.Find(e=>e.QuestionId==questionId && e.ApplicationUserId==userId).ToList());
+        }
+
+        [Fact]
         public void CreateQuestion_ShouldReturnTrue()
         {
             var questionDTO = new QuestionDTO { Id=6, Text = "someText", Title = "someTitle" };
@@ -163,7 +184,7 @@ namespace askLNU.Tests
         public void VoteUp_ShouldReturnOne()
         {
             var userId = "userId";
-            var questionId = 60;
+            var questionId = 166;
 
             using var context = new ApplicationDbContext(options);
 
@@ -206,15 +227,15 @@ namespace askLNU.Tests
         [Fact]
         public void DisposeQuestion_ShouldReturnTrue()
         {
-            int questionId = 70;
+            int questionId = 80;
 
             //Arrange
             using var context = new ApplicationDbContext(options);
             
-            context.Questions.Add(new Question { Id = 70, Text = "Question1" });
+            context.Questions.Add(new Question { Id = questionId, Text = "Question1" });
 
-            context.Answers.Add(new Answer { Id = 30, Text = "Answer3" , QuestionId=70});
-            context.Answers.Add(new Answer { Id = 40, Text = "Answer4" , QuestionId=70});
+            context.Answers.Add(new Answer { Id = 216, Text = "Answer3" , QuestionId=70});
+            context.Answers.Add(new Answer { Id = 217, Text = "Answer4" , QuestionId=70});
 
             context.SaveChanges();
 
@@ -228,7 +249,6 @@ namespace askLNU.Tests
             var emptyList = new List<Question>() { };
             Assert.Equal(emptyList, unitOfWork.Questions.Find(e => e.Id == questionId).ToList());
         }
-        //TO DO:
-        //AddToFavorites
+
     }
 }

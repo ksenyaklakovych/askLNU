@@ -18,14 +18,14 @@ using askLNU.DAL.EF;
 
 namespace askLNU.Tests
 {
-    public class FacultyServiceTest
+    public class FacultyServiceTests
     {
         private readonly IMapper _mapper;
         private readonly IMapper _mapper_2;
         private readonly DbContextOptions<ApplicationDbContext> options;
         private Mock<ILogger<FacultyService>> _logger;
 
-        public FacultyServiceTest()
+        public FacultyServiceTests()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Faculty, FacultyDTO>());
             _mapper = new Mapper(config);
@@ -40,7 +40,7 @@ namespace askLNU.Tests
         }
 
         [Fact]
-        public void GetAll_ShouldReturnTrue()
+        public void GetAllFaculties_ShouldReturnTrue()
         {
             //Arrange
             using var context = new ApplicationDbContext(options);
@@ -85,7 +85,7 @@ namespace askLNU.Tests
         [Fact]
         public void GetFacultyIdByName_PassCorrectName()
         {
-            var facultyName = "facultyName";
+            var facultyName = "facultyNameCorrect";
             var facultyId = 4;
             //Arrange
             using var context = new ApplicationDbContext(options);

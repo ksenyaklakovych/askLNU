@@ -18,14 +18,14 @@ using askLNU.DAL.EF;
 
 namespace askLNU.Tests
 {
-    public class TagServiceTest
+    public class TagServiceTests
     {
         private readonly IMapper _mapper;
         private readonly IMapper _mapper_2;
         private readonly DbContextOptions<ApplicationDbContext> options;
         private Mock<ILogger<TagService>> _logger;
 
-        public TagServiceTest()
+        public TagServiceTests()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Tag, TagDTO>());
             _mapper = new Mapper(config);

@@ -18,14 +18,14 @@ using askLNU.DAL.EF;
 
 namespace askLNU.Tests
 {
-    public class AnswerServiceTest
+    public class AnswerServiceTests
     {
         private readonly IMapper _mapper;
         private readonly IMapper _mapperFromDTO;
         private readonly DbContextOptions<ApplicationDbContext> options;
         private Mock<ILogger<AnswerService>> _logger;
 
-        public AnswerServiceTest()
+        public AnswerServiceTests()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Answer, AnswerDTO>());
             _mapper = new Mapper(config);
@@ -41,17 +41,17 @@ namespace askLNU.Tests
         [Fact]
         public void GetAnswersByQuestionId_ShouldReturnTrue()
         {
-            int questionId = 1;
+            int questionId = 44;
 
             //Arrange
             using var context = new ApplicationDbContext(options);
 
-            context.Questions.Add(new Question { Id = 1 });
+            context.Questions.Add(new Question { Id = questionId });
 
-            context.Answers.Add(new Answer { QuestionId = 1, Text = "Answer1" });
-            context.Answers.Add(new Answer { QuestionId = 1, Text = "Answer2" });
-            context.Answers.Add(new Answer { QuestionId = 1, Text = "Answer3" });
-            context.Answers.Add(new Answer { QuestionId = 2, Text = "Answer4" });
+            context.Answers.Add(new Answer { QuestionId = questionId, Text = "Answer1" });
+            context.Answers.Add(new Answer { QuestionId = questionId, Text = "Answer2" });
+            context.Answers.Add(new Answer { QuestionId = questionId, Text = "Answer3" });
+            context.Answers.Add(new Answer { QuestionId = questionId+1, Text = "Answer4" });
 
             context.SaveChanges();
 
@@ -117,28 +117,24 @@ namespace askLNU.Tests
             var emptyList = new List<Answer>() { };
             Assert.Equal(emptyList, unitOfWork.Answers.Find(e => e.Id == answerId).ToList());
         }
-        //[Fact]
-        //public void AddAnswer_ShouldReturnTrue()
-        //{
-        //    int questionId = 50;
-        //    var answerDTO = new AnswerDTO { Id = 50, Text = "answer1" };
 
-        //    //Arrange
-        //    using var context = new ApplicationDbContext(options);
+        [Fact]
+        public void CreateAnswer_ShouldReturnTrue()
+        {
+            int answerId = 124;
+            var answerDTO = new AnswerDTO { Id = answerId, Text = "answer1" };
 
-        //    context.Questions.Add(new Question { Id = 50, Text = "question50" ,Answers = new List<Answer> { } });
-        //    context.SaveChanges();
+            //Arrange
+            using var context = new ApplicationDbContext(options);
+            var unitOfWork = new EFUnitOfWork(context);
 
-        //    var unitOfWork = new EFUnitOfWork(context);
+            //Act
+            AnswerService answerService = new AnswerService(unitOfWork, _mapperFromDTO);
+            answerService.CreateAnswer(answerDTO);
 
-        //    //Act
-        //    QuestionService answerService = new QuestionService(unitOfWork, _mapperFromDTO);
-        //    answerService.AddAnswer(questionId, answerDTO);
+            //Assert
+            Assert.Equal(answerDTO.Text,unitOfWork.Answers.Find(e => e.Id == answerId).FirstOrDefault().Text);
+        }
 
-        //    var answerMapped = _mapperFromDTO.Map<Answer>(answerDTO);
-        //    //Assert
-        //    Assert.True(unitOfWork.Questions.Find(e => e.Id == questionId).First().Answers.Contains(answerMapped));
-        //}
-       
     }
 }
