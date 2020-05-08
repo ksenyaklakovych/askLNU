@@ -49,6 +49,12 @@ namespace askLNU
             {
                 facebookOptions.AppId = this.Configuration["Authentication:Facebook:AppId"];
                 facebookOptions.AppSecret = this.Configuration["Authentication:Facebook:AppSecret"];
+            }).AddGoogle(options =>
+            {
+                IConfigurationSection googleAuthNSection =
+                    this.Configuration.GetSection("Authentication:Google");
+                options.ClientId = googleAuthNSection["ClientId"];
+                options.ClientSecret = googleAuthNSection["ClientSecret"];
             });
 
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
@@ -93,7 +99,6 @@ namespace askLNU
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
