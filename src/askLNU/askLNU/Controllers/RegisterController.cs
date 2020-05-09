@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
-    using System.Security.Claims;
     using askLNU.BLL.DTO;
     using askLNU.BLL.Interfaces;
     using askLNU.DAL.Entities;
@@ -84,7 +84,7 @@
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = this.Url.Action(
                          "ConfirmEmail", "Register",
-                         new { userId = user.Id, code = code, },
+                         new { userId = user.Id, code = code},
                          protocol: this.Request.Scheme);
 
                     await this._emailSender.SendEmailAsync(registerInputModel.Email, "Confirm your email",
@@ -161,43 +161,44 @@
         [ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
-            // Request a redirect to the external login provider.
-            var redirectUrl = Url.Action(nameof(this.ExternalLoginCallback), "Register", new { returnUrl });
+            var redirectUrl = this.Url.Action(nameof(this.ExternalLoginCallback), "Register", new { returnUrl });
             var properties = this._signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            return Challenge(properties, provider);
+            return this.Challenge(properties, provider);
         }
 
         [HttpGet]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
+            returnUrl = returnUrl ?? this.Url.Content("~/");
+
             if (remoteError != null)
             {
-                return RedirectToAction("Login");
-            }
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                return RedirectToAction("Login");
+                return this.RedirectToAction("Login");
             }
 
-            // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var info = await this._signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return this.RedirectToAction("Login");
+            }
+
+            var result = await this._signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
-                _logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
-                return Redirect(returnUrl);
+                this._logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
+                return this.Redirect(returnUrl);
             }
+
             if (result.IsLockedOut)
             {
-                return RedirectToAction("LogOut");
+                return this.RedirectToAction("LogOut");
             }
             else
             {
-                // If the user does not have an account, then ask the user to create an account.
-                ViewData["ReturnUrl"] = returnUrl;
-                ViewData["LoginProvider"] = info.LoginProvider;
+                this.ViewData["ReturnUrl"] = returnUrl;
+                this.ViewData["LoginProvider"] = info.LoginProvider;
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
+                return this.View("ExternalLogin", new ExternalLoginViewModel { Email = email});
             }
         }
 
@@ -205,30 +206,33 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginViewModel model, string returnUrl = null)
         {
-            if (ModelState.IsValid)
+            returnUrl = returnUrl ?? this.Url.Content("~/");
+            if (this.ModelState.IsValid)
             {
-                // Get the information about the user from the external login provider
-                var info = await _signInManager.GetExternalLoginInfoAsync();
+                var info = await this._signInManager.GetExternalLoginInfoAsync();
                 if (info == null)
                 {
                     throw new ApplicationException("Error loading external login information during confirmation.");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user);
+
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
+                var result = await this._userManager.CreateAsync(user);
+                await this._userService.AddUserToRoleAsync(user, "User");
+
                 if (result.Succeeded)
                 {
-                    result = await _userManager.AddLoginAsync(user, info);
+                    result = await this._userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-                        return Redirect(returnUrl);
+                        await this._signInManager.SignInAsync(user, isPersistent: false);
+                        this._logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                        return this.Redirect(returnUrl);
                     }
                 }
             }
 
-            ViewData["ReturnUrl"] = returnUrl;
-            return View(nameof(ExternalLogin), model);
+            this.ViewData["ReturnUrl"] = returnUrl;
+            return this.View(nameof(this.ExternalLogin), model);
         }
     }
 }
