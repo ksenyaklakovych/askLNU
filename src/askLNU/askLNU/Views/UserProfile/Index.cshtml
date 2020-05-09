@@ -15,49 +15,60 @@
     <div class="modal-guts">
         <h1>@ViewData["Title"]</h1>
 
-                <form asp-action="Index">
+                <form asp-action="Profile" method="post" enctype="multipart/form-data">
                     <div class="form-row">
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="form-group col-md-5">
+                        <div class="media col-md-3">
+                            <div class="imgContainer" style="margin-bottom: 16px;">
+                                <img src="@Model.ImageSrc" class="mr-3" width="104"><br>
+                                <div class="imgBotton" value="test">
+                                    <input type=button onClick="location.href='../UserProfile/ChangePhoto'" value='Change photo' style="width:inherit; margin-top: 8px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
                             <label asp-for="Email" class="control-label"></label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group col-md-5">
-                            <label asp-for="UserName" class="control-label"></label>
+                        <div class="form-group col-md-4">
+                            <label asp-for="UserName" class="control-label">Username</label>
                             <input asp-for="UserName" class="form-control" />
                             <span asp-validation-for="UserName" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group col-md-5">
-                            <label asp-for="Name" class="control-label"></label>
-                            <input asp-for="Name" class="form-control" />
-                            <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group col-md-5">
-                            <label asp-for="Surname" class="control-label"></label>
-                            <input asp-for="Surname" class="form-control" />
-                            <span asp-validation-for="Surname" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-3">
                             <label asp-for="Course" class="control-label"></label>
                             <input asp-for="Course" class="form-control" />
                             <span asp-validation-for="Course" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group col-md-5">
-                            <label asp-for="ImageSrc" class="control-label"></label>
-                            <input asp-for="ImageSrc" class="form-control" />
-                            <span asp-validation-for="ImageSrc" class="text-danger"></span>
+                        <div class="form-group col-md-4">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
 
+                        <div class="form-group col-md-4">
+                            <label asp-for="Surname" class="control-label"></label>
+                            <input asp-for="Surname" class="form-control" />
+                            <span asp-validation-for="Surname" class="text-danger"></span>
+                        </div>
+
+                        @*<div class="form-group col-md-4">
+
+                            <label asp-for="Image" class="control-label">Change photo:</label> <br>
+                            <input asp-for="Image" type='file' name='file' id='file' class='form-control-file' />
+                            <span asp-validation-for="Image" class="text-danger"></span>
+
+                         </div>*@
+
                         <div class="form-group col-md-10" id="button">
-                            <input type="submit" value="Save changes" class="btn btn-primary" />
+                            <input type="submit" value="Save changes" class="btn btn-primary" style="position: absolute;" />
                         </div>
 
                     </div>
