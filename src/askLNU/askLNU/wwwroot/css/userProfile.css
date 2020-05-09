@@ -8,6 +8,16 @@ body {
     background-color: lightslategray;
 }
 
+#linksRow {
+    width: 344px;
+    border: double;
+    padding: 6px;
+    border-radius: 4px;
+}
+a , h4{
+    color: #cb9d12;
+}
+
 .modal {
     display: block;
     width: 900px;
@@ -38,10 +48,6 @@ body {
     padding: 20px 20px 20px 50px;
 }
 
-.col-md-5 {
-    padding-right: 50px;
-}
-
 ul {
     margin: 10px 0 10px 30px;
 }
@@ -51,7 +57,7 @@ li, p {
 }
 
 h1 {
-    margin: 20px 0 20px 0;
+    margin: 14px 0 20px 0;
 }
 
 #button {
