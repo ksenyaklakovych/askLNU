@@ -20,6 +20,7 @@ namespace askLNU.DAL.EF
         private TagRepository tagRepository;
         private ApplicationUserFavoriteQuestionRepository favoriteQuestionRepository;
         private QuestionVoteRepository questionVoteRepository;
+        private AnswerVoteRepository answerVoteRepository;
 
 
         public EFUnitOfWork(ApplicationDbContext context)
@@ -114,6 +115,16 @@ namespace askLNU.DAL.EF
                 if (questionVoteRepository == null)
                     questionVoteRepository = new QuestionVoteRepository(db);
                 return questionVoteRepository;
+            }
+        }
+
+        public IRepository<AnswerVote> AnswerVotes
+        {
+            get
+            {
+                if (answerVoteRepository == null)
+                    answerVoteRepository = new AnswerVoteRepository(db);
+                return answerVoteRepository;
             }
         }
 

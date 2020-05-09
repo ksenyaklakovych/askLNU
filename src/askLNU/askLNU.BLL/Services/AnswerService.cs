@@ -89,5 +89,77 @@ namespace askLNU.BLL.Services
                 throw new ArgumentNullException("id");
             }
         }
+
+        private int Vote(string userId, int answerId, bool voteUp = false, bool voteDown = false)
+        {
+            var vote = _unitOfWork.AnswerVotes
+                .Find(v => v.ApplicationUserId == userId && v.AnswerId == answerId).FirstOrDefault();
+
+            var answer = _unitOfWork.Answers.Get(answerId);
+
+            if (vote == null)
+            {
+                _unitOfWork.AnswerVotes.Create(new AnswerVote
+                {
+                    ApplicationUserId = userId,
+                    AnswerId = answerId,
+                    VotedUp = voteUp,
+                    VotedDown = voteDown
+                });
+                _unitOfWork.Save();
+
+                if (voteUp)
+                {
+                    answer.Rating++;
+                }
+                else if (voteDown)
+                {
+                    answer.Rating--;
+                }
+            }
+            else
+            {
+                if (!vote.VotedUp && !vote.VotedDown)
+                {
+                    if (voteUp)
+                    {
+                        answer.Rating++;
+                        vote.VotedUp = true;
+                    }
+                    else if (voteDown)
+                    {
+                        answer.Rating--;
+                        vote.VotedDown = true;
+                    }
+                }
+                else if (voteDown && vote.VotedUp)
+                {
+                    answer.Rating--;
+                    vote.VotedUp = false;
+                }
+                else if (voteUp && vote.VotedDown)
+                {
+                    answer.Rating++;
+                    vote.VotedDown = false;
+                }
+
+                _unitOfWork.AnswerVotes.Update(vote);
+            }
+
+            _unitOfWork.Answers.Update(answer);
+            _unitOfWork.Save();
+
+            return answer.Rating;
+        }
+
+        public int VoteUp(string userId, int answerId)
+        {
+            return Vote(userId, answerId, voteUp: true);
+        }
+
+        public int VoteDown(string userId, int answerId)
+        {
+            return Vote(userId, answerId, voteDown: true);
+        }
     }
 }

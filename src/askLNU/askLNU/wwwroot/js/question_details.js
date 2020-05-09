@@ -4,14 +4,14 @@
     $("#vote-up-button").click(
         function (e) {
             e.preventDefault();
-            sendVote("/Question/VoteUp");
+            sendQuestionVote("/Question/VoteUp");
 		}
     );
 
     $("#vote-down-button").click(
         function (e) {
             e.preventDefault();
-            sendVote("/Question/VoteDown");
+            sendQuestionVote("/Question/VoteDown");
         }
     );
 
@@ -22,6 +22,18 @@
         }
     );
 });
+
+function bindVoteEvents() {
+    $("#answers .row .answer-vote-up-button").on('click', function (e) {
+        e.preventDefault();
+        sendAnswerVote("/Answer/VoteUp", $(this).closest(".row"));
+    });
+
+    $("#answers .row .answer-vote-down-button").on("click", function (e) {
+        e.preventDefault();
+        sendAnswerVote("/Answer/VoteDown", $(this).closest(".row"));
+    });
+}
 
 function getAnswers() {
     $.ajax({
@@ -34,6 +46,7 @@ function getAnswers() {
         },
         success: function (response) {
             $("#answers").render(response);
+            bindVoteEvents();
             $("#answers").css("visibility", "visible");
         },
         error: function (response) {
@@ -66,7 +79,7 @@ function sendAnswer() {
     }
 }
 
-function sendVote(url) {
+function sendQuestionVote(url) {
     $.ajax({
         url: url,
         type: "POST",
@@ -75,8 +88,24 @@ function sendVote(url) {
             questionId: $("#question-id").val()
         },
         success: function (response) {
-            let result = $.parseJSON(response);
             $("#question-rating").text(response);
+        },
+        error: function (response) {
+            console.log("error", response);
+        }
+    });
+}
+
+function sendAnswerVote(url, answerRow) {
+    $.ajax({
+        url: url,
+        type: "POST",
+        dataType: "json",
+        data: {
+            answerId: answerRow.find("[name='answer-id']").val()
+        },
+        success: function (response) {
+            answerRow.find(".answer-rating").text(response);
         },
         error: function (response) {
             console.log("error", response);

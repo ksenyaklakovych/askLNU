@@ -167,6 +167,7 @@
                                 orderby answer.IsSolution descending
                                 select new AnswerViewModel
                                 {
+                                    Id = answer.Id,
                                     Text = answer.Text,
                                     Rating = answer.Rating,
                                     IsSolution = answer.IsSolution,
