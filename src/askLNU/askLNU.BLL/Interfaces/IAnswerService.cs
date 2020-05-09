@@ -14,5 +14,9 @@ namespace askLNU.BLL.Interfaces
         public IEnumerable<AnswerDTO> GetAnswersByQuestionId(int? id);
         
         public void Dispose(int answerId);
+
+        int VoteUp(string userId, int answerId);
+
+        int VoteDown(string userId, int answerId);
     }
 }

@@ -25,6 +25,8 @@ namespace askLNU.DAL.Interfaces
         
         IRepository<QuestionVote> QuestionVotes { get; }
 
+        IRepository<AnswerVote> AnswerVotes { get; }
+
         void Save();
     }
 }

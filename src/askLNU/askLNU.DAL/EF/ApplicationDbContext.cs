@@ -29,6 +29,8 @@
 
         public DbSet<QuestionVote> QuestionVotes { get; set; }
 
+        public DbSet<AnswerVote> AnswerVotes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -43,6 +45,9 @@
 
             builder.Entity<QuestionVote>()
                 .HasKey(o => new { o.ApplicationUserId, o.QuestionId });
+
+            builder.Entity<AnswerVote>()
+                .HasKey(o => new { o.ApplicationUserId, o.AnswerId });
 
             // Seed data
             builder.Entity<Faculty>().HasData(
