@@ -101,7 +101,7 @@ namespace askLNU.BLL.Services
             return _userManager.Options.SignIn.RequireConfirmedAccount;
         }
 
-        private async Task AddUserToRoleAsync(ApplicationUser user, string role)
+        public async Task AddUserToRoleAsync(ApplicationUser user, string role)
         {
             await _userManager.AddToRoleAsync(user, role);
         }

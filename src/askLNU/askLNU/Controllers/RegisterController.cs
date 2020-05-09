@@ -3,14 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
     using askLNU.BLL.DTO;
     using askLNU.BLL.Interfaces;
+    using askLNU.DAL.Entities;
     using askLNU.InputModels;
     using askLNU.ViewModels;
     using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.WebUtilities;
@@ -23,19 +26,26 @@
         private readonly ISignInService _signInService;
         private readonly ILogger<RegisterController> _logger;
         private readonly IImageService _imageService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+
 
         public RegisterController(
             IEmailSender emailSender,
             IUserService userService,
             ISignInService signInService,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterController> logger,
-            IImageService imageService)
+            IImageService imageService,
+            UserManager<ApplicationUser> userManager)
         {
+            this._userManager = userManager;
             this._emailSender = emailSender;
             this._userService = userService;
             this._signInService = signInService;
             this._logger = logger;
             this._imageService = imageService;
+            this._signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -74,7 +84,7 @@
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = this.Url.Action(
                          "ConfirmEmail", "Register",
-                         new { userId = user.Id, code = code, },
+                         new { userId = user.Id, code = code},
                          protocol: this.Request.Scheme);
 
                     await this._emailSender.SendEmailAsync(registerInputModel.Email, "Confirm your email",
@@ -145,6 +155,84 @@
             };
 
             return this.View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        {
+            var redirectUrl = this.Url.Action(nameof(this.ExternalLoginCallback), "Register", new { returnUrl });
+            var properties = this._signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return this.Challenge(properties, provider);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl = returnUrl ?? this.Url.Content("~/");
+
+            if (remoteError != null)
+            {
+                return this.RedirectToAction("Login");
+            }
+
+            var info = await this._signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return this.RedirectToAction("Login");
+            }
+
+            var result = await this._signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (result.Succeeded)
+            {
+                this._logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
+                return this.Redirect(returnUrl);
+            }
+
+            if (result.IsLockedOut)
+            {
+                return this.RedirectToAction("LogOut");
+            }
+            else
+            {
+                this.ViewData["ReturnUrl"] = returnUrl;
+                this.ViewData["LoginProvider"] = info.LoginProvider;
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                return this.View("ExternalLogin", new ExternalLoginViewModel { Email = email});
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginViewModel model, string returnUrl = null)
+        {
+            returnUrl = returnUrl ?? this.Url.Content("~/");
+            if (this.ModelState.IsValid)
+            {
+                var info = await this._signInManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    throw new ApplicationException("Error loading external login information during confirmation.");
+                }
+
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
+                var result = await this._userManager.CreateAsync(user);
+                await this._userService.AddUserToRoleAsync(user, "User");
+
+                if (result.Succeeded)
+                {
+                    result = await this._userManager.AddLoginAsync(user, info);
+                    if (result.Succeeded)
+                    {
+                        await this._signInManager.SignInAsync(user, isPersistent: false);
+                        this._logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                        return this.Redirect(returnUrl);
+                    }
+                }
+            }
+
+            this.ViewData["ReturnUrl"] = returnUrl;
+            return this.View(nameof(this.ExternalLogin), model);
         }
     }
 }
