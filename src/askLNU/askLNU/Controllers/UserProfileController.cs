@@ -51,46 +51,37 @@
             userCurrent.Surname = user.Surname;
             userCurrent.Email = user.Email;
             userCurrent.Course = user.Course;
-            userCurrent.ImageSrc = user.ImageSrc;
             userCurrent.UserName = user.UserName;
-
-
 
             var updatedUser = await this._userManager.UpdateAsync(userCurrent);
             var userModel = this._mapper.Map<UserProfileViewModel>(userCurrent);
 
             return this.View(userModel);
-           
-
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Profile (UserProfileViewModel userProfileViewModel)
+        //[HttpPost]
+        //public async Task<IActionResult> Profile (UserProfileViewModel userProfileViewModel)
+        //{
+        //    var user = new UserDTO
+        //    {
+        //        UserName = userProfileViewModel.UserName,
+        //        Email = userProfileViewModel.Email,
+        //        Name = userProfileViewModel.Name,
+        //        Surname = userProfileViewModel.Surname,
+        //        Course = userProfileViewModel.Course,
+        //    };
+        //    var imageSrc = await this._imageService.SaveImage(userProfileViewModel.Image);
+        //    await this._userService.UpdateImage(user.Id, imageSrc);
+        //    return this.View(imageSrc);
+        //}
+
+        public async Task<IActionResult> ChangePhoto (ChangePhotoViewModel changePhotoViewModel)
         {
-            var user = new UserDTO
-            {
-                UserName = userProfileViewModel.UserName,
-                Email = userProfileViewModel.Email,
-                Name = userProfileViewModel.Name,
-                Surname = userProfileViewModel.Surname,
-                Course = userProfileViewModel.Course,
-            };
-
-            var imageSrc = await this._imageService.SaveImage(userProfileViewModel.Image);
-            await this._userService.UpdateImage(user.Id, imageSrc);
-
-
-            return this.View(imageSrc);
-
-        }
-        public async Task<IActionResult> Index (ChangePhotoViewModel changePhotoViewModel)
-        {
-            var user = new UserDTO { };
+            var userCurrent = await this._userManager.GetUserAsync(this.User);
             var imageSrc = await this._imageService.SaveImage(changePhotoViewModel.Image);
-            await this._userService.UpdateImage(user.Id, imageSrc);
+            await this._userService.UpdateImage(userCurrent.Id, imageSrc);
 
             return this.View(imageSrc);
-
         }
     }
 }
