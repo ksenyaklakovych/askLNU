@@ -12,9 +12,6 @@
     using Microsoft.AspNetCore.Mvc;
     using askLNU.BLL.Interfaces;
 
-
-
-
     public class UserProfileController : Controller
     {
         private readonly IImageService _imageService;
@@ -24,9 +21,8 @@
 
         public UserProfileController(
            UserManager<ApplicationUser> userManager,
-            IUserService userService,
-            IImageService imageService
-           )
+           IUserService userService,
+           IImageService imageService)
         {
             this._userManager = userManager;
             var config = new MapperConfiguration(cfg => cfg.CreateMap<ApplicationUser,UserProfileViewModel>());
@@ -45,7 +41,7 @@
 
         [HttpPost]
         public async Task<IActionResult> Index(UserProfileViewModel user)
-        { 
+        {
             var userCurrent = await this._userManager.GetUserAsync(this.User);
             userCurrent.Name = user.Name;
             userCurrent.Surname = user.Surname;
@@ -54,43 +50,27 @@
             userCurrent.ImageSrc = user.ImageSrc;
             userCurrent.UserName = user.UserName;
 
-
-
             var updatedUser = await this._userManager.UpdateAsync(userCurrent);
             var userModel = this._mapper.Map<UserProfileViewModel>(userCurrent);
 
             return this.View(userModel);
-           
-
         }
 
         [HttpPost]
-        public async Task<IActionResult> Profile (UserProfileViewModel userProfileViewModel)
+        public async Task<IActionResult> ChangePhoto (ChangePhotoViewModel changePhotoViewModel)
         {
-            var user = new UserDTO
-            {
-                UserName = userProfileViewModel.UserName,
-                Email = userProfileViewModel.Email,
-                Name = userProfileViewModel.Name,
-                Surname = userProfileViewModel.Surname,
-                Course = userProfileViewModel.Course,
-            };
-
-            var imageSrc = await this._imageService.SaveImage(userProfileViewModel.Image);
-            await this._userService.UpdateImage(user.Id, imageSrc);
-
-
-            return this.View(imageSrc);
-
-        }
-        public async Task<IActionResult> Index (ChangePhotoViewModel changePhotoViewModel)
-        {
-            var user = new UserDTO { };
+            var userCurrent = await this._userManager.GetUserAsync(this.User);
             var imageSrc = await this._imageService.SaveImage(changePhotoViewModel.Image);
-            await this._userService.UpdateImage(user.Id, imageSrc);
+            await this._userService.UpdateImage(userCurrent.Id, imageSrc);
 
             return this.View(imageSrc);
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> ChangePhoto()
+        {
+            var viewModel = new ChangePhotoViewModel();
+            return this.View(viewModel);
         }
     }
 }

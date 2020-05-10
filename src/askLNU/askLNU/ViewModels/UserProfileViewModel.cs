@@ -23,7 +23,5 @@
         public int Course { get; set; }
 
         public string ImageSrc { get; set; }
-
-        public IFormFile Image { get; set; }
     }
 }
