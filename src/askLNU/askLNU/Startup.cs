@@ -45,6 +45,18 @@ namespace askLNU
 
             services.AddDALDependencies(this.Configuration.GetConnectionString("DefaultConnection"));
 
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = this.Configuration["Authentication:Facebook:AppId"];
+                facebookOptions.AppSecret = this.Configuration["Authentication:Facebook:AppSecret"];
+            }).AddGoogle(options =>
+            {
+                IConfigurationSection googleAuthNSection =
+                    this.Configuration.GetSection("Authentication:Google");
+                options.ClientId = googleAuthNSection["ClientId"];
+                options.ClientSecret = googleAuthNSection["ClientSecret"];
+            });
+
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISignInService, SignInService>();
@@ -87,7 +99,6 @@ namespace askLNU
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
