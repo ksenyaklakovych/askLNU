@@ -2,7 +2,11 @@
 @{
     ViewData["Title"] = "Register";
 }
-
+<style>
+    .text-danger {
+        margin-left: 80px;
+    }
+</style>
 <head>
     <meta name="viewport" content="width=device-width" />
     <link href="@Url.Content("~/css/register.css")" rel="stylesheet" type="text/css" />
@@ -48,7 +52,7 @@
                 <input asp-for="UserName" class="form-control" placeholder="User Name" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-left: 130px;">
                 <input asp-for="Image" class="form-control-file" placeholder="Image" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>

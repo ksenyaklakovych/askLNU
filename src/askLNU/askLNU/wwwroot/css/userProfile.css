@@ -31,11 +31,11 @@ a , h4{
     transform: translate(-50%, -50%);
     background: white;
     box-shadow: 0 0 16px 4px rgba(0, 0, 0, 0.9);
+    border-radius: 4px;
 }
 
 .modal-backdrop {
-    z-index: 98
-    !important;
+    z-index: 98 !important;
 }
 
 .modal-guts {

@@ -3,37 +3,61 @@
 @{
     ViewData["Title"] = "AllTags";
 }
+<style>
+    body {
+        background-color: lightslategray;
+    }
 
-<h1>Tags</h1>
+    form {
+        margin-bottom: 16px;
+    }
 
-<p>
-    <a asp-action="CreateNewTag">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.Text)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
-                @Html.ActionLink("Delete", "DeleteTag", new {  id=item.Id })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    section {
+        display: block;
+        overflow: auto;
+        height: 100%;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        padding: 16px 24px;
+    }
+</style>
+<body>
+    <section>
+        <div class="content">
+            <h1>Tags</h1>
+
+            <p>
+                <a asp-action="CreateNewTag">Create New</a>
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>*@
+                        <th>
+                            @Html.DisplayNameFor(model => model.Text)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => item.Id)
+                                </td>*@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Text)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Delete", "DeleteTag", new { id = item.Id })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</body>

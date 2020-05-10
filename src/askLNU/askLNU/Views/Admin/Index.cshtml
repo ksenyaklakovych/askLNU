@@ -3,87 +3,110 @@
 @{
     ViewData["Title"] = "Index";
 }
+<style>
+    body {
+        background-color: lightslategray;
+    }
 
-<h1>Search users by email</h1>
+    form {
+        margin-bottom: 16px;
+    }
 
-@using (Html.BeginForm("Index", "Admin", FormMethod.Get, new { @class = "form-horizontal" }))
-{
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2">
-                <input name="email" class="form-control" />
-            </div>
-            <div class="col-md-2" id="btext">
-                <input type="submit" value="Find" class="btn btn-warning" />
-            </div>
+    section {
+        display: block;
+        overflow: auto;
+        height: 100%;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        padding: 16px 24px;
+    }
+</style>
+<body>
+    <section>
+        <div class="content">
+            <h1>Search users by email</h1>
+
+            @using (Html.BeginForm("Index", "Admin", FormMethod.Get, new { @class = "form-horizontal" }))
+            {
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input name="email" class="form-control" />
+                        </div>
+                        <div class="col-md-2" id="btext">
+                            <input type="submit" value="Find" class="btn btn-warning" />
+                        </div>
+                    </div>
+
+                </div>
+            }
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UserName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Surname)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsModerator)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Surname)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsModerator)
+                            </td>
+                            <td>
+                                @if (item.IsModerator)
+                                {
+                                    <input type="submit" value="Remove rights" class="btn btn-danger" onclick="location.href='@Url.Action("ChangeRights", "Admin", new {userId=item.Id, remove=true}) '" />
+                                }
+                                else
+                                {
+                                    <input type="submit" value="Give rights" class="btn btn-danger" onclick="location.href='@Url.Action("ChangeRights", "Admin", new { userId=item.Id,remove=false}) '" />
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsBlocked)
+                            </td>
+                            <td>
+                                @if (item.IsBlocked)
+                                {
+                                    <input type="submit" value="UnBlock" class="btn btn-danger" onclick="location.href='@Url.Action("BlockUser", "Admin", new {userId=item.Id, block=false}) '" />
+                                }
+                                else
+                                {
+                                    <input type="submit" value="Block" class="btn btn-danger" onclick="location.href='@Url.Action("BlockUser", "Admin", new { userId=item.Id,block=true}) '" />
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-
-    </div>
-}
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Surname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsModerator)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Surname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsModerator)
-            </td>
-            <td>
-                @if (item.IsModerator)
-                {
-                    <input type="submit" value="Remove rights" class="btn btn-danger" onclick="location.href='@Url.Action("ChangeRights", "Admin", new {userId=item.Id, remove=true}) '" />
-                }
-                else
-                {
-                    <input type="submit" value="Give rights" class="btn btn-danger" onclick="location.href='@Url.Action("ChangeRights", "Admin", new { userId=item.Id,remove=false}) '" />
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsBlocked)
-            </td>
-            <td>
-                @if (item.IsBlocked)
-                {
-                    <input type="submit" value="UnBlock" class="btn btn-danger" onclick="location.href='@Url.Action("BlockUser", "Admin", new {userId=item.Id, block=false}) '" />
-                }
-                else
-                {
-                    <input type="submit" value="Block" class="btn btn-danger" onclick="location.href='@Url.Action("BlockUser", "Admin", new { userId=item.Id,block=true}) '" />
-                }
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+    </section>
+</body>
