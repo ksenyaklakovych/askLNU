@@ -3,48 +3,70 @@
 @{
     ViewData["Title"] = "Ask a question";
 }
+    <style>
+        body {
+            background-color: lightslategray;
+        }
 
-<h4>Ask a question</h4>
-<hr />
-<div class="row justify-content-md-center">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Text" class="control-label"></label>
-                <textarea asp-for="Text" class="form-control" rows="5" style="resize: none;"></textarea>
-                <span asp-validation-for="Text" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Faculty</label>
-                <select class="form-control faculty-select" name="facultyId">
-                    <option selected value="null">Common</option>
-                    @foreach (var faculty in Model.Faculties)
-                    {
-                        <option value="@faculty.Id">@faculty.Title</option>
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Tags</label>
-                <select class="form-control tags-select" multiple name="tags">
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+        form {
+            margin-bottom: 16px;
+        }
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-    <script src="~/js/question_create.js"></script>
-}
+        section {
+            display: block;
+            overflow: auto;
+            height: 100%;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            padding: 16px 24px;
+        }
+    </style>
+    <body>
+        <section>
+            <div class="content">
+                <h4>Ask a question</h4>
+                <hr />
+                <div class="row justify-content-md-center">
+                    <div class="col-md-10">
+                        <form asp-action="Create" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="Title" class="control-label"></label>
+                                <input asp-for="Title" class="form-control" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Text" class="control-label"></label>
+                                <textarea asp-for="Text" class="form-control" rows="5" style="resize: none;"></textarea>
+                                <span asp-validation-for="Text" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Faculty</label>
+                                <select class="form-control faculty-select" name="facultyId">
+                                    <option selected value="null">Common</option>
+                                    @foreach (var faculty in Model.Faculties)
+                                    {
+                                        <option value="@faculty.Id">@faculty.Title</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Tags</label>
+                                <select class="form-control tags-select" multiple name="tags">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                </div>
+            </section>
+        </body>
+                @section Scripts {
+                    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+                    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+                    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+                    <script src="~/js/question_create.js"></script>
+                }

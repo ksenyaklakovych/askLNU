@@ -7,10 +7,36 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    <link href="@Url.Content("~/css/site.css")" rel="stylesheet" type="text/css" />
+
     @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">*@
     <style>
+        body {
+            /* Margin bottom by footer height */
+            margin-bottom: 60px;
+            background-color: lightslategray;
+        }
+
+        form {
+            margin-bottom: 16px;
+        }
+
+        section {
+            display: block;
+            overflow: auto;
+            height: 100%;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            padding: 16px 80px;
+        }
+
+        .border{
+            padding: 10px;
+        }
+
         .pagination {
             display: inline-block;
+            margin-top: 24px;
         }
 
             .pagination a {
@@ -21,7 +47,7 @@
             }
 
                 .pagination a.active {
-                    background-color: #F3C920;
+                    background-color: #ffc107;
                     color: white;
                     border-radius: 5px;
                 }
@@ -32,116 +58,121 @@
                 }
     </style>
 </head>
-<body>
-    <h1>All questions</h1>
-    <input type="submit" style="float:right" value="Create new" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Question")'" />
-    <p>@Model.Questions.Count() questions</p>
-    @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-horizontal" }))
-    {
-        <div class="container">
-            <div class="row">
-                <div class="col-md-2">
-                    @*<label class="control-label">Tag: </label>*@
-                    <input name="tag" class="form-control" />
-                </div>
-                <div class="col-md-2">
-                    @Html.DropDownList("faculties", "Faculty")
-                </div>
-                <div class="col-md-2">
-                    @Html.DropDownList("sortMethod", "Sort by")
-                </div>
-                <div class="col-md-2" id="btext">
-                    <input type="submit" value="Filter" class="btn btn-warning" />
-                </div>
-            </div>
-
-        </div>
-    }
-
-
-<div class="container-fluid" style="max-width:850px; float:left">
-    @foreach (var item in Model.Questions)
-    {
-        @if (!item.IsSolved)
+<body> 
+    <section>
+        <div class="content">
+        <h1>All questions</h1>
+        <input type="submit" style="float:right" value="Create new" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Question")'" />
+        <p>@Model.Questions.Count() questions</p>
+        @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-horizontal" }))
         {
-            <div class="border border-right-0 border-left-0 border-warning">
+            <div class="container">
                 <div class="row">
-                    <div class="col-10 text-left">
-                        <h2>
-                            @Html.ActionLink(item.Title, "Details", "Question", new { id = item.Id }, new { style = "text-decoration:none; color: black;" })
-                        </h2>
+                    <div class="col-md-4">
+                        @*<label class="control-label">Tag: </label>*@
+                        <input name="tag" class="form-control" />
                     </div>
-                    @if (User.IsInRole("Moderator"))
-                    {
-                        <div class="col-2 text-right">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="location.href='@Url.Action("DeleteQuestion", "Question", new { questionId = item.Id }) '">
-                                <i class="fa fa-trash-o" style="font-size:15px;color:white"></i>
-                            </button>
-                        </div>
-                    }
+                    <div class="col-md-2" style="margin-right: 16px;">
+                        @Html.DropDownList("faculties", "Faculty")
+                    </div>
+                    <div class="col-md-2">
+                        @Html.DropDownList("sortMethod", "Sort by")
+                    </div>
+                    <div class="col-md-2" id="btext">
+                        <input type="submit" value="Filter" class="btn btn-warning" style="margin-left: 40px;" />
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-2 text-center">
-                        <h3>
-                            @Html.DisplayFor(modelItem => item.NumberOfAnswers)
-                        </h3>
-                        answers
-                    </div>
-                    <div class="col-7">
-                        @Html.DisplayFor(modelItem => item.Text)
-                        <div class="w-100"></div>
-                        @foreach (var tag in item.Tags)
-                        {
-                            <p class="btn btn-sm btn-dark">@tag </p>
-                        }
-                    </div>
-                    <div class="col-2 text-center">
-                        <h4>
-                            Rate: @Html.DisplayFor(modelItem => item.Rating)
-                        </h4>
-                        @DateTime.Now.Subtract(item.Date).Days.ToString() days ago
-                    </div>
-                    @if (SignInService.IsSignedIn(User))
-                    {
-                        <div class="col-1 text-right">
-                            <button type="button" class="btn btn-warning btn-lg" onclick="location.href='@Url.Action("AddToFavorites", "", new { questionId = item.Id }) '">
-                                @if (item.IsFavorite == false)
+
+            </div>
+        }
+
+
+        <div class="container-fluid" style="max-width:888px; float:left">
+            @foreach (var item in Model.Questions)
+            {
+                @if (!item.IsSolved)
+                {
+                    <div class="border border-right-0 border-left-0 border-warning">
+                        <div class="row">
+                            <div class="col-10 text-left">
+                                <h2>
+                                    @Html.ActionLink(item.Title, "Details", "Question", new { id = item.Id }, new { style = "text-decoration:none; color: black;" })
+                                </h2>
+                            </div>
+                            @if (User.IsInRole("Moderator"))
+                            {
+                                <div class="col-2 text-right">
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="location.href='@Url.Action("DeleteQuestion", "Question", new { questionId = item.Id }) '">
+                                        <i class="fa fa-trash-o" style="font-size:15px;color:white"></i>
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                        <div class="row">
+                            <div class="col-2 text-center">
+                                <h3>
+                                    @Html.DisplayFor(modelItem => item.NumberOfAnswers)
+                                </h3>
+                                answers
+                            </div>
+                            <div class="col-7">
+                                @Html.DisplayFor(modelItem => item.Text)
+                                <div class="w-100"></div>
+                                @foreach (var tag in item.Tags)
                                 {
-                                    <span class="fa fa-star-o"></span>
+                                    <p class="btn btn-sm btn-dark">@tag </p>
+                                }
+                            </div>
+                            <div class="col-2 text-center">
+                                <h4>
+                                    Rate: @Html.DisplayFor(modelItem => item.Rating)
+                                </h4>
+                                @DateTime.Now.Subtract(item.Date).Days.ToString() days ago
+                            </div>
+                            @if (SignInService.IsSignedIn(User))
+                            {
+                                <div class="col-1 text-right">
+                                    <button type="button" class="btn btn-warning btn-lg" onclick="location.href='@Url.Action("AddToFavorites", "", new { questionId = item.Id }) '">
+                                        @if (item.IsFavorite == false)
+                                        {
+                                            <span class="fa fa-star-o"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="fa fa-star"></span>
+                                        }
+                                    </button>
+                                </div>
+                             }
+                        </div>
+                    </div>
+                }
+             }
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="pagination">
+                        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+                        {
+                            @for (int i = 1; i <= Model.PageCount; i++)
+                            {
+                                @if (i != Model.CurrentPageIndex)
+                                {
+                                    @Html.ActionLink($"{i}", "Index", "Home", new { page = i })
                                 }
                                 else
                                 {
-                                    <span class="fa fa-star"></span>
+                                    <a class="active">@i</a>
                                 }
-                            </button>
-                        </div>
-                    }
+                            }
+                        }
+                    </div>
                 </div>
             </div>
-        }
-    }
-    <div class="row">
-        <div class="col-12 text-center">
-            <div class="pagination">
-                @using (Html.BeginForm("Index", "Home", FormMethod.Post))
-                {
-                    @for (int i = 1; i <= Model.PageCount; i++)
-                    {
-                        @if (i != Model.CurrentPageIndex)
-                        {
-                            @Html.ActionLink($"{i}", "Index", "Home", new { page = i })
-                        }
-                        else
-                        {
-                            <a class="active">@i</a>
-                        }
-                    }
-                }
-            </div>
+            <br />
+            <br />
         </div>
-    </div>
-    <br />
-    <br />
-</div>
+        </div>
+
+    </section>
 </body>
 </html>                                                                     
