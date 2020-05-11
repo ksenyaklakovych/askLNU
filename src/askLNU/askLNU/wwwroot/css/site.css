@@ -62,9 +62,18 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-color: lightslategray;
 }
+
+section {
+    border-radius: 8px;
+    background-color: #fdfcec;
+    height: 666px;
+    padding: 16px 80px;
+}
+
 .footer {
   position: absolute;
   bottom: 0;

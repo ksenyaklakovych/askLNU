@@ -17,6 +17,8 @@
 
         public int Rating { get; set; }
 
+        public bool IsFavorite { get; set; }
+
         public bool IsSolved { get; set; }
 
         public DateTime Date { get; set; }

@@ -11,11 +11,17 @@
 </head>
 
 <div class="modal" id="modal">
-
+   
     <div class="modal-guts">
+        <div class="w3-row-padding" id="linksRow">
+            <a class="link" asp-area="" asp-controller="UserProfile" asp-action="Index">Profile |</a>
+            <a class="link" asp-area="" asp-controller="Question" asp-action="CreatedQuestions">Created questions |</a>
+            <a class="link" asp-area="" asp-controller="Question" asp-action="FavoriteUserQuestions">Favorite questions</a>
+        </div>
+
         <h1>@ViewData["Title"]</h1>
 
-        <form asp-action="Index" method="post" enctype="multipart/form-data">
+        <form asp-action="Profile" method="post" enctype="multipart/form-data">
             <div class="form-row">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>

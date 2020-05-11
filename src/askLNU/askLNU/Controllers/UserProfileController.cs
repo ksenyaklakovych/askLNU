@@ -21,8 +21,9 @@
 
         public UserProfileController(
            UserManager<ApplicationUser> userManager,
-           IUserService userService,
-           IImageService imageService)
+            IUserService userService,
+            IImageService imageService
+           )
         {
             this._userManager = userManager;
             var config = new MapperConfiguration(cfg => cfg.CreateMap<ApplicationUser,UserProfileViewModel>());
@@ -41,13 +42,12 @@
 
         [HttpPost]
         public async Task<IActionResult> Index(UserProfileViewModel user)
-        {
+        { 
             var userCurrent = await this._userManager.GetUserAsync(this.User);
             userCurrent.Name = user.Name;
             userCurrent.Surname = user.Surname;
             userCurrent.Email = user.Email;
             userCurrent.Course = user.Course;
-            userCurrent.ImageSrc = user.ImageSrc;
             userCurrent.UserName = user.UserName;
 
             var updatedUser = await this._userManager.UpdateAsync(userCurrent);

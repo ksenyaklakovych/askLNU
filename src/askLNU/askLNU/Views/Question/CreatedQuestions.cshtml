@@ -1,65 +1,157 @@
 ﻿@model IEnumerable<askLNU.ViewModels.CreatedQuestionsViewModel>
+@using askLNU.BLL.Interfaces
+@inject ISignInService SignInService
 
 @{
     ViewData["Title"] = "CreatedQuestions";
 }
+<style>
+    body {
+        background-color: lightslategray;
+    }
 
-<div>
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Text)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Rating)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsSolved)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Date)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Text)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Rating)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsSolved)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-@section Scripts {
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-    <script src="~/js/question_create.js"></script>
-}
+    form {
+        margin-bottom: 16px;
+    }
+
+    section {
+        display: block;
+        overflow: auto;
+        height: 100%;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        padding: 16px 24px 40px !important;
+    }
+
+    #linksRow {
+    width: 344px;
+    border: double;
+    padding: 6px;
+    border-radius: 4px;
+    }
+
+    a, h4 {
+    color: #cb9d12;
+    }
+
+</style>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+    <body>
+        <section>
+            <div class="content">
+
+                <div class="w3-row-padding" id="linksRow">
+                    <a class="link" asp-area="" asp-controller="UserProfile" asp-action="Index">Profile |</a>
+                    <a class="link" asp-area="" asp-controller="Question" asp-action="CreatedQuestions">Created questions |</a>
+                    <a class="link" asp-area="" asp-controller="Question" asp-action="FavoriteUserQuestions">Favorite questions</a>
+                </div>
+                <input type="submit" style="float: right" value="Create new" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Question")'" />
+                <h1 style="padding: 24px;">Created questions</h1>
+
+                <div class="container-fluid" style="max-width:888px; float:left">
+                    @foreach (var item in Model)
+                    {
+                        @if (!item.IsSolved)
+                        {
+                            <div class="border border-right-0 border-left-0 border-warning" style="padding: 8px;">
+                                <div class="row">
+                                    <div class="col-10 text-left">
+                                        <h2>
+                                            @Html.ActionLink(item.Title, "Details", "Question", new { id = item.Id }, new { style = "text-decoration:none; color: black;" })
+                                        </h2>
+                                    </div>
+                                    @if (User.IsInRole("Moderator"))
+                                    {
+                                        <div class="col-2 text-right">
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="location.href='@Url.Action("DeleteQuestion", "Question", new { questionId = item.Id }) '">
+                                                <i class="fa fa-trash-o" style="font-size:15px;color:white"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-7">
+                                        @Html.DisplayFor(modelItem => item.Text)
+
+                                    </div>
+                                    <div class="col-2 text-center">
+                                        <h4>
+                                            Rate: @Html.DisplayFor(modelItem => item.Rating)
+                                        </h4>
+                                        @DateTime.Now.Subtract(item.Date).Days.ToString() days ago
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+                @*<div>
+            <input type="submit" style="float:right" value="Create new" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Question")'" />
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Text)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Rating)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsSolved)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Date)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Text)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Rating)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsSolved)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>*@
+            </div>
+        </section>
+    </body>
+
+
+    @section Scripts {
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+        <script src="~/js/question_create.js"></script>
+        <link href="@Url.Content("~/css/questions.css")" rel="stylesheet" type="text/css" />
+
+    }
