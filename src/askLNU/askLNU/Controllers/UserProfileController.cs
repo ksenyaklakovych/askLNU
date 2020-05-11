@@ -42,7 +42,7 @@
 
         [HttpPost]
         public async Task<IActionResult> UserProfile(UserProfileViewModel user)
-        { 
+        {
             var userCurrent = await this._userManager.GetUserAsync(this.User);
             userCurrent.Name = user.Name;
             userCurrent.Surname = user.Surname;
