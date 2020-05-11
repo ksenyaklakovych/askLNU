@@ -21,8 +21,8 @@
 
         public UserProfileController(
            UserManager<ApplicationUser> userManager,
-            IUserService userService,
-            IImageService imageService
+           IUserService userService,
+           IImageService imageService
            )
         {
             this._userManager = userManager;

@@ -144,7 +144,7 @@
                 this._questionService.AddToFavorites(userCurrent.Id, questionId);
             }
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction("FavoriteUserQuestions", "Question");
         }
 
         public IActionResult Privacy()
