@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using askLNU.BLL.Interfaces;
+    using askLNU.DAL.Entities;
     using askLNU.InputModels;
     using askLNU.ViewModels;
     using Microsoft.AspNetCore.Authentication;
@@ -16,11 +17,15 @@
     {
         private readonly ISignInService _signInService;
         private readonly ILogger<LoginController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public LoginController(ISignInService signInService, ILogger<LoginController> logger)
+
+        public LoginController(ISignInService signInService, ILogger<LoginController> logger, UserManager<ApplicationUser> userManager)
         {
             this._signInService = signInService;
             this._logger = logger;
+            this._userManager = userManager;
+
         }
 
         public async Task<IActionResult> Index()
@@ -39,6 +44,12 @@
         {
             if (this.ModelState.IsValid)
             {
+                var user = this._userManager.FindByNameAsync(loginInputModel.UserName);
+                if(user.Result.IsBlocked)
+                {
+                    ModelState.AddModelError("RememberMe", "You are blocked.");
+                    return this.View("Index");
+                }
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await this._signInService.PasswordSignInAsync(loginInputModel.UserName, loginInputModel.Password, loginInputModel.RememberMe, lockoutOnFailure: false);
