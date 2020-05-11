@@ -8,6 +8,7 @@
     .text-danger {
         margin-left: 80px;
     }
+
     .fa {
         border-radius: 16px;
         padding: 13px;
@@ -56,7 +57,14 @@
                 <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" style="width: 40%; margin: auto; margin-bottom: 16px;">
                     @foreach (var provider in loginProviders)
                     {
-                        <button type="submit" class="fa fa-google" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                        @if (@provider.Name == "Google")
+                        {
+                            <button type="submit" class="fa fa-google" name="provider" value="@provider.Name" title="Sign up using your @provider.DisplayName account">@provider.DisplayName</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="fa fa-facebook" name="provider" value="@provider.Name" title="Sign up using your @provider.DisplayName account">@provider.DisplayName</button>
+                        }
                     }
                 </form>
             }

@@ -56,13 +56,19 @@
                 }
                 else
                 {
-                    <form asp-action="ExternalLogin" asp-controller="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" style=" width: 38%; margin: auto; margin-bottom: 16px;">
-                            @foreach (var provider in loginProviders)
-                            {
-                               
-                                    <button type="submit" class="fa fa-facebook" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                            }
-                    </form>
+        <form asp-action="ExternalLogin" asp-controller="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" style=" width: 38%; margin: auto; margin-bottom: 16px;">
+            @foreach (var provider in loginProviders)
+            {
+                @if (@provider.Name == "Google")
+                {
+                    <button type="submit" class="fa fa-google" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                }
+                else
+                {
+                    <button type="submit" class="fa fa-facebook" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                }
+            }
+        </form>
                 }
             }
             <p class="divider-text">
