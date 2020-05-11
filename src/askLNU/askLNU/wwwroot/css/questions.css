@@ -8,14 +8,14 @@ form {
     margin-bottom: 16px;
 }
 
-section {
+/*section {
     display: block;
     overflow: auto;
     height: 100%;
     border-radius: 4px;
     background-color: #f8f9fa;
     padding: 16px 80px;
-}
+}*/
 
 .border {
     padding: 10px;
