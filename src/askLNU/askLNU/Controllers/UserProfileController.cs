@@ -33,7 +33,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> UserProfile()
         {
             var user = await this._userManager.GetUserAsync(this.User);
             var userModel = this._mapper.Map<UserProfileViewModel>(user);
@@ -41,7 +41,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(UserProfileViewModel user)
+        public async Task<IActionResult> UserProfile(UserProfileViewModel user)
         { 
             var userCurrent = await this._userManager.GetUserAsync(this.User);
             userCurrent.Name = user.Name;
@@ -70,7 +70,7 @@
             var imageSrc = await this._imageService.SaveImage(changePhotoViewModel.Image);
             await this._userService.UpdateImage(userCurrent.Id, imageSrc);
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction("UserProfile");
         }
     }
 }
