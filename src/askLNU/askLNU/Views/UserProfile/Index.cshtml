@@ -35,6 +35,8 @@
                     </div>
                 </div>
 
+                <input asp-for="ImageSrc" type="hidden" class="form-control" />
+
                 <div class="form-group col-md-4">
                     <label asp-for="Email" class="control-label"></label>
                     <input asp-for="Email" class="form-control" />
@@ -64,14 +66,6 @@
                     <input asp-for="Surname" class="form-control" />
                     <span asp-validation-for="Surname" class="text-danger"></span>
                 </div>
-
-                @*<div class="form-group col-md-4">
-
-                   <label asp-for="Image" class="control-label">Change photo:</label> <br>
-                   <input asp-for="Image" type='file' name='file' id='file' class='form-control-file' />
-                   <span asp-validation-for="Image" class="text-danger"></span>
-
-                </div>*@
 
                 <div class="form-group col-md-10" id="button">
                     <input type="submit" value="Save changes" class="btn btn-primary" style="position: absolute;" />

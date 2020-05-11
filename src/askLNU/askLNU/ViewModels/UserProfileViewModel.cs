@@ -2,10 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authentication;
-    using System.ComponentModel.DataAnnotations;
     using Microsoft.AspNetCore.Http;
 
     public class UserProfileViewModel
@@ -23,7 +23,5 @@
         public int Course { get; set; }
 
         public string ImageSrc { get; set; }
-
-        //public IFormFile Image { get; set; }
     }
 }

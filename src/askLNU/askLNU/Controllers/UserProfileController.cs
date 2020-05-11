@@ -12,9 +12,6 @@
     using Microsoft.AspNetCore.Mvc;
     using askLNU.BLL.Interfaces;
 
-
-
-
     public class UserProfileController : Controller
     {
         private readonly IImageService _imageService;
@@ -59,29 +56,21 @@
             return this.View(userModel);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Profile (UserProfileViewModel userProfileViewModel)
-        //{
-        //    var user = new UserDTO
-        //    {
-        //        UserName = userProfileViewModel.UserName,
-        //        Email = userProfileViewModel.Email,
-        //        Name = userProfileViewModel.Name,
-        //        Surname = userProfileViewModel.Surname,
-        //        Course = userProfileViewModel.Course,
-        //    };
-        //    var imageSrc = await this._imageService.SaveImage(userProfileViewModel.Image);
-        //    await this._userService.UpdateImage(user.Id, imageSrc);
-        //    return this.View(imageSrc);
-        //}
+        [HttpGet]
+        public ActionResult ChangePhoto()
+        {
+            var viewModel = new ChangePhotoViewModel();
+            return this.View(viewModel);
+        }
 
-        public async Task<IActionResult> ChangePhoto (ChangePhotoViewModel changePhotoViewModel)
+        [HttpPost]
+        public async Task<IActionResult> ChangePhoto(ChangePhotoViewModel changePhotoViewModel)
         {
             var userCurrent = await this._userManager.GetUserAsync(this.User);
             var imageSrc = await this._imageService.SaveImage(changePhotoViewModel.Image);
             await this._userService.UpdateImage(userCurrent.Id, imageSrc);
 
-            return this.View(imageSrc);
+            return this.RedirectToAction("Index");
         }
     }
 }
