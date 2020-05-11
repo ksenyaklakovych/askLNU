@@ -56,21 +56,21 @@
             return this.View(userModel);
         }
 
+        [HttpGet]
+        public ActionResult ChangePhoto()
+        {
+            var viewModel = new ChangePhotoViewModel();
+            return this.View(viewModel);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> ChangePhoto (ChangePhotoViewModel changePhotoViewModel)
+        public async Task<IActionResult> ChangePhoto(ChangePhotoViewModel changePhotoViewModel)
         {
             var userCurrent = await this._userManager.GetUserAsync(this.User);
             var imageSrc = await this._imageService.SaveImage(changePhotoViewModel.Image);
             await this._userService.UpdateImage(userCurrent.Id, imageSrc);
 
-            return this.View(imageSrc);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ChangePhoto()
-        {
-            var viewModel = new ChangePhotoViewModel();
-            return this.View(viewModel);
+            return this.RedirectToAction("Index");
         }
     }
 }
