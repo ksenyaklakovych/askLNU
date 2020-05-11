@@ -159,7 +159,7 @@ namespace askLNU.Tests
         }
 
         [Fact]
-        public void VoteDown_ShouldReturnOne()
+        public void VoteDown_ShouldReturnZero()
         {
             var userId = "userId";
             var answerId = 166;
