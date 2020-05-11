@@ -136,5 +136,48 @@ namespace askLNU.Tests
             Assert.Equal(answerDTO.Text,unitOfWork.Answers.Find(e => e.Id == answerId).FirstOrDefault().Text);
         }
 
+        [Fact]
+        public void VoteUp_ShouldReturnOne()
+        {
+            var userId = "userId";
+            var answerId = 100;
+
+            using var context = new ApplicationDbContext(options);
+
+            context.AnswerVotes.Add(new AnswerVote { ApplicationUserId = userId, AnswerId = answerId });
+            context.Answers.Add(new Answer { Id = answerId, Text = "answer1", Rating = 0 });
+
+            context.SaveChanges();
+
+            var unitOfWork = new EFUnitOfWork(context);
+
+            var fakeAnswerService = new AnswerService(unitOfWork, null, null);
+
+            int result = fakeAnswerService.VoteUp(userId, answerId);
+
+            Assert.Equal(1, result);
+        }
+
+        [Fact]
+        public void VoteDown_ShouldReturnOne()
+        {
+            var userId = "userId";
+            var answerId = 166;
+
+            using var context = new ApplicationDbContext(options);
+
+            //context.AnswerVotes.Add(new AnswerVote { ApplicationUserId = userId, AnswerId = answerId });
+            context.Answers.Add(new Answer { Id = answerId, Text = "answer1", Rating = 1 });
+
+            context.SaveChanges();
+
+            var unitOfWork = new EFUnitOfWork(context);
+
+            var fakeAnswerService = new AnswerService(unitOfWork, null, null);
+
+            int result = fakeAnswerService.VoteDown(userId, answerId);
+
+            Assert.Equal(0, result);
+        }
     }
 }
