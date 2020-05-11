@@ -2,19 +2,42 @@
 @{
     ViewData["Title"] = "Register confirmation";
 }
+<style>
+    body {
+        background-color: lightslategray;
+    }
 
-<h1>@ViewData["Title"]</h1>
-@{
-    if (@Model.DisplayConfirmAccountLink)
-    {
-        <p>
-            <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-        </p>
+    form {
+        margin-bottom: 16px;
     }
-    else
-    {
-        <p>
-            Please check your email to confirm your account.
-        </p>
+
+    section {
+        display: block;
+        overflow: auto;
+        height: 100%;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        padding: 16px 24px;
     }
-}
+</style>
+<body>
+    <section>
+        <div class="content">
+            <h1>@ViewData["Title"]</h1>
+            @{
+                if (@Model.DisplayConfirmAccountLink)
+                {
+                    <p>
+                        <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        Please check your email to confirm your account.
+                    </p>
+                }
+            }
+        </div>
+    </section>
+</body>

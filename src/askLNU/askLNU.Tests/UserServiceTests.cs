@@ -257,56 +257,28 @@ namespace askLNU.Tests
             //Assert
             Assert.Equal(newImage, userService.GetByIdAsync(userId).Result.ImageSrc);
         }
-        //[Fact]
-        //public void CreateUserAsync_ShouldReturnFalse()
-        //{
-        //    UserDTO fakeUser = new UserDTO("name", "name", "surname", 1, false, "image", "test@test.com");
-        //    string fakePassword = "password";
-        //    Task<bool> trueTask = Task.FromResult(true);
-        //    var nullUser = Task.Run(() => new ApplicationUser());
-        //    fakeManager.Setup(m => m.FindByEmailAsync(fakeUser.Email)).Returns(Task.FromResult((ApplicationUser)null));
 
-        //    UserService userService = new UserService(fakeManager.Object, _logger.Object, _mapper2);
+        [Fact]
+        public void UserProfile_ShouldReturnTrue()
+        {
+            string userId = "testId";
 
-        //    var result= userService.CreateUserAsync(fakeUser, fakePassword);
+            //Arrange
+            Task<ApplicationUser> fakeUser = Task.Run(() => new ApplicationUser("TestName", "TestSurname", 1, false, "image.jpg"));
+            Task<IdentityResult> trueTask = Task.FromResult(IdentityResult.Success);
 
-        //    Assert.Equal(IdentityResult.Success,result.Result);
+            fakeManager.Setup(m => m.FindByIdAsync(userId)).Returns(fakeUser);
+            fakeManager.Setup(m => m.UpdateAsync(fakeUser.Result)).Returns(trueTask);
 
-        //}
+            int newCourse = 2;
+            fakeUser.Result.Course = newCourse;
+            //Act
+            fakeManager.Object.UpdateAsync(fakeUser.Result);
 
-
-
-        //TO DO:
-        //RemoveModeratorRole
-        //GiveModeratorRole
-
-        //[Fact]
-        //public void CreateUserAsync_ShouldReturnTrue()
-        //{
-        //    //Arrange
-        //    string password = "password";
-        //    var fakeUserDTO = new UserDTO("testUsername", "TestName", "TestSurname", 1, false, "image.jpg", "test@gmail.com");
-        //    var fakeAppUser = new ApplicationUser()
-        //    {
-        //        Name = fakeUserDTO.Name,
-        //        Surname = fakeUserDTO.Surname,
-        //        Course = fakeUserDTO.Course,
-        //        FacultyId = fakeUserDTO.FacultyId,
-        //        ImageSrc = fakeUserDTO.ImageSrc,
-        //        UserName = fakeUserDTO.UserName,
-        //        Email = fakeUserDTO.Email
-        //    };
-        //    fakeManager.Setup(m => m.CreateAsync(fakeAppUser, password)).ReturnsAsync(IdentityResult.Success);
-        //    UserService userService = new UserService(fakeManager.Object);
-
-        //    //Act
-        //    var result = userService.CreateUserAsync(fakeUserDTO, password);
-
-        //    //Assert
-        //    Console.WriteLine(result.Result);
-        //}
-
-
+            var result =  fakeManager.Object.FindByIdAsync(userId);
+            //Assert
+            Assert.Equal(newCourse, result.Result.Course);
+        }
 
     }
 }

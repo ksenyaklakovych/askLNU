@@ -3,25 +3,47 @@
 @{
     ViewData["Title"] = "CreateNewTag";
 }
+<style>
+    body {
+        background-color: lightslategray;
+    }
 
-<h1>Create New</h1>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="CreateNewTag">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Text" class="control-label"></label>
-                <input asp-for="Text" class="form-control" />
-                <span asp-validation-for="Text" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+    form {
+        margin-bottom: 16px;
+    }
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    section {
+        display: block;
+        overflow: auto;
+        height: 100%;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        padding: 16px 24px;
+    }
+</style>
+<body>
+    <section>
+        <div class="content">
+            <h1>Create New</h1>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="CreateNewTag">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Text" class="control-label"></label>
+                            <input asp-for="Text" class="form-control" />
+                            <span asp-validation-for="Text" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+            @section Scripts {
+                @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+            }

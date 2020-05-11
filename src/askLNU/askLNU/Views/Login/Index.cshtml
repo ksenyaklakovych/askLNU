@@ -5,11 +5,45 @@
 @{
     ViewData["Title"] = "Log in";
 }
+    <style>
+        .text-danger {
+            margin-left: 103px;
+        }
+        .form-group {
+            margin-bottom: 4px !important;
+        }
+        .fa {
+            border-radius: 16px;
+            padding: 13px;
+            font-size: 30px;
+            text-align: center;
+            text-decoration: none;
+            margin: 5px 2px;
+        }
 
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <link href="@Url.Content("~/css/register.css")" rel="stylesheet" type="text/css" />
-</head>
+        .fa:hover {
+            opacity: 0.7;
+        }
+
+        .fa-facebook {
+            background: #3B5998;
+            color: white;
+        }
+
+        .fa-google {
+            background: #dd4b39;
+            color: white;
+        }
+
+        .fa.fa-facebook:before, .fa.fa-google:before {
+            padding-right: 4px;
+        }
+    </style>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="@Url.Content("~/css/register.css")" rel="stylesheet" type="text/css" />
+    </head>
 <div class="row">
     <div class="col-md-12" id="register">
         <section>
@@ -27,13 +61,19 @@
                 }
                 else
                 {
-                    <form asp-action="ExternalLogin" asp-controller="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                            @foreach (var provider in loginProviders)
-                            {
-                               
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                            }
-                    </form>
+        <form asp-action="ExternalLogin" asp-controller="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" style=" width: 38%; margin: auto; margin-bottom: 16px;">
+            @foreach (var provider in loginProviders)
+            {
+                @if (@provider.Name == "Google")
+                {
+                    <button type="submit" class="fa fa-google" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                }
+                else
+                {
+                    <button type="submit" class="fa fa-facebook" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                }
+            }
+        </form>
                 }
             }
             <p class="divider-text">

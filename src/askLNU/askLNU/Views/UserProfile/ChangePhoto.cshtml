@@ -1,0 +1,54 @@
+﻿@model askLNU.ViewModels.ChangePhotoViewModel
+@{
+    ViewData["Title"] = "Change photo";
+}
+<style>
+    body {
+        background-color: lightslategray;
+    }
+
+    form {
+        margin-bottom: 16px;
+    }
+
+    section {
+        display: block;
+        overflow: auto;
+        height: 100%;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        padding: 16px 24px 40px 40px;
+    }
+</style>
+<body>
+    <section>
+        <div class="content">
+            <h4>Change photo</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-10">
+                    <form asp-action="ChangePhoto" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group col-md-10">
+                            <label asp-for="Image" class="control-label">Choose photo:</label> <br>
+                            <input asp-for="Image" type='file' class='form-control-file' />
+                            <span asp-validation-for="Image" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                 <a asp-action="UserProfile">Back to profile</a>
+            </div>
+
+            
+        </div>
+    </section>
+</body>
+            @section Scripts {
+                @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+            }

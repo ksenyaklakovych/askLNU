@@ -1,0 +1,45 @@
+﻿body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-color: lightslategray;
+}
+
+form {
+    margin-bottom: 16px;
+}
+
+/*section {
+    display: block;
+    overflow: auto;
+    height: 100%;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    padding: 16px 80px;
+}*/
+
+.border {
+    padding: 10px;
+}
+
+.pagination {
+    display: inline-block;
+    margin-top: 24px;
+}
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+    }
+
+        .pagination a.active {
+            background-color: #ffc107;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #F9E69C;
+            border-radius: 5px;
+        }

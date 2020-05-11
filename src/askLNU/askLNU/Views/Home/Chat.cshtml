@@ -1,38 +1,65 @@
-﻿
-@page
+﻿@page
+
 <style>
     div.panel-body {
         overflow: scroll;
         background: url('http://subtlepatterns.com/patterns/geometry2.png');
     }
-</style>
-<div class="container panel-body">
-    <h1>Start chatting in real-time</h1>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-4"><input type="hidden" id="userInput" class="form-control" value="@User.Identity.Name" /></div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <ul id="messagesList"></ul>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <hr />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-2">Message</div>
-        <div class="col-4"><input type="text" id="messageInput" class="form-control" /></div>
-    </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-6">
-            <input type="button" id="sendButton" value="Send" class="btn btn-success" />
-        </div>
-    </div>
-</div>
 
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js"></script>
+    body {
+        background-color: lightslategray;
+    }
+
+    form {
+        margin-bottom: 16px;
+    }
+
+    section {
+        display: block;
+        overflow: auto;
+        height: 100%;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        padding: 4px 4px;
+    }
+</style>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+</head>
+<body>
+    <section>
+        <div class="content">
+            <div class="container panel-body">
+                <h1 style="padding: 16px;">Start chatting in real-time</h1>
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-4"><input type="hidden" id="userInput" class="form-control" value="@User.Identity.Name" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <ul id="messagesList"></ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <hr />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">Message</div>
+                    <div class="col-6"><input type="text" id="messageInput" class="form-control" /></div>
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="button" id="sendButton" value="Send" class="btn btn-success" style="margin-left: 15px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
+</body>

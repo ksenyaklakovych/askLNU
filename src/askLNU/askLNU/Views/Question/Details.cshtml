@@ -4,6 +4,24 @@
     ViewData["Title"] = Model.Title;
     ViewData["Disabled"] = User.IsInRole("User") ? "" : "disabled";
 }
+    <style>
+        body {
+            background-color: lightslategray;
+        }
+
+        form {
+            margin-bottom: 16px;
+        }
+
+        section {
+            display: block;
+            overflow: auto;
+            height: 100%;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            padding: 16px 24px;
+        }
+    </style>
 
 <div class="row">
 

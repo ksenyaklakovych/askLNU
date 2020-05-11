@@ -3,30 +3,54 @@
 @{
     ViewData["Title"] = "AllFaculties";
 }
+<style>
+    body {
+        background-color: lightslategray;
+    }
 
-<h1>Faculties</h1>
+    form {
+        margin-bottom: 16px;
+    }
 
-<p>
-    <a asp-action="CreateNewFaculty">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.ActionLink("Delete", "DeleteFaculty", new { id=item.Id })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    section {
+        display: block;
+        overflow: auto;
+        height: 100%;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        padding: 16px 24px;
+    }
+</style>
+<body>
+    <section>
+        <div class="content">
+            <h1>Faculties</h1>
+
+            <p>
+                <a asp-action="CreateNewFaculty">Create New</a>
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Title)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Delete", "DeleteFaculty", new { id = item.Id })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</body>
