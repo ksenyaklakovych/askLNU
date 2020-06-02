@@ -81,6 +81,13 @@
             }
         }
 
+
+        public ActionResult TopTen()
+        {
+             var questions=_questionService.GetAll().OrderByDescending(i => i.Rating).Take(1); 
+            return View(questions);
+        }
+
         public IActionResult Create()
         {
             var viewModel = new CreateQuestionViewModel

@@ -36,7 +36,7 @@
             this._mapper = new Mapper(config);
         }
 
-        public async Task<IActionResult> Index(string faculties, string tag, string sortMethod, int page = 1)
+        public async Task<IActionResult> Index(string faculties, string tag, string sortMethod, string date, int page = 1)
         {
             this._logger.LogInformation("User on main page.");
 
@@ -84,6 +84,22 @@
                 questions = list_of_questions;
             }
 
+
+            if (!string.IsNullOrEmpty(date))
+            {
+                this._logger.LogInformation("Filtering by date");
+
+                var list_of_questions = new List<QuestionShortViewModel> { };
+                for (int i = 0; i < questions.Count(); i++)
+                {
+                    if (DateTime.Parse(date) > questions[i].Date)
+                    {
+                        list_of_questions.Add(questions[i]);
+                    }
+                }
+
+                questions = list_of_questions;
+            }
             // change list to IEnumerable
             IEnumerable<QuestionShortViewModel> questionsWithTags = questions;
 
