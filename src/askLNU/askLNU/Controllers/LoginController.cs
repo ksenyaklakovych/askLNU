@@ -45,13 +45,12 @@
             if (this.ModelState.IsValid)
             {
                 var user = this._userManager.FindByNameAsync(loginInputModel.UserName);
-                if(user.Result.IsBlocked)
+                if (user.Result != null && user.Result.IsBlocked)
                 {
-                    ModelState.AddModelError("RememberMe", "You are blocked.");
+                    this.ModelState.AddModelError("RememberMe", "You are blocked.");
                     return this.View("Index");
                 }
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+
                 var result = await this._signInService.PasswordSignInAsync(loginInputModel.UserName, loginInputModel.Password, loginInputModel.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
