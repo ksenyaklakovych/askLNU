@@ -77,8 +77,12 @@
                 {
                     this._logger.LogInformation("User registered successfully.");
                     user = await this._userService.GetByEmailAsync(user.Email);
-                    var imageSrc = await this._imageService.SaveImage(registerInputModel.Image);
-                    await this._userService.UpdateImage(user.Id, imageSrc);
+
+                    if (registerInputModel.Image != null)
+                    { 
+                        var imageSrc = await this._imageService.SaveImage(registerInputModel.Image);
+                        await this._userService.UpdateImage(user.Id, imageSrc);
+                    }
 
                     var code = await this._userService.GenerateEmailConfirmationTokenAsync(user.Id);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
