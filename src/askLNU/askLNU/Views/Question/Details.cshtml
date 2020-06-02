@@ -97,9 +97,13 @@
                                         <span data-bind="date"></span>
                                         @if (User.IsInRole("Moderator"))
                                         {
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="location.href='@Url.Action("DeleteAnswer", "Question", new { questionId = Model.Id }) '">
-                                                <span class="fa fa-trash-o" style="font-size:15px;color:white"></span>
-                                            </button>
+                                            <form asp-controller="Answer" asp-action="Delete">
+                                                <input type="hidden" name="answerId" data-bind="id"/>
+                                                <input type="hidden" name="questionId" value="@Model.Id"/>
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <span class="fa fa-trash-o" style="font-size:15px;color:white"></span>
+                                                </button>
+                                            </form>
                                         }
                                     </div>
                                 </div>

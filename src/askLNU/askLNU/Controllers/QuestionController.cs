@@ -186,14 +186,6 @@
             return this.RedirectToAction("Index", "Home");
         }
 
-        [Authorize(Roles = "Moderator,Admin")]
-        public ActionResult DeleteAnswer(int answerId)
-        {
-            this._logger.LogInformation($"Moderator deleted answer with id {answerId}.");
-            this._answerService.Dispose(answerId);
-            return this.RedirectToAction("Index", "Home");
-        }
-
         public async Task<ActionResult> CreatedQuestions()
         {
             var user = await this._userManager.GetUserAsync(this.User);
