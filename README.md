@@ -1,5 +1,4 @@
 # askLNU
-# eCommerceShop_WEB
 The goal of the project is to provide a platform for asking questions on some studying materials and receiving answers to them. System allows to create a question in the chosen faculty, add tags, reply to created ones and mark the answers and questions based on how helpful they were.
 ### Description
 To start with, user needs to go to the starting page to log in, also, if user doesn't have an account, he can register.
